@@ -18,14 +18,30 @@ fun main(args: Array<String>) {
     System.out.println(foo("d", 2, true))
 
     //Lamdas
-    System.out.println("containsEven: " + containsEven(mutableListOf(1,3,5,7)))
-    System.out.println("containsEven: " + containsEven(mutableListOf(1,2,5,7)))
+    System.out.println("containsEven: " + containsEven(mutableListOf(1, 3, 5, 7)))
+    System.out.println("containsEven: " + containsEven(mutableListOf(1, 2, 5, 7)))
 
     //Strings
     System.out.println("date match: 13 APR 1992: " + "13 APR 1992".matches(getPattern().toRegex()))
     System.out.println("date match: 12 MAT 1992: " + "12 MAT 1992".matches(getPattern().toRegex()))
     System.out.println("date match: 14 DEC 2018: " + "14 DEC 2018".matches(getPattern().toRegex()))
     System.out.println("date match: 14 DEC 18: " + "14 DEC 18".matches(getPattern().toRegex()))
+
+    //Classes
+    getPeople().forEach { System.out.println("${it.name} ${it.age}") }
+
+    //Nullable types
+    val info = PersonalInfo(email = "martin@email.com")
+    val client = Client(info)
+    sendMessageToClient(client, "message", Mailer())
+
+    //Smart casts
+    System.out.println(eval(Num(1)))
+    System.out.println(eval(Sum(Num(1), Num(1))))
+
+    //Extension functions
+    System.out.print(1.r())
+    System.out.print(Pair(1, 2).r())
 }
 
 /**
@@ -38,10 +54,10 @@ fun start(): String = "OK"
  *
  * <code>
  *      fun joinToString(
- *      separator: String = ", ",
- *      prefix: String = "",
- *      postfix: String = "",
- *      /* ... */
+ *          separator: String = ", ",
+ *          prefix: String = "",
+ *          postfix: String = "",
+ *          /* ... */
  *      ): String
  * </code>
  *
@@ -95,7 +111,6 @@ fun containsEven(collection: Collection<Int>): Boolean {
  *
  * Raw strings are useful for writing regex patterns, you don't need to escape a backslash by a backslash. Below there is a pattern that matches a date in format 13.06.1992 (two digits, a dot, two digits, a dot, four digits):
  *
- *
  * <code>
  *    fun getPattern() = """\d{2}\.\d{2}\.\d{4}"""
  * </code>
@@ -105,3 +120,82 @@ fun containsEven(collection: Collection<Int>): Boolean {
 var month = "(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)"
 
 fun getPattern(): String = """\d{2} $month \d{4}"""
+
+/**
+ * Data classes
+ * Rewrite the following Java code to Kotlin:
+ *
+ * <code>
+ *      public class Person {
+ *      private final String name;
+ *      private final int age;
+​
+ *      public Person(String name, int age) {
+ *          this.name = name;
+ *          this.age = age;
+ *      }
+ * ​
+ *       public String getName() {
+ *          return name;
+ *      }
+ *
+ *      public int getAge() {
+ *          return age;
+ *      }
+ * }
+ * </code>
+ *
+ * Then add a modifier data to the resulting class. This annotation means the compiler will generate a bunch of useful methods in this class: equals/hashCode, toString and some others. The getPeople function should start to compile.
+ *
+ * Read about <a href="http://kotlinlang.org/docs/reference/classes.html">classes</a>, <a href="http://kotlinlang.org/docs/reference/properties.html">properties</a> and <a href="https://kotlinlang.org/docs/reference/data-classes.html">data classes</a>.
+ */
+fun getPeople(): List<Person> {
+    return listOf(Person("Alice", 29), Person("Bob", 31))
+}
+
+/**
+ * Read about <a href="http://kotlinlang.org/docs/reference/null-safety.html">null safety and safe calls</a> in Kotlin and rewrite the following Java code using only one if expression:
+ *
+ * <code>
+ *      public void sendMessageToClient(@Nullable Client client, @Nullable String message, @NotNull Mailer mailer) {
+ *          if (client == null || message == null) return;​
+ *
+ *          PersonalInfo personalInfo = client.getPersonalInfo();
+ *          if (personalInfo == null) return;
+ *
+ *          String email = personalInfo.getEmail();
+ *          if (email == null) return;
+ *​
+ *          mailer.sendMessage(email, message);
+ *     }
+ * </code>
+ */
+fun sendMessageToClient(client: Client?, message: String?, mailer: Mailer) {
+    val email = client?.personalInfo?.email
+    if (email != null && message != null) {
+        mailer.sendMessage(email, message)
+    }
+}
+
+/**
+ * Rewrite the following Java code using smart casts and when expression:
+ *
+ * <code>
+ *      public int eval(Expr expr) {
+ *          if (expr instanceof Num) {
+ *              return ((Num) expr).getValue();
+ *          }
+ *          if (expr instanceof Sum) {
+ *              Sum sum = (Sum) expr;
+ *              return eval(sum.getLeft()) + eval(sum.getRight());
+ *          }
+ *          throw new IllegalArgumentException("Unknown expression");
+ *      }
+ * </code>
+ */
+fun eval(expr: Expr): Int =
+        when (expr) {
+            is Num -> expr.value
+            is Sum -> eval(expr.left) + eval(expr.right)
+            else -> throw IllegalArgumentException("Unknown expression")
+        }
