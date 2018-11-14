@@ -1,5 +1,7 @@
 package introduction
 
+import java.util.*
+
 /**
  * @author Martin Trollip <martint@discovery.co.za>
  * @since 2018/11/12 20:38
@@ -42,6 +44,12 @@ fun main(args: Array<String>) {
     //Extension functions
     System.out.print(1.r())
     System.out.print(Pair(1, 2).r())
+
+    //Object declarations
+    System.out.println(getList())
+
+    //SAM convertions
+    System.out.println(getSAMList())
 }
 
 /**
@@ -199,3 +207,27 @@ fun eval(expr: Expr): Int =
             is Sum -> eval(expr.left) + eval(expr.right)
             else -> throw IllegalArgumentException("Unknown expression")
         }
+
+/**
+ * Read about <a href="http://kotlinlang.org/docs/reference/object-declarations.html">object expressions</a> that play the same role in Kotlin as anonymous classes in Java.
+ *
+ * Add an object expression that provides a comparator to sort a list in a descending order using java.util.Collections class. In Kotlin you use Kotlin library extensions instead of java.util.Collections, but this example is still a good demonstration of mixing Kotlin and Java code.
+ */
+fun getList(): List<Int> {
+    val arrayList = arrayListOf(1, 5, 2)
+    Collections.sort(arrayList, object : Comparator<Int> {
+        override fun compare(x: Int, y: Int) = y - x
+    })
+    return arrayList
+}
+
+/**
+ * When an object implements a <a href="https://kotlinlang.org/docs/reference/java-interop.html#sam-conversions">SAM interface (one with a Single Abstract Method)</a>, you can pass a lambda instead. Read more about SAM-conversions.
+ *
+ * In the previous example change an object expression to a lambda.
+ */
+fun getSAMList(): List<Int> {
+    val arrayList = arrayListOf(1, 5, 2)
+    Collections.sort(arrayList, { x, y -> y - x })
+    return arrayList
+}
