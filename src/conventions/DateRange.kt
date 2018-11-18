@@ -4,11 +4,13 @@ package conventions
  * @author Martin Trollip
  * @since 2018/11/18 21:16
  */
-class DateRange(override val start: MyDate, override val endInclusive: MyDate): ClosedRange<MyDate> {
+class DateRange(override val start: MyDate, override val endInclusive: MyDate) : ClosedRange<MyDate>, Iterable<MyDate> {
 
     override operator fun contains(contains: MyDate): Boolean {
         return contains > start && contains <= endInclusive
     }
+
+    override fun iterator(): Iterator<MyDate> = DateIterator(this)
 }
 
 /**

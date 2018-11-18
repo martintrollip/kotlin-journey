@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
     println(pastDay..futureDay)
 
     //For loop
-    println(checkInRange(pastDay, futureDay, currentDay))
+    iterateOverDateRange(pastDay, futureDay)
 }
 
 /**
@@ -50,8 +50,8 @@ fun checkInRange(date: MyDate, first: MyDate, last: MyDate): Boolean {
  * For loop
  * Kotlin <a href="http://kotlinlang.org/docs/reference/control-flow.html#for-loops">for loop</a> iterates through anything that provides an iterator. Make the class DateRange implement Iterable<MyDate>, so that it could be iterated over. You can use the function MyDate.nextDay() defined in DateUtil.kt
  */
-fun iterateOverDateRange(firstDate: MyDate, secondDate: MyDate, handler: (MyDate) -> Unit) {
+fun iterateOverDateRange(firstDate: MyDate, secondDate: MyDate) {
     for (date in firstDate..secondDate) {
-        handler(date)
+        println("${date.year} ${date.month} ${date.dayOfMonth}")
     }
 }
