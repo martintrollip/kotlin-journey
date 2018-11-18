@@ -1,7 +1,7 @@
 package introduction
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2018/11/12 21:31
  *
  **/

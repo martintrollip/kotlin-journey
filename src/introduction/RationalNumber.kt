@@ -1,7 +1,7 @@
 package introduction
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2018/11/12 22:09
  *
  * Read about <a href="http://kotlinlang.org/docs/reference/extensions.html">extension functions</a>. Then implement extension functions Int.r() and Pair.r() and make them convert Int and Pair to RationalNumber.
