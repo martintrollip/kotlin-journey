@@ -1,7 +1,7 @@
 package conventions
 
 /**
- * @author Martin Trollip <martint@discovery.co.za>
+ * @author Martin Trollip
  * @since 2018/11/18 21:41
  */
 class DateIterator(val dateRange:DateRange) : Iterator<MyDate> {
