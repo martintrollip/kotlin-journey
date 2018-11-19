@@ -5,21 +5,40 @@ package conventions
  * @since 2018/11/18 20:50
  */
 fun main(args: Array<String>) {
-    //Comparison
     val currentDay = MyDate(2018, 11, 18)
     val futureDay = MyDate(2018, 12, 18)
     val pastDay = MyDate(2018, 10, 18)
+    val leapDay = MyDate(2020, 2, 29)
 
+    //Comparison
+    println("Comparing:")
     println(compare(futureDay, currentDay))
 
     //In range
+    println("Check in range $pastDay to $futureDay, $currentDay:")
     println(checkInRange(pastDay, futureDay, currentDay))
 
     //Range to
+    println("Range to $pastDay to $futureDay")
     println(pastDay..futureDay)
 
     //For loop
+    println("Iterate/For loop $pastDay to $futureDay")
     iterateOverDateRange(pastDay, futureDay)
+
+    //Operators overloading
+    println("Plus operator $currentDay (plus year, plus week")
+    println(task1(currentDay))
+    println("Plus operator $currentDay (plus 2 years, plus 3 weeks, plus 5 days")
+    println(task2(currentDay))
+
+    //Destructuring declarations
+    println("29 February of a leap year $leapDay")
+    println(isLeapDay(leapDay))
+
+    //Invoke
+    println("Invoke twice")
+    invokeTwice(Invoker())
 }
 
 /**
@@ -55,3 +74,50 @@ fun iterateOverDateRange(firstDate: MyDate, secondDate: MyDate) {
         println("${date.year} ${date.month} ${date.dayOfMonth}")
     }
 }
+
+/**
+ * Operators overloading
+ * Implement a kind of date arithmetic. Support adding years, weeks and days to a date. You could be able to write the code like this: date + YEAR * 2 + WEEK * 3 + DAY * 15.
+ *
+ * At first, add an extension function 'plus()' to MyDate, taking a TimeInterval as an argument. Use an utility function MyDate.addTimeIntervals() declared in DateUtil.kt
+ *
+ * Then, try to support adding several time intervals to a date. You may need an extra class.
+ */
+fun task1(today: MyDate): MyDate {
+    return today + TimeInterval.YEAR + TimeInterval.WEEK
+}
+
+fun task2(today: MyDate): MyDate {
+   return today + TimeInterval.YEAR * 2 + TimeInterval.WEEK * 3 + TimeInterval.DAY * 5
+}
+
+/**
+ * Destructuring declarations
+ * Read about <a href="http://kotlinlang.org/docs/reference/multi-declarations.html">destructuring declarations</a> and make the following code compile by adding one word.
+ *
+ * Example: Returning Two Values from a Function! :)
+ */
+fun isLeapDay(date: MyDate): Boolean {
+
+    val (year, month, dayOfMonth) = date
+
+    // 29 February of a leap year
+    return year % 4 == 0 && month == 2 && dayOfMonth == 29
+}
+
+/**
+ * Invoke
+ * Objects with invoke() method can be invoked as a function.
+ *
+ * You can add invoke extension for any class, but it's better not to overuse it:
+ *
+ * <code>
+ * fun Int.invoke() { println(this) }
+​ *
+ * 1() //huh?..
+ * </code>
+ *
+ * Implement the function Invokable.invoke() so it would count a number of invocations.
+ *
+ */
+fun invokeTwice(invokable: Invoker) = invokable()()
