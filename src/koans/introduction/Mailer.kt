@@ -1,4 +1,4 @@
-package introduction
+package koans.introduction
 
 class Mailer {
     fun sendMessage(email: String, message: String) {

@@ -1,4 +1,4 @@
-package collections
+package koans.collections
 
 /**
  * @author Martin Trollip
