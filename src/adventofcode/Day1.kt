@@ -3,16 +3,16 @@ package adventofcode
 import java.io.File
 
 /**
- * @author Martin Trollip <martint@discovery.co.za>
+ * @author Martin Trollip
  * @since 2018/12/03 12:29
  */
 fun main(args: Array<String>) {
     calibrate("src/res/day1_input")
 }
 
-fun calibrate(fileName: String) {
+fun calibrate(filename: String) {
     var frequencies = LinkedHashMap<Int, Int>()
-    val lines = File(fileName).readLines()
+    val lines = File(filename).readLines()
 
     println("Calibrated this round: " + calibrate(lines))
     println("First duplicate: " + duplications(lines, frequencies, 0))
