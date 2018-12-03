@@ -1,4 +1,4 @@
-package conventions
+package koans.conventions
 
 /**
  * @author Martin Trollip

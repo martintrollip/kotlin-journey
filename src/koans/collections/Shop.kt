@@ -1,4 +1,4 @@
-package collections
+package koans.collections
 
 data class Shop(val name: String, val customers: List<Customer>)
 
