@@ -1,4 +1,4 @@
-package conventions
+package koans.conventions
 
 /**
  * @author Martin Trollip
@@ -23,6 +23,5 @@ class DateRange(override val start: MyDate, override val endInclusive: MyDate) :
  *
  * Note that now the class <code>DateRange</code> implements the standard <code>ClosedRange</code> interface and inherits contains method implementation.
  *
- * TODO Read up more on this
  */
 operator fun MyDate.rangeTo(other: MyDate) = DateRange(this, other)
