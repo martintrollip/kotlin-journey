@@ -1,4 +1,4 @@
-package introduction
+package koans.introduction
 
 import java.util.*
 
