@@ -7,17 +7,17 @@ import java.io.File
  * @since 2018/12/03 19:53
  */
 
-val EMPTY_MATERIAL = "."
-val CONFLICTING_MATERIAL = "X"
+const val EMPTY_MATERIAL = "."
+const val CONFLICTING_MATERIAL = "X"
 
 val INSTRUCTION_REGEX = "\\#([0-9]+) \\@ ([0-9]+),([0-9]+): ([0-9]+)x([0-9]+)".toRegex()
 
-val TOTAL_SIZE = 1000
-val INPUT = "src/res/day3_input"
+const val TOTAL_SIZE = 1000
+const val DAY3_INPUT = "src/res/day3_input"
 
 fun main(args: Array<String>) {
 
-    val instructions = File(INPUT).readLines().map {
+    val instructions = File(DAY3_INPUT).readLines().map {
         val matchResult = INSTRUCTION_REGEX.find(it)
         val (id, left, top, width, height) = matchResult!!.destructured
         Cut(id, left.toInt(), top.toInt(), width.toInt(), height.toInt())
