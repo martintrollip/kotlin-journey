@@ -4,8 +4,10 @@ import koans.conventions.MyDate
 import java.io.File
 
 /**
- * @author Martin Trollip <martint@discovery.co.za>
+ * @author Martin Trollip
  * @since 2018/12/04 06:47
+ *
+ * @see https://regex101.com/r/yD0yX7/20
  */
 
 val SCHEDULE_REGEX = "\\[([0-9]{4})\\-([0-9]{2})\\-([0-9]{2}) ([0-9]{2}):([0-9]{2})\\] (falls asleep|wakes up|Guard #([0-9]+) begins shift)".toRegex()
