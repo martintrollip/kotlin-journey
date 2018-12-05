@@ -56,5 +56,15 @@ fun main(args: Array<String>) {
     //Fold
     println("Products ordered by every customer")
     println(shop.getSetOfProductsOrderedByEveryCustomer())
+
+    //Compound tasks
+    println("Most expensive delivered product")
+    println(shop.getCustomerWithMaximumNumberOfOrders()?.getMostExpensiveDeliveredProduct())
+    println("Number of times product was ordered")
+    println(shop.getNumberOfTimesProductWasOrdered(shop.getCustomerWithMaximumNumberOfOrders()?.getMostExpensiveDeliveredProduct()!!))
+
+    //Get used to new style
+    println("doSomethingStrangeWithCollection")
+    println(doSomethingStrangeWithCollection(arrayListOf("A", "B", "C", "A", "B", "C")))
 }
 

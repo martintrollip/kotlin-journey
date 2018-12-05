@@ -189,9 +189,73 @@ fun Shop.getCustomersWithMoreUndeliveredOrdersThanDelivered(): Set<Customer> = c
  */
 // Return the set of products that were ordered by every customer
 fun Shop.getSetOfProductsOrderedByEveryCustomer(): Set<Product> {
-    val allProducts = customers.flatMap { it.orders.flatMap { it.products }}.toSet()
-    return customers.fold(allProducts, {
-        orderedByAll, customer ->
+    val allProducts = customers.flatMap { it.orders.flatMap { it.products } }.toSet()
+    return customers.fold(allProducts, { orderedByAll, customer ->
         orderedByAll.intersect(customer.orders.flatMap { it.products }.toSet())
     })
 }
+
+/**
+ * Compound tasks
+ * Implement Customer.getMostExpensiveDeliveredProduct() and Shop.getNumberOfTimesProductWasOrdered() using functions from the Kotlin standard library.
+ */
+// Return the most expensive product among all delivered products
+// (use the Order.isDelivered flag)
+fun Customer.getMostExpensiveDeliveredProduct(): Product? {
+    return orders.filter { it.isDelivered }.flatMap { it.products }.maxBy { it.price }
+}
+
+// Return how many times the given product was ordered.
+// Note: a customer may order the same product for several times.
+fun Shop.getNumberOfTimesProductWasOrdered(product: Product): Int {
+    return customers.flatMap { it.getOrderedProductsList() }.filter { it == product }.count()
+}
+
+fun Customer.getOrderedProductsList(): List<Product> {
+    return orders.flatMap { it.products }
+}
+
+/**
+ * Get used to new style
+ * Rewrite the following Java function to Kotlin.
+ *
+ * <code>
+ * public Collection<String> doSomethingStrangeWithCollection(
+ * Collection<String> collection) {
+ *      Map<Integer, List<String>> groupsByLength = Maps.newHashMap();
+ *
+ *      for (String s : collection) {
+ *          List<String> strings = groupsByLength.get(s.length());
+ *          if (strings == null) {
+ *              strings = Lists.newArrayList();
+ *              groupsByLength.put(s.length(), strings);
+ *          }
+ *          strings.add(s);
+ *      }
+​ *
+ *      int maximumSizeOfGroup = 0;
+ *      for (List<String> group : groupsByLength.values()) {
+ *          if (group.size() > maximumSizeOfGroup) {
+ *          maximumSizeOfGroup = group.size();
+ *          }
+ *      }
+​ *
+ *      for (List<String> group : groupsByLength.values()) {
+ *          if (group.size() == maximumSizeOfGroup) {
+ *              return group;
+ *          }
+ *      }
+ *
+ *  return null;
+ * }
+ * </code>
+ *
+ * */
+//fun doSomethingStrangeWithCollection(collection: Collection<String>): Collection<String>? {
+//
+//    val groupsByLength = collection. groupBy { s -> TODO() }
+//
+//    val maximumSizeOfGroup = groupsByLength.values.map { group -> TODO() }.max()
+//
+//    return groupsByLength.values.firstOrNull { group -> TODO() }
+//}
