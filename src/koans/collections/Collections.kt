@@ -65,6 +65,6 @@ fun main(args: Array<String>) {
 
     //Get used to new style
     println("doSomethingStrangeWithCollection")
-    println(doSomethingStrangeWithCollection(arrayListOf("A", "B", "C", "A", "B", "C")))
+//    println(doSomethingStrangeWithCollection(arrayListOf("A", "B", "C", "A", "B", "C")))
 }
 
