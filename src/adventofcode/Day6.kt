@@ -3,135 +3,150 @@ package adventofcode
 import java.io.File
 import kotlin.math.absoluteValue
 
-//5013 is wrong
 /**
  * @author Martin Trollip ***REMOVED***
  * @since 2018/12/06 07:02
  */
 val COORDINATE_REGEX = "([0-9]+), ([0-9]+)".toRegex()
 
-const val DAY6_INPUT = "src/res/day6_input_small"
+const val DAY6_INPUT = "src/res/day6_input"
 
-val EMPTY_SPACE = Coordinate()
-val EMPTY_DISTANCE = listOf(ManhattanDistance())
-
-val PADDING = 1
+const val OFFSET = 10
 
 fun main(args: Array<String>) {
     var count = 0
     val symbols = CharArray(50) { (it + 97).toChar() }.joinToString("")
 
-    val coordinates = File(DAY6_INPUT).readLines().map {
+    val points = File(DAY6_INPUT).readLines().map {
         val matchResult = COORDINATE_REGEX.find(it)
-        val (x, y) = matchResult!!.destructured
-        Coordinate(symbols[count++].toString(), x.toInt(), y.toInt())
+        val (y, x) = matchResult!!.destructured
+        Coordinate(x.toInt() + OFFSET / 2, y.toInt() + OFFSET / 2, ManhattanDistance(symbols[count++].toString(), 0))
     }
 
-    val minX = coordinates.minBy { it.x }?.x!! - PADDING
-    val maxX = coordinates.maxBy { it.x }?.x!! + PADDING
+    val xMin = points.minBy { it.x }?.x
+    val xMax = points.maxBy { it.x }?.x
 
-    val minY = coordinates.minBy { it.y }?.y!! - PADDING
-    val maxY = coordinates.maxBy { it.y }?.y!!+ PADDING
+    val yMin = points.minBy { it.y }?.y
+    val yMax = points.maxBy { it.y }?.y
 
-    val bounds = Boundaries(minX, maxX, minY, maxY)
-    val map = Array(maxX , { Array(maxY) { EMPTY_SPACE } })
+    val map = Array(xMax!! + OFFSET, { Array(yMax!! + OFFSET, { Coordinate() }) })
 
-    val manhattans = map.calculateManhattan(coordinates, bounds)
-    var counts = LinkedHashMap<Coordinate, Int>()
+    map.plot(points)
+    map.calculateManhattan(points)
+    map.print()
 
-    for (x: Int in minX until maxX) {
-        for (y: Int in minY until maxY) {
-            val minBy = manhattans[x][y].minBy { it.distance }
+    val largestArea = map.largestArea(xMin, xMax, yMin, yMax)
+    println("The largest are is $largestArea")
 
-            var minDistance = 0
-            if(minBy != null) {
-                minDistance = minBy.distance
-            }
+    val sumOfDistanceLessThan = map.sumOfDistanceLessThan(10000)
+    println("Safe zone size $sumOfDistanceLessThan")
 
-            for (entry in manhattans[x][y]) {
+}
 
-                if (!isItemOnBoundary(entry.coordinate, bounds)) {
-                    if(entry.distance == minDistance) {
-                        if(manhattans[x][y].filter { it.distance == minDistance }.size == 1) {
-                            var counter = counts.getOrDefault(entry.coordinate, 0)
-                            counts.put(entry.coordinate, counter + 1)
-                        }
-                    }
-                }
-            }
+fun Array<Array<Coordinate>>.plot(points: List<Coordinate>) {
+    for (row in 0 until this.size) {
+        for (column in 0 until this[row].size) {
+            this[row][column] = Coordinate(row, column)
         }
     }
 
-    manhattans.print(bounds)
-    println("Boundaries: x=$minX,$maxX and y=$minY,$maxY")
-    println(counts)
-    println(counts.maxBy { it.value })
+    for (coordinate in points) {
+        coordinate.closestDistance.symbol = coordinate.closestDistance.symbol.toUpperCase()
+        this[coordinate.x][coordinate.y] = coordinate
+    }
 }
 
-fun Array<Array<List<ManhattanDistance>>>.print(bounds:Boundaries) {
-    for (x: Int in bounds.xMin until bounds.xMax) {
-        for (y: Int in bounds.yMin until bounds.yMax) {
-            var print = ""
-            val minBy = this[x][y].minBy { it.distance }
+fun Array<Array<Coordinate>>.calculateManhattan(points: List<Coordinate>) {
+    for (row in this) {
+        for (column in row) {
+            for (point in points) {
+                val distance = manhattanDistance(column, point)
+                column.setClosestDistance(point, distance)
+                column.add(distance)
+            }
+        }
+    }
+}
 
-            var minDistance = 0
-            if(minBy != null) {
-                minDistance = minBy.distance
-            }
-
-            for (entry in this[x][y]) {
-                //if (!isItemOnBoundary(entry.coordinate, bounds)) {
-                    if(entry.distance == minDistance) {
-                        if(x == entry.coordinate.x && y == entry.coordinate.y) {
-                            print += entry.coordinate.symbol.toUpperCase()
-                        } else {
-                            print += entry.coordinate.symbol
-                        }
-                        print += ""//"(${entry.distance})"
-                    }
-                //}
-            }
-            if(print == "") {
-                print = "."
-            }
-            print(print.padStart(4))
+fun Array<Array<Coordinate>>.print() {
+    for (row in this) {
+        for (column in row) {
+            print("${column.closestDistance.symbol}".padStart(2))
         }
         println("")
     }
 }
 
-fun Array<Array<Coordinate>>.calculateManhattan(coordinates: List<Coordinate>, boundaries: Boundaries): Array<Array<List<ManhattanDistance>>> {
-    val manhattans = Array(boundaries.xMax, { Array(boundaries.yMax) { EMPTY_DISTANCE } })
+fun Array<Array<Coordinate>>.largestArea(xMin: Int?, xMax: Int?, yMin: Int?, yMax: Int?): Int? {
+    var areas = LinkedHashMap<String, Int>()
+    var infinites = LinkedHashMap<String, Int>()
 
-    for (coordinate in coordinates) {
-        for (x: Int in boundaries.xMin until boundaries.xMax) {
-            for (y: Int in boundaries.yMin until boundaries.yMax) {
-                val distance = manhattanDistance(Coordinate(".", x, y), coordinate)
-                manhattans[x][y] = manhattans[x][y].add(distance, coordinate)
+    for (row in this) {
+        for (column in row) {
+            val key = column.closestDistance.symbol.toLowerCase()
+
+            if (isItemOnBoundary(column, xMin, xMax, yMin, yMax)) {
+                infinites.put(key, 0)
+            } else {
+                areas.put(key, areas.getOrDefault(key, 0) + 1)
             }
         }
     }
 
-    return manhattans
+    infinites.keys.forEach {
+        areas.remove(it)
+    }
+
+    println(areas)
+
+    return areas.maxBy { it.value }?.value
 }
 
-fun List<ManhattanDistance>.add(distance: Int, coordinate: Coordinate): List<ManhattanDistance> {
-    val toMutableList = this.toMutableList()
-    toMutableList.add(ManhattanDistance(coordinate, distance))
-    return toMutableList
+fun Array<Array<Coordinate>>.sumOfDistanceLessThan(upperBound: Int) : Int {
+    var count = 0
+    for (row in this) {
+        for (column in row) {
+            if (column.sumOfDistance < upperBound ) {
+                count++
+            }
+        }
+    }
+
+    return count
 }
 
 fun manhattanDistance(a: Coordinate, b: Coordinate): Int {
     return (a.x - b.x).absoluteValue + (a.y - b.y).absoluteValue
 }
 
-fun isItemOnBoundary(coordinate: Coordinate, boundaries: Boundaries): Boolean {
+fun isItemOnBoundary(coordinate: Coordinate, xMin: Int?, xMax: Int?, yMin: Int?, yMax: Int?): Boolean {
     //Items on the boundary will have infinite counts,
-    return coordinate.x <= boundaries.xMin + PADDING || coordinate.x >= boundaries.xMax - PADDING || coordinate.y <= boundaries.yMin + PADDING || coordinate.y >= boundaries.yMax - PADDING
+    return coordinate.x <= xMin!! || coordinate.x >= xMax!! || coordinate.y <= yMin!! || coordinate.y >= yMax!!
 }
 
-data class Coordinate(var symbol: String = ".", var x: Int = -1, var y: Int = -1)
+data class Coordinate(var x: Int = -1, var y: Int = -1, var closestDistance: ManhattanDistance = ManhattanDistance(), var sumOfDistance: Int = 0) {
+    fun setClosestDistance(point: Coordinate, distance: Int) {
+        this.closestDistance.distance
 
-data class ManhattanDistance(var coordinate: Coordinate = Coordinate(), var distance: Int = Integer.MAX_VALUE)
+        if (this.closestDistance.distance != 0) {
+            if (this.closestDistance.distance == distance) {
+                this.closestDistance.symbol = "."
+            } else {
+                if (distance < this.closestDistance.distance) {
+                    this.closestDistance.distance = distance
+                    this.closestDistance.symbol = point.closestDistance.symbol.toLowerCase()
+                }
+            }
+        }
+    }
 
-data class Boundaries(var xMin: Int, var xMax: Int, var yMin: Int, var yMax: Int)
+    fun add(distance: Int) {
+        this.sumOfDistance += distance
+
+//        if(this.sumOfDistance >= 32) {
+//            this.closestDistance.symbol = ""
+//        }
+    }
+}
+
+data class ManhattanDistance(var symbol: String = ".", var distance: Int = Integer.MAX_VALUE)
