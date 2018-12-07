@@ -126,7 +126,7 @@ fun work(steps: LinkedHashMap<String, Step>, workers: List<Worker>): Int {
             }
         }
         readiness.sort()
-        println("$tic ${workers.printStatus()} $readiness")
+        println("$tic ${workers.printStatus()} ready=$readiness done=$completedWork")
 
         while (workers.getAvailable().isNotEmpty() && readiness.isNotEmpty()) {
             workers.getAvailable().first().assignWork(steps.get(readiness.first())!!)
