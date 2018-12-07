@@ -4,7 +4,7 @@ package koans.conventions
  * @author Martin Trollip
  * @since 2018/11/18 20:51
  */
-data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int) : Comparable<MyDate> {
+data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int, val hour:Int = 0 , val minute:Int = 0) : Comparable<MyDate> {
 
     override fun compareTo(other: MyDate): Int {
         if (year != other.year) {
@@ -17,6 +17,14 @@ data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int) : Comparab
 
         if (dayOfMonth != other.dayOfMonth) {
             return dayOfMonth - other.dayOfMonth
+        }
+
+        if (hour != other.hour) {
+            return hour - other.hour
+        }
+
+        if (minute != other.minute) {
+            return minute - other.minute
         }
 
         return 0
