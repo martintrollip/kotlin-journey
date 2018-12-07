@@ -3,7 +3,7 @@ package adventofcode
 import java.io.File
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2018/12/07 07:07
  */
 val STEPS_REGEX = "Step ([A-Z]) must be finished before step ([A-Z]) can begin.".toRegex()
