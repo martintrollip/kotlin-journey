@@ -1,4 +1,4 @@
-package adventofcode
+package adventofcode.twenty18
 
 import koans.conventions.MyDate
 import java.io.File

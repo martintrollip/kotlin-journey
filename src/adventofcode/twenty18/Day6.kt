@@ -1,4 +1,4 @@
-package adventofcode
+package adventofcode.twenty18
 
 import java.io.File
 import kotlin.math.absoluteValue
