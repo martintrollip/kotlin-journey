@@ -6,6 +6,7 @@ This is me learning Kotlin.
 
 ## The tasks:
 1. Complete the koans on https://play.kotlinlang.org/koans/
+
 2. Complete "Kotlin for Android Developers" course (https://www.udacity.com/course/kotlin-for-android-developers--ud888)
 
 3. Watch "Modern Android development: Android Jetpack, Kotlin, and more (Google I/O 2018)," available on YouTube @ https://www.youtube.com/watch?v=IrMw7MEgADk
