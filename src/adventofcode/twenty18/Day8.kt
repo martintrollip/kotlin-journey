@@ -77,7 +77,7 @@ fun Node.value(): Int {
     for (metaDatum in metaData) {
         val index = metaDatum - 1
         if (index >= 0  && index < children.size) {
-            sum += children[metaDatum - 1].value()
+            sum += children[index].value()
         }
     }
     return sum
