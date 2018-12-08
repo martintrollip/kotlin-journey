@@ -54,7 +54,6 @@ fun MutableList<Int>.getMetaData(length: Int): List<Int> {
         metadata.add(get(0))
         removeAt(0)
     }
-
     return metadata
 }
 
@@ -64,7 +63,6 @@ fun Node.sum(): Int {
     for (child in children) {
         sum += child.sum()
     }
-
     return sum
 }
 
