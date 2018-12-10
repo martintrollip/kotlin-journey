@@ -1,14 +1,17 @@
 package adventofcode.twenty18
 
 import java.io.File
-import kotlin.math.absoluteValue
+import java.lang.Math.pow
 import kotlin.math.max
+import kotlin.math.sqrt
 
 /**
  * @author Martin Trollip
  * @since 2018/12/10 06:51
  */
 val POINT_OF_LIGHT_REGEX = "position=<\\s?(\\-?[0-9]+), \\s?(\\-?[0-9]+)> velocity=<\\s?(\\-?[0-9]+), \\s?(\\-?[0-9]+)>".toRegex()
+val MAX_RUNS = 10000000
+var LETTER_HEIGHT = 8//Assuming the letters has the same height as example
 
 const val DAY10_INPUT = "src/res/day10_input_small"
 
@@ -21,41 +24,29 @@ fun main(args: Array<String>) {
         LightPoint(count++, x.toInt(), y.trim().toInt(), dx.toInt(), dy.toInt())
     }
 
-    //TODO move to function and have multiple return values
-    val xMin = lightPoints.minBy { it.x }?.x
-    val xMax = lightPoints.maxBy { it.x }?.x
-    val xSize = (xMax?.absoluteValue!! + xMin?.absoluteValue!!) * 2
-    val yMin = lightPoints.minBy { it.y }?.y
-    val yMax = lightPoints.maxBy { it.y }?.y
-    val ySize = (yMin?.absoluteValue!! + yMax?.absoluteValue!!) * 2
-    val size = max(xSize, ySize)
-
-    lightPoints.translateAll(xMin, yMin)
-    val skyMap = Array(size, { Array(size, { LightPoint() }) })
-    simulate(skyMap, lightPoints)
+    simulate(lightPoints)
 }
 
-fun simulate(skyMap: Array<Array<LightPoint>>, points: List<LightPoint>) {
-    var map = skyMap.toMutableList()
-//    points.move(3)
-    for (i in 0 until 10) {
-        for (point in points) {
-            if (point.x >= 0 && point.x < map.size && point.y >= 0 && point.y < map.size) {
-                map[point.x][point.y] = point
-            }
-        }
-        map.print()
-        map = MutableList(skyMap.size, { Array(skyMap.size, { LightPoint() }) })
+fun simulate(points: List<LightPoint>) {
+    var detected = false
+    var count = -1
+    while (!detected && count < MAX_RUNS) {
+        count++
         points.move()
+        detected = letterDetector(points)
     }
+
+    println("Possible detection at ${count + 1}")
+//    points.normalise()
+    val sorted = points.sortedWith(compareBy({ it.x }, { it.y }))
+    buildArray(sorted).print()
 }
 
+fun letterDetector(points: List<LightPoint>): Boolean {
+    val yMax = points.maxBy { it.y }?.y
+    val yMin = points.minBy { it.y }?.y
 
-fun List<LightPoint>.move(step: Int) {
-    for (lightPoint in this) {
-        lightPoint.x += lightPoint.dx * step
-        lightPoint.y += lightPoint.dy * step
-    }
+    return sqrt(pow(yMax?.toDouble()!!, 2.0) + pow(yMin?.toDouble()!!, 2.0)) <= LETTER_HEIGHT //Assuming 1 line
 }
 
 fun List<LightPoint>.move() {
@@ -65,14 +56,32 @@ fun List<LightPoint>.move() {
     }
 }
 
-fun List<LightPoint>.translateAll(xMin: Int, yMin: Int) {
-    for (lightPoint in this) {
-        lightPoint.x += xMin.absoluteValue
-        lightPoint.y += yMin.absoluteValue
+fun List<LightPoint>.normalise() {
+    val xOffset = minBy { it.x }?.x
+    val yOffset = minBy { it.y }?.y
+
+    forEach {
+        it.x -= xOffset!!
+        it.y -= yOffset!!
     }
 }
 
-fun MutableList<Array<LightPoint>>.print() {
+fun buildArray(points: List<LightPoint>): Array<Array<LightPoint>> {
+    val height = points.maxBy { it.y }?.y!! + 10
+    val width = points.maxBy { it.x }?.x!! + 10
+    val size = max(height, width)
+
+    val array = Array(size, { Array(size, { LightPoint() }) })
+    for (point in points) {
+        if (point.x >= 0 && point.y >= 0 && point.x < size && point.y < size) {
+            array[point.x][point.y] = point
+        }
+    }
+
+    return array
+}
+
+fun Array<Array<LightPoint>>.print() {
     var print = ""
     for (row in 0 until this.size) {
         var line = ""
