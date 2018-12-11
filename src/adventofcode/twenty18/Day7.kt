@@ -13,7 +13,6 @@ const val DAY7_INPUT = "src/res/day7_input"
 const val BASE_COST = 60
 const val WORKERS = 5
 
-
 fun main(args: Array<String>) {
     var steps = LinkedHashMap<String, Step>()
 
