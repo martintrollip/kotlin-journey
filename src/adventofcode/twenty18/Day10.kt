@@ -9,12 +9,8 @@ import kotlin.math.sqrt
  * @since 2018/12/10 06:51
  */
 val POINT_OF_LIGHT_REGEX = "position=<\\s?(\\-?[0-9]+), \\s?(\\-?[0-9]+)> velocity=<\\s?(\\-?[0-9]+), \\s?(\\-?[0-9]+)>".toRegex()
-val MAX_RUNS = 1000000000
-var LETTER_HEIGHT = 8//Assuming the letters has the same height as example
 
-const val DAY10_INPUT = "src/res/day10_input_small"
-
-//303710075
+const val DAY10_INPUT = "src/res/day10_input"
 
 fun main(args: Array<String>) {
     var count = 0
@@ -23,36 +19,32 @@ fun main(args: Array<String>) {
         val matchResult = POINT_OF_LIGHT_REGEX.find(it)
         val (x, y, dx, dy) = matchResult!!.destructured
         LightPoint(count++, x.toLong(), y.trim().toLong(), dx.toLong(), dy.toLong())
-    }
-
-
+    }.sortedWith(compareBy({ it.x }, { it.y }))
 
     simulate(lightPoints)
 }
 
 fun simulate(points: List<LightPoint>) {
     var textDetected = false
-    var count = -1
+    var round = -1
 
-    while (!textDetected && count < MAX_RUNS) {
-        count++
+    while (!textDetected) {
+        round++
+        val currentHeight = points.height()
         points.move()
-        textDetected = letterDetector(points)
+        val newHeight = points.height()
+        textDetected = singularityDetector(currentHeight, newHeight)
     }
 
-    println("Possible detection at $count")
-    println(buildArray(points).print())
+    points.reverse() //we missed it
+    buildArray(points).print()
+    println("That took $round seconds")
 }
 
-fun letterDetector(points: List<LightPoint>): Boolean {
-    val yMin = points.minBy { it.y }?.y!!
-    val yMax = points.maxBy { it.y }?.y!!
-    val height = distance(yMax, yMin)
 
-    return height <= LETTER_HEIGHT //Assuming 1 line
+fun singularityDetector(currentHeight: Long, newHeight: Long): Boolean {
+    return newHeight > currentHeight
 }
-
-private fun distance(a: Long, b: Long) = sqrt(((a * a) + (b * b)).toDouble()).toInt() + 1
 
 fun List<LightPoint>.move() {
     for (lightPoint in this) {
@@ -61,11 +53,18 @@ fun List<LightPoint>.move() {
     }
 }
 
-fun List<LightPoint>.move(steps: Int) {
+fun List<LightPoint>.reverse() {
     for (lightPoint in this) {
-        lightPoint.x += steps * lightPoint.dx
-        lightPoint.y += steps * lightPoint.dy
+        lightPoint.x -= lightPoint.dx
+        lightPoint.y -= lightPoint.dy
     }
+}
+
+fun List<LightPoint>.height(): Long {
+    val yMin = minBy { it.y }?.y!!
+    val yMax = maxBy { it.y }?.y!!
+
+    return (yMax - yMin).absoluteValue
 }
 
 fun List<LightPoint>.normalise() {
@@ -99,7 +98,9 @@ fun buildArray(points: List<LightPoint>): Array<Array<LightPoint>> {
     return array
 }
 
-fun Array<Array<LightPoint>>.print(): String {
+private fun distance(a: Long, b: Long) = sqrt(((a * a) + (b * b)).toDouble()).toInt() + 1
+
+fun Array<Array<LightPoint>>.print() {
     var print = ""
     for (row in 0 until this.size) {
         var line = ""
@@ -112,9 +113,8 @@ fun Array<Array<LightPoint>>.print(): String {
         }
         print += "$line\n"
     }
-    return print
-//    println(print)
-//    File("$iteration.txt").writeText(print)
+
+    println(print)
 }
 
 data class LightPoint(var id: Int = -1, var x: Long = -1, var y: Long = -1, var dx: Long = -1, var dy: Long = -1)

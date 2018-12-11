@@ -70,6 +70,7 @@ fun Int.nextPlayer(playerCount: Int): Int {
 data class Marble(var number: Int, var player: Int = -1)
 
 class CircularNode {
+    //TODO custom iterator?
 
     var previous: CircularNode
     var next: CircularNode
