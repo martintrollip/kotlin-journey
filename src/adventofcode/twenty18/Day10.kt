@@ -108,7 +108,7 @@ fun Array<Array<LightPoint>>.print() {
             line += if (this[row][column].id >= 0) {
                 "#"
             } else {
-                "."
+                " "
             }
         }
         print += "$line\n"
