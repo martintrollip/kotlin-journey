@@ -1,7 +1,6 @@
 package adventofcode.twenty18
 
 import java.io.File
-import kotlin.math.absoluteValue
 
 /**
  * @author Martin Trollip
@@ -12,7 +11,7 @@ import kotlin.math.absoluteValue
  */
 val SCORES_REGEX = "([0-9]+) players; last marble is worth ([0-9]+) points".toRegex()
 
-const val DAY9_INPUT = "src/res/day9_input_small"
+const val DAY9_INPUT = "src/res/day9_input"
 
 fun main(args: Array<String>) {
     var playerCount = 0
@@ -25,77 +24,39 @@ fun main(args: Array<String>) {
         lastScore = worth.toInt()
     }
 
-    var board = ArrayList<Marble>()
-    playGame(board, playerCount, lastScore)
+    playGame(playerCount, lastScore)
 }
 
-fun playGame(board: MutableList<Marble>, playerCount: Int, lastScore: Int) {
-    var scores = LinkedHashMap<Int, Int>()
+fun playGame(playerCount: Int, lastScore: Int) {
+    val scores = LinkedHashMap<Int, Long>()
+
     var round = 1
     var currentPlayer = -1
-    var currentPosition = 0
     var nextMarble = Marble(0)
-    board.add(0, nextMarble)
-    printRound(nextMarble.player, board)
 
-    while (nextMarble.number < lastScore) {
+    var currentNode = CircularNode(item = nextMarble)
+
+    while (nextMarble.number < lastScore * 100) { //Times 100 for part 2
         currentPlayer = currentPlayer.nextPlayer(playerCount)
         nextMarble = Marble(round, currentPlayer)
 
         if (!nextMarble.number.multipleOf23()) {
-            currentPosition = nextPosition(currentPosition, board.size)
-            board.add(currentPosition, nextMarble)
+            currentNode = currentNode.insert(nextMarble)
         } else {
             var playerScore = scores.getOrDefault(currentPlayer, 0)
             playerScore += nextMarble.number
-            val removedPosition = positionCounterClockwise(currentPosition, board.size)
-            playerScore += board.pop(removedPosition).number
-            currentPosition = removedPosition
+            currentNode = currentNode.popPositionCounterClockwise()
+            playerScore += currentNode.item.number
+            currentNode = currentNode.next
+
             scores.put(currentPlayer, playerScore)
         }
-
-        printRound(nextMarble.player, board)
         round++
+//        currentNode.print()
     }
 
     val maxScore = scores.maxBy { it.value }
     println("The winner is $maxScore")
-}
-
-fun nextPosition(currentPosition: Int, currentSize: Int): Int {
-    if (currentSize == 0 || currentSize == 1) {
-        return currentSize
-    }
-
-    val pos = (currentPosition + 2).rem(currentSize)
-    return if (pos == 0) {
-        //place at end rather
-        currentSize
-    } else {
-        pos
-    }
-}
-
-fun positionCounterClockwise(currentPosition: Int, currentSize: Int): Int {
-    val pos: Int
-    if (currentPosition - 7 < 0) {
-        pos = currentSize - (currentPosition - 7).absoluteValue
-    } else {
-        pos = (currentPosition - 7).rem(currentSize)
-    }
-
-    return if (pos == 0) {
-        //place at end rather
-        currentSize
-    } else {
-        pos
-    }
-}
-
-fun MutableList<Marble>.pop(index: Int): Marble {
-    val marble = get(index)
-    removeAt(index)
-    return marble
 }
 
 fun Int.multipleOf23(): Boolean {
@@ -106,12 +67,56 @@ fun Int.nextPlayer(playerCount: Int): Int {
     return (this + 1).rem(playerCount)
 }
 
-private fun printRound(player: Int, board: MutableList<Marble>) {
-    var print = "[$player]".padEnd(4)
-    for (marble in board) {
-        print += "(${marble.number})".padStart(5)
+data class Marble(var number: Int, var player: Int = -1)
+
+class CircularNode {
+    //TODO custom iterator?
+
+    var previous: CircularNode
+    var next: CircularNode
+    var item: Marble
+
+    constructor(item: Marble) {
+        this.item = item
+        this.previous = this
+        this.next = this
+    }
+
+    fun insert(marble: Marble): CircularNode {
+        val insert = CircularNode(marble)
+
+        val pos1 = next
+        val pos2 = next.next
+
+        pos1.next = insert
+        insert.previous = pos1
+
+        pos2.previous = insert
+        insert.next = pos2
+
+        return insert
+    }
+
+    fun popPositionCounterClockwise(): CircularNode {
+        val node = previous.previous.previous.previous.previous.previous.previous
+        return pop(node)
+    }
+
+    private fun pop(node: CircularNode): CircularNode {
+        node.previous.next = node.next
+        node.next.previous = node.previous
+
+        return node
+    }
+}
+
+fun CircularNode.print() {
+    var print = this.item.number.toString()
+
+    var nextNode = this.next
+    while (nextNode != this) {
+        print += "-" + nextNode.item.number
+        nextNode = nextNode.next
     }
     println(print)
 }
-
-data class Marble(var number: Int, var player: Int = -1)

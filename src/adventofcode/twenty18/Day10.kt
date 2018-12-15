@@ -2,7 +2,7 @@ package adventofcode.twenty18
 
 import java.io.File
 import kotlin.math.absoluteValue
-import kotlin.math.max
+import kotlin.math.sqrt
 
 /**
  * @author Martin Trollip
@@ -10,7 +10,7 @@ import kotlin.math.max
  */
 val POINT_OF_LIGHT_REGEX = "position=<\\s?(\\-?[0-9]+), \\s?(\\-?[0-9]+)> velocity=<\\s?(\\-?[0-9]+), \\s?(\\-?[0-9]+)>".toRegex()
 
-const val DAY10_INPUT = "src/res/day10_input_small"
+const val DAY10_INPUT = "src/res/day10_input"
 
 fun main(args: Array<String>) {
     var count = 0
@@ -18,44 +18,32 @@ fun main(args: Array<String>) {
     val lightPoints = File(DAY10_INPUT).readLines().map {
         val matchResult = POINT_OF_LIGHT_REGEX.find(it)
         val (x, y, dx, dy) = matchResult!!.destructured
-        LightPoint(count++, x.toInt(), y.trim().toInt(), dx.toInt(), dy.toInt())
-    }
+        LightPoint(count++, x.toLong(), y.trim().toLong(), dx.toLong(), dy.toLong())
+    }.sortedWith(compareBy({ it.x }, { it.y }))
 
-    //TODO move to function and have multiple return values
-    val xMin = lightPoints.minBy { it.x }?.x
-    val xMax = lightPoints.maxBy { it.x }?.x
-    val xSize = (xMax?.absoluteValue!! + xMin?.absoluteValue!!) * 2
-    val yMin = lightPoints.minBy { it.y }?.y
-    val yMax = lightPoints.maxBy { it.y }?.y
-    val ySize = (yMin?.absoluteValue!! + yMax?.absoluteValue!!) * 2
-    val size = max(xSize, ySize)
-
-    lightPoints.translateAll(xMin, yMin)
-    val skyMap = Array(size, { Array(size, { LightPoint() }) })
-    simulate(skyMap, lightPoints)
+    simulate(lightPoints)
 }
 
-fun simulate(skyMap: Array<Array<LightPoint>>, points: List<LightPoint>) {
-    var map = skyMap.toMutableList()
-//    points.move(3)
-    for (i in 0 until 10) {
-        for (point in points) {
-            if (point.x >= 0 && point.x < map.size && point.y >= 0 && point.y < map.size) {
-                map[point.x][point.y] = point
-            }
-        }
-        map.print()
-        map = MutableList(skyMap.size, { Array(skyMap.size, { LightPoint() }) })
+fun simulate(points: List<LightPoint>) {
+    var textDetected = false
+    var round = -1
+
+    while (!textDetected) {
+        round++
+        val currentHeight = points.height()
         points.move()
+        val newHeight = points.height()
+        textDetected = singularityDetector(currentHeight, newHeight)
     }
+
+    points.reverse() //we missed it
+    buildArray(points).print()
+    println("That took $round seconds")
 }
 
 
-fun List<LightPoint>.move(step: Int) {
-    for (lightPoint in this) {
-        lightPoint.x += lightPoint.dx * step
-        lightPoint.y += lightPoint.dy * step
-    }
+fun singularityDetector(currentHeight: Long, newHeight: Long): Boolean {
+    return newHeight > currentHeight
 }
 
 fun List<LightPoint>.move() {
@@ -65,28 +53,68 @@ fun List<LightPoint>.move() {
     }
 }
 
-fun List<LightPoint>.translateAll(xMin: Int, yMin: Int) {
+fun List<LightPoint>.reverse() {
     for (lightPoint in this) {
-        lightPoint.x += xMin.absoluteValue
-        lightPoint.y += yMin.absoluteValue
+        lightPoint.x -= lightPoint.dx
+        lightPoint.y -= lightPoint.dy
     }
 }
 
-fun MutableList<Array<LightPoint>>.print() {
+fun List<LightPoint>.height(): Long {
+    val yMin = minBy { it.y }?.y!!
+    val yMax = maxBy { it.y }?.y!!
+
+    return (yMax - yMin).absoluteValue
+}
+
+fun List<LightPoint>.normalise() {
+    val xOffset = minBy { it.x }?.x
+    val yOffset = minBy { it.y }?.y
+
+    forEach {
+        it.x -= xOffset?.absoluteValue!!
+        it.y -= yOffset?.absoluteValue!!
+    }
+}
+
+fun buildArray(points: List<LightPoint>): Array<Array<LightPoint>> {
+    points.normalise()
+    val sorted = points.sortedWith(compareBy({ it.x }, { it.y }))
+
+    val xMax = sorted.maxBy { it.x }?.x!!
+    val xMin = sorted.minBy { it.x }?.x!!
+    val yMax = sorted.maxBy { it.y }?.y!!
+    val yMin = sorted.minBy { it.y }?.y!!
+    val width = distance(xMin, xMax)
+    val height = distance(yMin, yMax)
+
+    val array = Array(height, { Array(width, { LightPoint() }) })
+    for (point in sorted) {
+        if (point.x >= 0 && point.y >= 0 && point.x <= width && point.y <= height) {
+            array[point.y.toInt()][point.x.toInt()] = point // :/
+        }
+    }
+
+    return array
+}
+
+private fun distance(a: Long, b: Long) = sqrt(((a * a) + (b * b)).toDouble()).toInt() + 1
+
+fun Array<Array<LightPoint>>.print() {
     var print = ""
     for (row in 0 until this.size) {
         var line = ""
         for (column in 0 until this[row].size) {
-            line += if (this[column][row].id >= 0) {
+            line += if (this[row][column].id >= 0) {
                 "#"
             } else {
-                "."
+                " "
             }
         }
         print += "$line\n"
     }
+
     println(print)
-//    File("$iteration.txt").writeText(print)
 }
 
-data class LightPoint(var id: Int = -1, var x: Int = -1, var y: Int = -1, var dx: Int = -1, var dy: Int = -1)
+data class LightPoint(var id: Int = -1, var x: Long = -1, var y: Long = -1, var dx: Long = -1, var dy: Long = -1)

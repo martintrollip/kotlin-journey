@@ -7,7 +7,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2018/12/07 19:02
  *
  * Delegates

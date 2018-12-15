@@ -4,7 +4,7 @@ import java.io.File
 import kotlin.math.absoluteValue
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2018/12/06 07:02
  */
 val COORDINATE_REGEX = "([0-9]+), ([0-9]+)".toRegex()
