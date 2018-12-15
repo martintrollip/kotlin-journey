@@ -1,7 +1,7 @@
 package koans.properties
 
 /**
- * @author Martin Trollip <martint@discovery.co.za>
+ * @author Martin Trollip
  * @since 2018/12/07 18:44
  *
  * Lazy property
