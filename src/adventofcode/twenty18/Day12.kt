@@ -8,12 +8,12 @@ import java.lang.Math.pow
  * @since 2018/12/12 07:03
  */
 
-const val DAY12_INPUT = "src/res/day12_input"
-
-val PLANTS_REGEX = "([.#]{5}) => ([.#])".toRegex()
-
 const val initialState = "##....#.#.#...#.#..#.#####.#.#.##.#.#.#######...#.##....#..##....#.#..##.####.#..........#..#...#"
 const val initialStateSmall = "#..#.#..##......###...###"
+const val DAY12_INPUT = "src/res/day12_input"
+val PLANTS_REGEX = "([.#]{5}) => ([.#])".toRegex()
+
+const val RUNS = 50000000000L
 
 val notes = LinkedHashMap<Byte, Boolean>()
 
@@ -30,44 +30,87 @@ fun main(args: Array<String>) {
         notes.put(convertToDecimal(booleanArray[0], booleanArray[1], booleanArray[2], booleanArray[3], booleanArray[4]), result.toBool())
     }
 
-    var configuration = initialState.toPots()
-    configuration.print()
-    for (generation in 0 until 50000000000) {
-        configuration.updateConfiguration()
-        configuration = nextGeneration(configuration)
-//        configuration.print()
+    var (pot) = initialState.toPots()
+    pot.print(-1)
+    for (generation in 0 until RUNS) {
+        pot.updateConfiguration()
+        val nextGeneration = pot.nextGeneration()
+        val expand = pot.expand(nextGeneration.minPlant, nextGeneration.maxPlant)
+        pot = expand.minPlant
+//        pot.print(generation)
     }
+    pot.print(RUNS)
 
-
-    val sum = configuration.filter { it.plant }.sumBy { it.index }
+    val sum = pot.filter { it.plant }.sumBy { it.index }
 
     println("The sum is $sum")
-
 }
 
-fun nextGeneration(initialPot: Pot): Pot {
-    var currentPot = initialPot
-    for (pot in currentPot) {
+fun Pot.nextGeneration(): PotBounds {
+    var minPot = this
+    var minPlant: Pot? = null
+    var maxPlant: Pot? = null
+
+    for (pot in this) {
         pot.plant = notes.getOrDefault(pot.currentConfig, false)
+
+        if (pot.plant) {
+            if (minPlant == null || pot.index < minPlant.index) {
+                minPlant = pot
+            } else if (maxPlant == null || pot.index > maxPlant.index) {
+                maxPlant = pot
+            }
+        }
     }
-    return initialPot
+
+    return PotBounds(minPot, minPlant!!, maxPlant!!)
+}
+
+fun Pot.expand(min: Pot, max: Pot): PotBounds {
+    var leftLeftPot = min
+    var rightRightPot = max
+
+    val expandLeftEdge = min.plant == true || min.right?.plant == true || min.right?.right?.plant == true || min.right?.right?.right?.plant == true || min.right?.right?.right?.right?.plant == true
+    val expandRightEdge = max.plant == true || max.left?.plant == true || max.left?.left?.plant == true || max.left?.left?.left?.plant == true || max.left?.left?.left?.left?.plant == true
+
+    if (expandLeftEdge) {
+        leftLeftPot = updateLeftLeftPot(updateLeftLeftPot(min))
+    }
+
+    if (expandRightEdge) {
+        rightRightPot = updateRightRightPot(updateRightPot(max))
+    }
+
+    return PotBounds(this, leftLeftPot, rightRightPot)
 }
 
 fun String.toBool() = this == "#"
 
-
-fun String.toPots(): Pot {
-    var initialPot = Pot(0, plant = get(0).toString().toBool())
-    getLeftLeftPot(initialPot) //This will "add" empty pots to the left
+fun String.toPots(): PotBounds {
+    val initialPot = Pot(0, plant = get(0).toString().toBool())
+    val leftLeftPot = updateLeftLeftPot(initialPot) //This will "add" empty pots to the left\
     var currentPot = initialPot
+
+    var minPot = leftLeftPot
+    var minPotPlant = initialPot
+    var maxPotPlant = initialPot
+
     for (i in 1 until length) {
-        var nextPot = Pot(i, plant = get(i).toString().toBool())
+        val nextPot = Pot(i, plant = get(i).toString().toBool())
         nextPot.left = currentPot
         currentPot.right = nextPot
         currentPot = nextPot
+
+        if (currentPot.plant && nextPot.index < currentPot.index) {
+            minPotPlant = currentPot
+        }
+
+        if (currentPot.plant) {
+            maxPotPlant = currentPot
+        }
     }
 
-    return initialPot
+    return PotBounds(minPot, minPotPlant, maxPotPlant)
 }
 
 fun convertToDecimal(a: Boolean, b: Boolean, c: Boolean, d: Boolean, e: Boolean): Byte {
@@ -96,63 +139,21 @@ fun convertToDecimal(a: Boolean, b: Boolean, c: Boolean, d: Boolean, e: Boolean)
     return sum.toByte()
 }
 
-
-class Pot(var index: Int, var currentConfig: Byte = -1, var plant: Boolean = false, var left: Pot? = null, var right: Pot? = null) : Iterable<Pot> {
-
-    fun updateConfiguration() {
-        for (pot in this) {
-            if (shouldUpdate(pot)) {
-                pot.currentConfig = convertToDecimal(getLeftLeftPot(pot).plant, getLeftPot(pot).plant, pot.plant, getRightPot(pot).plant, getRightRightPot(pot).plant)
-            }
-        }
+fun updateLeftLeftPot(currentPot: Pot): Pot {
+    if (updateLeftPot(currentPot).left == null) {
+        updateLeftPot(currentPot).left = Pot(currentPot.index - 2, right = updateLeftPot(currentPot))
     }
-
-    fun shouldUpdate(pot: Pot): Boolean {
-        val leftMostPot = pot.searchLeftMostPot()
-        val rightMostPot = pot.searchRightMostPot()
-
-        val checkRightEdge = rightMostPot.plant == true || rightMostPot.left?.plant == true || rightMostPot.left?.left?.plant == true || rightMostPot.left?.left?.left?.plant == true || rightMostPot.left?.left?.left?.left?.plant == true
-
-        val inbetween = pot.index > leftMostPot.index + 2 && pot.index < rightMostPot.index - 2
-
-        return checkRightEdge || inbetween
-    }
-
-    fun searchLeftMostPot(): Pot {
-        var currentPot: Pot? = this
-        while (currentPot?.left != null) {
-            currentPot = currentPot.left
-        }
-        return currentPot!!
-    }
-
-    fun searchRightMostPot(): Pot {
-        var currentPot: Pot? = this
-        while (currentPot?.right != null) {
-            currentPot = currentPot.right
-        }
-        return currentPot!!
-    }
-
-    override fun iterator(): Iterator<Pot> = PotsIterator(this)
+    return updateLeftPot(currentPot).left!!
 }
 
-fun getLeftLeftPot(currentPot: Pot): Pot {
-    if (getLeftPot(currentPot).left == null) {
-        getLeftPot(currentPot).left = Pot(currentPot.index - 2, right = getLeftPot(currentPot))
-    }
-
-    return getLeftPot(currentPot).left!!
-}
-
-private fun getLeftPot(currentPot: Pot): Pot {
+private fun updateLeftPot(currentPot: Pot): Pot {
     if (currentPot.left == null) {
         currentPot.left = Pot(currentPot.index - 1, right = currentPot)
     }
     return currentPot.left!!
 }
 
-private fun getRightPot(currentPot: Pot): Pot {
+private fun updateRightPot(currentPot: Pot): Pot {
     if (currentPot.right == null) {
         currentPot.right = Pot(currentPot.index + 1, left = currentPot)
     }
@@ -160,28 +161,46 @@ private fun getRightPot(currentPot: Pot): Pot {
     return currentPot.right!!
 }
 
-private fun getRightRightPot(currentPot: Pot): Pot {
-    if (getRightPot(currentPot).right == null) {
-        getRightPot(currentPot).right = Pot(currentPot.index + 2, left = getRightPot(currentPot))
+private fun updateRightRightPot(currentPot: Pot): Pot {
+    if (updateRightPot(currentPot).right == null) {
+        updateRightPot(currentPot).right = Pot(currentPot.index + 2, left = updateRightPot(currentPot))
     }
-    return getRightPot(currentPot).right!!
+    return updateRightPot(currentPot).right!!
 }
 
-fun Pot.print() {
-    var print = ""
-    for (pot in this) {
-        print += if (pot.plant) {
-            "#"
-        } else {
-            "."
+class Pot(var index: Int, var currentConfig: Byte = -1, var plant: Boolean = false, var left: Pot? = null, var right: Pot? = null) : Iterable<Pot> {
+
+    fun updateConfiguration() {
+        for (pot in this) {
+            pot.currentConfig = convertToDecimal(pot.left?.left?.plant == true, pot.left?.plant == true, pot.plant, pot.right?.plant == true, pot.right?.right?.plant == true)
         }
     }
 
-    println(print)
+    override fun iterator(): Iterator<Pot> = PotsIterator(this)
+}
+
+fun Pot.print(round: Long) {
+    var print = ""
+
+    val offset = 50
+
+    for (i in 0 until offset + this.index) {
+        print += " "
+    }
+
+    for (pot in this) {
+        print += if (pot.plant) {
+            "#" /*+ pot.index + " "*/
+        } else {
+            "."/* + pot.index + " "*/
+        }
+    }
+
+    println("$round: ".padStart(5) + print)
 }
 
 class PotsIterator(start: Pot) : Iterator<Pot> {
-    private var current: Pot? = start.searchLeftMostPot()
+    private var current: Pot? = start
 
     override fun hasNext(): Boolean = current != null
 
@@ -195,3 +214,5 @@ class PotsIterator(start: Pot) : Iterator<Pot> {
         return result!!
     }
 }
+
+data class PotBounds(var min: Pot, var minPlant: Pot, var maxPlant: Pot)
