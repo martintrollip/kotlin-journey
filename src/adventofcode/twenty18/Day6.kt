@@ -43,7 +43,7 @@ fun main(args: Array<String>) {
 
 }
 
-fun Array<Array<Coordinate>>.plot(points: List<Coordinate>) {
+private fun Array<Array<Coordinate>>.plot(points: List<Coordinate>) {
     for (row in 0 until this.size) {
         for (column in 0 until this[row].size) {
             this[row][column] = Coordinate(row, column)
@@ -56,7 +56,7 @@ fun Array<Array<Coordinate>>.plot(points: List<Coordinate>) {
     }
 }
 
-fun Array<Array<Coordinate>>.calculateManhattan(points: List<Coordinate>) {
+private fun Array<Array<Coordinate>>.calculateManhattan(points: List<Coordinate>) {
     for (row in this) {
         for (column in row) {
             for (point in points) {
@@ -68,7 +68,7 @@ fun Array<Array<Coordinate>>.calculateManhattan(points: List<Coordinate>) {
     }
 }
 
-fun Array<Array<Coordinate>>.print() {
+private fun Array<Array<Coordinate>>.print() {
     for (row in this) {
         for (column in row) {
             print("${column.closestDistance.symbol}".padStart(2))
@@ -77,7 +77,7 @@ fun Array<Array<Coordinate>>.print() {
     }
 }
 
-fun Array<Array<Coordinate>>.largestArea(xMin: Int?, xMax: Int?, yMin: Int?, yMax: Int?): Int? {
+private fun Array<Array<Coordinate>>.largestArea(xMin: Int?, xMax: Int?, yMin: Int?, yMax: Int?): Int? {
     var areas = LinkedHashMap<String, Int>()
     var infinites = LinkedHashMap<String, Int>()
 
@@ -102,7 +102,7 @@ fun Array<Array<Coordinate>>.largestArea(xMin: Int?, xMax: Int?, yMin: Int?, yMa
     return areas.maxBy { it.value }?.value
 }
 
-fun Array<Array<Coordinate>>.sumOfDistanceLessThan(upperBound: Int) : Int {
+private fun Array<Array<Coordinate>>.sumOfDistanceLessThan(upperBound: Int) : Int {
     var count = 0
     for (row in this) {
         for (column in row) {
@@ -115,16 +115,16 @@ fun Array<Array<Coordinate>>.sumOfDistanceLessThan(upperBound: Int) : Int {
     return count
 }
 
-fun manhattanDistance(a: Coordinate, b: Coordinate): Int {
+private fun manhattanDistance(a: Coordinate, b: Coordinate): Int {
     return (a.x - b.x).absoluteValue + (a.y - b.y).absoluteValue
 }
 
-fun isItemOnBoundary(coordinate: Coordinate, xMin: Int?, xMax: Int?, yMin: Int?, yMax: Int?): Boolean {
+private fun isItemOnBoundary(coordinate: Coordinate, xMin: Int?, xMax: Int?, yMin: Int?, yMax: Int?): Boolean {
     //Items on the boundary will have infinite counts,
     return coordinate.x <= xMin!! || coordinate.x >= xMax!! || coordinate.y <= yMin!! || coordinate.y >= yMax!!
 }
 
-data class Coordinate(var x: Int = -1, var y: Int = -1, var closestDistance: ManhattanDistance = ManhattanDistance(), var sumOfDistance: Int = 0) {
+private data class Coordinate(var x: Int = -1, var y: Int = -1, var closestDistance: ManhattanDistance = ManhattanDistance(), var sumOfDistance: Int = 0) {
     fun setClosestDistance(point: Coordinate, distance: Int) {
         this.closestDistance.distance
 
