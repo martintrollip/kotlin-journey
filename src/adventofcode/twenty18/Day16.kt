@@ -10,7 +10,7 @@ import java.io.File
 const val DAY16_INPUT = "src/res/day16_input"
 const val DAY16_INPUT_INSTRUCTIONS = "src/res/day16_part2_input"
 
-val SAMPLE_TEXT =
+const val SAMPLE_TEXT =
         "Before: \\[([0-9]+), ([0-9]+), ([0-9]+), ([0-9]+)\\]\r\n" +
                 "([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)\r\n" +
                 "After:  \\[([0-9]+), ([0-9]+), ([0-9]+), ([0-9])+\\]"
@@ -53,7 +53,7 @@ private fun part2(samples: List<Sample>, opcodes: List<OpCode>) {
 
     var registers = listOf(Register("A", 0), Register("B", 0), Register("C", 0), Register("D", 0))
     for (instruction in instructions) {
-        registers = opCodes.get(instruction.opCodeName)?.first()?.operation(instruction.a, instruction.b, instruction.c, registers)!!
+        registers = opCodes[instruction.opCodeName]?.first()?.operation(instruction.a, instruction.b, instruction.c, registers)!!
     }
     println("The resisters after instructions: $registers")
 }
@@ -98,9 +98,9 @@ fun readInput(file: String): List<Sample> {
                 instructionName, instructionA, instructionB, instructionC,
                 afterR_A, afterR_B) = it.destructured
 
-        //Can only deconstruct 10 elements from $it.deconstructed
-        val afterR_C = it.groupValues.get(11)
-        val afterR_D = it.groupValues.get(12)
+        //TODO Check why, can only deconstruct 10 elements from $it.deconstructed
+        val afterR_C = it.groupValues[11]
+        val afterR_D = it.groupValues[12]
 
         val before = listOf(Register("A", beforeR_A.toInt()), Register("B", beforeR_B.toInt()), Register("C", beforeR_C.toInt()), Register("D", beforeR_D.toInt()))
         val after = listOf(Register("A", afterR_A.toInt()), Register("B", afterR_B.toInt()), Register("C", afterR_C.toInt()), Register("D", afterR_D.toInt()))
@@ -108,17 +108,15 @@ fun readInput(file: String): List<Sample> {
 
         samples.add(Sample(before, instruction, after))
     }
-
     return samples
 }
 
 fun readInstructions(file: String): List<Instruction> {
-    val instructions = File(file).readLines().map {
+    return File(file).readLines().map {
         val matchResult = OPCODE_INSTRUCTION_REGEX.find(it)
         val (name, a, b, c) = matchResult!!.destructured
         Instruction(name.toInt(), a.toInt(), b.toInt(), c.toInt())
     }
-    return instructions
 }
 
 fun getAllOpCodes(): List<OpCode> {
