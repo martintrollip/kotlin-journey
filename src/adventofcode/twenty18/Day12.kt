@@ -10,7 +10,7 @@ import java.lang.Math.pow
 
 const val initialState = "##....#.#.#...#.#..#.#####.#.#.##.#.#.#######...#.##....#..##....#.#..##.####.#..........#..#...#"
 const val initialStateSmall = "#..#.#..##......###...###"
-const val DAY12_INPUT = "src/res/day12_input"
+const val DAY12_INPUT = "src/res/day12_input_small"
 val PLANTS_REGEX = "([.#]{5}) => ([.#])".toRegex()
 
 const val RUNS = 50000000000L
@@ -30,7 +30,7 @@ fun main(args: Array<String>) {
         notes.put(convertToDecimal(booleanArray[0], booleanArray[1], booleanArray[2], booleanArray[3], booleanArray[4]), result.toBool())
     }
 
-    var (pot) = initialState.toPots()
+    var (pot) = initialStateSmall.toPots()
     pot.print(-1)
     for (generation in 0 until RUNS) {
         pot.updateConfiguration()
