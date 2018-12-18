@@ -4,3 +4,4 @@ out
 build
 local.properties
 *.iml
+gradle-wrapper.properties
