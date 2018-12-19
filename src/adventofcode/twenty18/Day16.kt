@@ -8,10 +8,15 @@ import java.io.File
  */
 
 const val DAY16_INPUT = "src/res/day16_input"
-val SAMPLE_TEXT =
+const val DAY16_INPUT_INSTRUCTIONS = "src/res/day16_part2_input"
+
+const val SAMPLE_TEXT =
         "Before: \\[([0-9]+), ([0-9]+), ([0-9]+), ([0-9]+)\\]\r\n" +
                 "([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)\r\n" +
                 "After:  \\[([0-9]+), ([0-9]+), ([0-9]+), ([0-9])+\\]"
+
+val OPCODE_INSTRUCTION_REGEX = "([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)".toRegex()
+
 val SAMPLE_REGEX = SAMPLE_TEXT.toRegex()
 
 fun main(args: Array<String>) {
@@ -39,14 +44,48 @@ private fun part1(samples: List<Sample>, opcodes: List<OpCode>) {
             samplesCounted++
         }
     }
-
     println("$samplesCounted samples in the puzzle input behave like three or more opcodes") //242 is too low
 }
 
 private fun part2(samples: List<Sample>, opcodes: List<OpCode>) {
-    var opcodeMatches = LinkedHashMap<Int, List<OpCode>>()
+    val opCodes = getOpCodes(samples, opcodes).toSortedMap()
+    val instructions = readInstructions(DAY16_INPUT_INSTRUCTIONS)
 
+    var registers = listOf(Register("A", 0), Register("B", 0), Register("C", 0), Register("D", 0))
+    for (instruction in instructions) {
+        registers = opCodes[instruction.opCodeName]?.first()?.operation(instruction.a, instruction.b, instruction.c, registers)!!
+    }
+    println("The resisters after instructions: $registers")
+}
 
+private fun getOpCodes(samples: List<Sample>, opcodes: List<OpCode>): Map<Int, MutableList<OpCode>> {
+    val opcodeMatches = LinkedHashMap<Int, MutableList<OpCode>>()
+
+    for (sample in samples) {
+        for (opcode in opcodes) {
+            val opResult = opcode.operation(sample.instruction.a, sample.instruction.b, sample.instruction.c, sample.before)
+            if (opResult.compareWith(sample.after)) {
+                if (!opcodeMatches.containsKey(sample.instruction.opCodeName)) {
+                    opcodeMatches[sample.instruction.opCodeName] = ArrayList()
+                }
+                opcodeMatches[sample.instruction.opCodeName]?.addUnique(opcode)
+            }
+        }
+    }
+
+    var uniqueCodes = opcodeMatches.getUnique()
+    while (uniqueCodes.size < 16) {
+        for (uniqueCode in uniqueCodes) {
+            opcodeMatches.removeUniques(uniqueCode.value.first())
+            uniqueCodes = opcodeMatches.getUnique()
+        }
+    }
+
+    uniqueCodes.forEach {
+        it.value.first().name = it.key
+    }
+    println("The codes are $uniqueCodes")
+    return uniqueCodes
 }
 
 fun readInput(file: String): List<Sample> {
@@ -59,9 +98,9 @@ fun readInput(file: String): List<Sample> {
                 instructionName, instructionA, instructionB, instructionC,
                 afterR_A, afterR_B) = it.destructured
 
-        //Can only deconstruct 10 elements from $it.deconstructed
-        val afterR_C = it.groupValues.get(11)
-        val afterR_D = it.groupValues.get(12)
+        //TODO Check why, can only deconstruct 10 elements from $it.deconstructed
+        val afterR_C = it.groupValues[11]
+        val afterR_D = it.groupValues[12]
 
         val before = listOf(Register("A", beforeR_A.toInt()), Register("B", beforeR_B.toInt()), Register("C", beforeR_C.toInt()), Register("D", beforeR_D.toInt()))
         val after = listOf(Register("A", afterR_A.toInt()), Register("B", afterR_B.toInt()), Register("C", afterR_C.toInt()), Register("D", afterR_D.toInt()))
@@ -69,8 +108,15 @@ fun readInput(file: String): List<Sample> {
 
         samples.add(Sample(before, instruction, after))
     }
-
     return samples
+}
+
+fun readInstructions(file: String): List<Instruction> {
+    return File(file).readLines().map {
+        val matchResult = OPCODE_INSTRUCTION_REGEX.find(it)
+        val (name, a, b, c) = matchResult!!.destructured
+        Instruction(name.toInt(), a.toInt(), b.toInt(), c.toInt())
+    }
 }
 
 fun getAllOpCodes(): List<OpCode> {
@@ -88,6 +134,26 @@ fun List<Register>.compareWith(other: List<Register>): Boolean {
     return true
 }
 
+fun MutableList<OpCode>.addUnique(code: OpCode): MutableList<OpCode> {
+    if (!contains(code)) {
+        add(code)
+    }
+    return this
+}
+
+fun LinkedHashMap<Int, MutableList<OpCode>>.getUnique(): Map<Int, MutableList<OpCode>> {
+    return filter { it.value.size == 1 }
+}
+
+fun LinkedHashMap<Int, MutableList<OpCode>>.removeUniques(code: OpCode): Map<Int, MutableList<OpCode>> {
+    for (value in values) {
+        if (value.size != 1) { //Dont remove the last one
+            value.remove(code)
+        }
+    }
+    return this
+}
+
 abstract class OpCode(var name: Int = -1) {
     protected abstract fun execute(a: Int, b: Int, registers: List<Register>): Int
 
@@ -102,7 +168,7 @@ abstract class OpCode(var name: Int = -1) {
     }
 
     override fun toString(): String {
-        return this.javaClass.simpleName
+        return "${this.javaClass.simpleName}($name)"
     }
 }
 
