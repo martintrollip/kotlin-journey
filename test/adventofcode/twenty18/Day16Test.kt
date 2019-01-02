@@ -5,7 +5,7 @@ import org.junit.Before
 import org.junit.Test
 
 /**
- * @author Martin Trollip <martint@discovery.co.za>
+ * @author Martin Trollip
  * @since 2018/12/18 07:40
  */
 class Day16Test {
