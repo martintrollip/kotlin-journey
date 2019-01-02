@@ -366,7 +366,7 @@ class Day16Test {
         before[a].value = 100
         after = Eqrr().operation(a, b, c, before)
 
-        assertTrue("Expected register C to have answer", after[c].value == 1)
+        assertTrue("Expected register C to have answer", after[c].value == 0)
 
         //Register A=2 equals Register B=1 -> 2 == 2 -> 1
         before[a].value = 2

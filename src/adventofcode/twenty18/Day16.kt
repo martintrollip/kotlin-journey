@@ -123,7 +123,11 @@ fun getAllOpCodes(): List<OpCode> {
     return listOf(Addr(), Addi(), Mulr(), Muli(), Banr(), Bani(), Borr(), Bori(), Setr(), Seti(), Gtir(), Gtri(), Gtrr(), Eqir(), Eqri(), Eqrr())
 }
 
-data class Register(var name: String, var value: Int)
+data class Register(var name: String, var value: Int = 0) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
 
 fun List<Register>.compareWith(other: List<Register>): Boolean {
     for (i in 0 until 4) {
@@ -158,11 +162,10 @@ abstract class OpCode(var name: Int = -1) {
     protected abstract fun execute(a: Int, b: Int, registers: List<Register>): Int
 
     fun operation(a: Int, b: Int, c: Int, registers: List<Register>): List<Register> {
-        val newRegister = listOf(
-                Register(registers[0].name, registers[0].value),
-                Register(registers[1].name, registers[1].value),
-                Register(registers[2].name, registers[2].value),
-                Register(registers[3].name, registers[3].value))
+        val newRegister = ArrayList<Register>()
+        for (register in registers) {
+            newRegister.add(Register(register.name, register.value))
+        }
         newRegister[c].value = execute(a, b, newRegister)
         return newRegister
     }
