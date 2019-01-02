@@ -5,6 +5,10 @@ import java.io.File
 /**
  * @author Martin Trollip
  * @since 2018/12/20 19:27
+ *
+ * TODO:
+ * - Segment this, only keep important part of the cave and keep a seperate count
+ * - Tests
  */
 const val DAY17_INPUT = "src/res/day17_input_small"
 
