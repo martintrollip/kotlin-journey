@@ -58,6 +58,10 @@ fun execute(pointer: Pointer, instructions: Map<Int, NamedInstruction>): List<Re
     return registers
 }
 
+/**
+ * Thanks to Todd Ginsberg, <a href="https://todd.ginsberg.com/post/advent-of-code/2018/day19/">Day 19</a> for pointing out the
+ * logic the device performs
+ */
 private fun Int.factors(): List<Int> =
         (1..this).mapNotNull { n ->
             if (this % n == 0) n else null
