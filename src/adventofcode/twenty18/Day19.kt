@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
     val pointer = readDay19Pointer(DAY19_INPUT)
 
     println("Part1: Value left in register 0 when the background process halts? ${part1(pointer, instructions)}")
-    println("Part2: Value left in register 0 when the background process halts? ${println(10551383.factors().sum())}")//hacks, looked at the largest number during execution
+    println("Part2: Value left in register 0 when the background process halts? ${10551383.factors().sum()}")//hacks, looked at the largest number during execution
 }
 
 fun part1(pointer: Pointer, instructions: Map<Int, NamedInstruction>): Int {
