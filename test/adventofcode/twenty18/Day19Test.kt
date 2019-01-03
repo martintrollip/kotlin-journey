@@ -6,7 +6,7 @@ import org.junit.Test
 import kotlin.system.measureTimeMillis
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/01/02 11:04
  */
 class Day19Test {
