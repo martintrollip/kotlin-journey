@@ -16,7 +16,6 @@ class Day20Test {
     var DAY20_INPUT_EXAMPLE_3 = "^ESSWWN(E|NNENN(EESS(WNSE|)SSS|WWWSSSSE(SW|NNNE)))\$"
     var DAY20_INPUT_EXAMPLE_4 = "^WSSEESWWWNW(S|NENNEEEENN(ESSSSW(NWSW|SSEN)|WSWWN(E|WWS(E|SS))))\$"
 
-
     @Test
     fun testSimpleCase() {
         val parsed = parse(DAY20_INPUT_SIMPLE)
