@@ -23,21 +23,6 @@ fun roomsPart2(parsed: Map<Room, Int>): Int {
     return parsed.filter { it.value >= 1000 }.count()
 }
 
-/**
- * This will parse the regular expression for the building.
- *
- * The starting room is at x = 0, y = 0 and using Java coordinates
- *
- * Iterate over the input string.
- *
- * If it has a clear direction ('N', 'E', 'S', 'W'), move in that direction by creating a new Room object with new coordinates.
- * If the building map already contains that room, update the distance from the starting location with the shortest distance which can be used to reach that room
- *
- * If an opening parenthesis, store the current room on a queue and continue through the string
- * If a branch is encountered, peek at the top of the queue which is the starting location of a branch and process the string as usual
- * If a closing parenthesis is encountered, pop the room from the stack, and continue
- *
- */
 fun parse(string: String): Map<Room, Int> {
     var currentRoom = Room(0, 0)
     val building = mutableMapOf(currentRoom to 0)
