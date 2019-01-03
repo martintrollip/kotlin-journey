@@ -33,7 +33,7 @@ private fun part1(samples: List<Sample>, opcodes: List<OpCode>) {
         var opCodeMatched = 0
         var print = "$sample matches "
         for (opcode in opcodes) {
-            val opResult = opcode.operation(sample.instruction.a, sample.instruction.b, sample.instruction.c, sample.before)
+            val opResult = opcode.expensiveOperation(sample.instruction.a, sample.instruction.b, sample.instruction.c, sample.before)
             if (opResult.compareWith(sample.after)) {
                 print += " $opcode"
                 opCodeMatched++
@@ -53,7 +53,7 @@ private fun part2(samples: List<Sample>, opcodes: List<OpCode>) {
 
     var registers = listOf(Register("A", 0), Register("B", 0), Register("C", 0), Register("D", 0))
     for (instruction in instructions) {
-        registers = opCodes[instruction.opCodeName]?.first()?.operation(instruction.a, instruction.b, instruction.c, registers)!!
+        opCodes[instruction.opCodeName]?.first()?.operation(instruction.a, instruction.b, instruction.c, registers)!!
     }
     println("The resisters after instructions: $registers")
 }
@@ -63,7 +63,7 @@ private fun getOpCodes(samples: List<Sample>, opcodes: List<OpCode>): Map<Int, M
 
     for (sample in samples) {
         for (opcode in opcodes) {
-            val opResult = opcode.operation(sample.instruction.a, sample.instruction.b, sample.instruction.c, sample.before)
+            val opResult = opcode.expensiveOperation(sample.instruction.a, sample.instruction.b, sample.instruction.c, sample.before)
             if (opResult.compareWith(sample.after)) {
                 if (!opcodeMatches.containsKey(sample.instruction.opCodeName)) {
                     opcodeMatches[sample.instruction.opCodeName] = ArrayList()
@@ -82,7 +82,7 @@ private fun getOpCodes(samples: List<Sample>, opcodes: List<OpCode>): Map<Int, M
     }
 
     uniqueCodes.forEach {
-        it.value.first().name = it.key
+        it.value.first().name = it.key.toString()
     }
     println("The codes are $uniqueCodes")
     return uniqueCodes
@@ -123,7 +123,11 @@ fun getAllOpCodes(): List<OpCode> {
     return listOf(Addr(), Addi(), Mulr(), Muli(), Banr(), Bani(), Borr(), Bori(), Setr(), Seti(), Gtir(), Gtri(), Gtrr(), Eqir(), Eqri(), Eqrr())
 }
 
-data class Register(var name: String, var value: Int)
+data class Register(var name: String, var value: Int = 0) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
 
 fun List<Register>.compareWith(other: List<Register>): Boolean {
     for (i in 0 until 4) {
@@ -154,15 +158,20 @@ fun LinkedHashMap<Int, MutableList<OpCode>>.removeUniques(code: OpCode): Map<Int
     return this
 }
 
-abstract class OpCode(var name: Int = -1) {
+abstract class OpCode(var name: String = "") {
     protected abstract fun execute(a: Int, b: Int, registers: List<Register>): Int
 
-    fun operation(a: Int, b: Int, c: Int, registers: List<Register>): List<Register> {
-        val newRegister = listOf(
-                Register(registers[0].name, registers[0].value),
-                Register(registers[1].name, registers[1].value),
-                Register(registers[2].name, registers[2].value),
-                Register(registers[3].name, registers[3].value))
+    //Used for comparision
+    fun operation(a: Int, b: Int, c: Int, registers: List<Register>) {
+        registers[c].value = execute(a, b, registers)
+    }
+
+    //Used for comparision
+    fun expensiveOperation(a: Int, b: Int, c: Int, registers: List<Register>): List<Register> {
+        val newRegister = ArrayList<Register>()
+        for (register in registers) {
+            newRegister.add(Register(register.name, register.value))
+        }
         newRegister[c].value = execute(a, b, newRegister)
         return newRegister
     }
@@ -173,14 +182,14 @@ abstract class OpCode(var name: Int = -1) {
 }
 
 //Addition:
-class Addr : OpCode() {
+class Addr : OpCode("addr") {
     //addr (add register) stores into register C the result of adding register A and register B.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return registers[a].value + registers[b].value
     }
 }
 
-class Addi : OpCode() {
+class Addi() : OpCode("addi") {
     //addi (add immediate) stores into register C the result of adding register A and value B.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return registers[a].value + b
@@ -188,14 +197,14 @@ class Addi : OpCode() {
 }
 
 //Multiplication:
-class Mulr : OpCode() {
+class Mulr : OpCode("mulr") {
     //mulr (multiply register) stores into register C the result of multiplying register A and register B.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return registers[a].value * registers[b].value
     }
 }
 
-class Muli : OpCode() {
+class Muli : OpCode("muli") {
     //muli (multiply immediate) stores into register C the result of multiplying register A and value B.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return registers[a].value * b
@@ -203,14 +212,14 @@ class Muli : OpCode() {
 }
 
 //Bitwise AND:
-class Banr : OpCode() {
+class Banr : OpCode("banr") {
     //banr (bitwise AND register) stores into register C the result of the bitwise AND of register A and register B.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return registers[a].value and registers[b].value
     }
 }
 
-class Bani : OpCode() {
+class Bani : OpCode("bani") {
     //bani (bitwise AND immediate) stores into register C the result of the bitwise AND of register A and value B.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return registers[a].value and b
@@ -218,14 +227,14 @@ class Bani : OpCode() {
 }
 
 //Bitwise OR:
-class Borr : OpCode() {
+class Borr : OpCode("borr") {
     //borr (bitwise OR register) stores into register C the result of the bitwise OR of register A and register B.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return registers[a].value or registers[b].value
     }
 }
 
-class Bori : OpCode() {
+class Bori : OpCode("bori") {
     //bori (bitwise OR immediate) stores into register C the result of the bitwise OR of register A and value B.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return registers[a].value or b
@@ -233,14 +242,14 @@ class Bori : OpCode() {
 }
 
 //Assignment:
-class Setr : OpCode() {
+class Setr : OpCode("setr") {
     //setr (set register) copies the contents of register A into register C. (Input B is ignored.)
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return registers[a].value
     }
 }
 
-class Seti : OpCode() {
+class Seti : OpCode("seti") {
     //seti (set immediate) stores value A into register C. (Input B is ignored.)
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return a
@@ -248,21 +257,21 @@ class Seti : OpCode() {
 }
 
 //Greater-than testing:
-class Gtir : OpCode() {
+class Gtir : OpCode("gtir") {
     //gtir (greater-than immediate/register) sets register C to 1 if value A is greater than register B. Otherwise, register C is set to 0.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return if (a > registers[b].value) 1 else 0
     }
 }
 
-class Gtri : OpCode() {
+class Gtri : OpCode("gtri") {
     //gtri (greater-than register/immediate) sets register C to 1 if register A is greater than value B. Otherwise, register C is set to 0.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return if (registers[a].value > b) 1 else 0
     }
 }
 
-class Gtrr : OpCode() {
+class Gtrr : OpCode("gtrr") {
     //gtrr (greater-than register/register) sets register C to 1 if register A is greater than register B. Otherwise, register C is set to 0.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return if (registers[a].value > registers[b].value) 1 else 0
@@ -270,21 +279,21 @@ class Gtrr : OpCode() {
 }
 
 //Equality testing:
-class Eqir : OpCode() {
+class Eqir : OpCode("eqir") {
     //eqir (equal immediate/register) sets register C to 1 if value A is equal to register B. Otherwise, register C is set to 0.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return if (a == registers[b].value) 1 else 0
     }
 }
 
-class Eqri : OpCode() {
+class Eqri : OpCode("eqri") {
     //eqri (equal register/immediate) sets register C to 1 if register A is equal to value B. Otherwise, register C is set to 0.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return if (registers[a].value == b) 1 else 0
     }
 }
 
-class Eqrr : OpCode() {
+class Eqrr : OpCode("eqrr") {
     //eqrr (equal register/register) sets register C to 1 if register A is equal to register B. Otherwise, register C is set to 0.
     override fun execute(a: Int, b: Int, registers: List<Register>): Int {
         return if (registers[a].value == registers[b].value) 1 else 0
