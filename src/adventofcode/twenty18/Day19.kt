@@ -1,6 +1,7 @@
 package adventofcode.twenty18
 
 import java.io.File
+import java.rmi.UnexpectedException
 
 /**
  * @author Martin Trollip
@@ -10,7 +11,7 @@ import java.io.File
 const val DAY19_INPUT = "src/res/day19_input"
 
 val POINTER_REGEX = "#ip ([0-9]+)".toRegex()
-val OPERATION_REGEX = "(addi|seti|mulr|eqrr|addr|gtrr|muli|setr) ([0-9]+) ([0-9]+) ([0-9]+)".toRegex()
+val OPERATION_REGEX = "(addr|addi|mulr|muli|banr|bani|borr|bori|setr|seti|gtir|gtri|gtrr|eqir|eqri|eqrr) ([0-9]+) ([0-9]+) ([0-9]+)".toRegex()
 
 var registers = listOf(Register("0", 0), Register("1"), Register("2"), Register("3"), Register("4"), Register("5"))
 
@@ -33,9 +34,10 @@ fun part2(pointer: Pointer, instructions: Map<Int, NamedInstruction>): Int {
 
 fun execute(pointer: Pointer, instructions: Map<Int, NamedInstruction>): List<Register> {
     val ip = registers[pointer.address]
+
     while (pointer.value < instructions.size) {
-//        val regBefore = registers.toString()
-//        val ipBefore = pointer.toString()
+        //val regBefore = registers.toString()
+        //val ipBefore = pointer.toString()
 
         val instruction = instructions[pointer.value]!!
 
@@ -44,7 +46,7 @@ fun execute(pointer: Pointer, instructions: Map<Int, NamedInstruction>): List<Re
 
         //Do operation
         instruction.opcode.operation(instruction.a, instruction.b, instruction.c, registers)
-        val regAfter = registers.toString()
+        //val regAfter = registers.toString()
 
         //Set the instruction pointer to the value of register [pointer]
         pointer.value = ip.value
@@ -52,7 +54,11 @@ fun execute(pointer: Pointer, instructions: Map<Int, NamedInstruction>): List<Re
         //Add one to pointer value
         pointer.value++
 
-//        println("$ipBefore $regBefore $instruction $regAfter")
+        //println("$ipBefore $regBefore $instruction $regAfter")
+
+        if(ip.value == 28 && registers[0].value > 0) {
+            println(registers)
+        }
     }
 
     return registers
@@ -96,9 +102,6 @@ fun readDay19Input(file: String): Map<Int, NamedInstruction> {
 
 fun getOperationFrom(name: String): OpCode {
     when (name) {
-        "eqrr" -> {
-            return Eqrr()
-        }
         "addr" -> {
             return Addr()
         }
@@ -111,17 +114,41 @@ fun getOperationFrom(name: String): OpCode {
         "muli" -> {
             return Muli()
         }
+        "bani" -> {
+            return Bani()
+        }
+        "borr" -> {
+            return Borr()
+        }
+        "bori" -> {
+            return Bori()
+        }
         "setr" -> {
             return Setr()
         }
         "seti" -> {
             return Seti()
         }
+        "gtir" -> {
+            return Gtir()
+        }
+        "gtri" -> {
+            return Gtri()
+        }
         "gtrr" -> {
             return Gtrr()
         }
+        "eqir" -> {
+            return Eqir()
+        }
+        "eqri" -> {
+            return Eqri()
+        }
+        "eqrr" -> {
+            return Eqrr()
+        }
         else -> {
-            return Addi()
+            throw UnexpectedException("$name not mapped")
         }
     }
 }
