@@ -2,11 +2,12 @@ package adventofcode.twenty18
 
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import kotlin.system.measureTimeMillis
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/01/02 11:04
  */
 class Day19Test {
@@ -19,6 +20,7 @@ class Day19Test {
 
     @Before
     fun setup() {
+        resetRegisters()
         sample = readDay19Input(DAY19_INPUT_SMALL)
         pointer = readDay19Pointer(DAY19_INPUT_SMALL)
 
@@ -73,6 +75,7 @@ class Day19Test {
         //newest time 230ms (assign operations beforehand)
     }
 
+    @Ignore ("Ignored testPart2; Takes too long to execute")
     @Test
     fun testPart2() {
         println(
@@ -81,4 +84,13 @@ class Day19Test {
                     assertEquals(984, part1)
                 }.toString() + "ms")
     }
+}
+
+private fun resetRegisters() {
+    registers[0].value = 0
+    registers[1].value = 0
+    registers[2].value = 0
+    registers[3].value = 0
+    registers[4].value = 0
+    registers[5].value = 0
 }

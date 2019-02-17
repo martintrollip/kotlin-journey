@@ -28,4 +28,5 @@ build/
 !**/testData/**/*.iml
 .idea/
 kotlin-ultimate/
-/gradle/wrapper/gradle-wrapper.properties
+gradle/wrapper/gradle-wrapper.properties
+src/res/kotlin-android-developer-masterclass

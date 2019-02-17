@@ -26,4 +26,4 @@ This is me learning Kotlin.
 
 3. Complete the "Developing Android Apps with Kotlin" course (https://www.udacity.com/course/developing-android-apps-with-kotlin--ud9012)
 
-4. Come up with another task (smile)
+4. Complete the "Kotlin Android Development Masterclass - (Updated for 2018)" course (https://discovery.udemy.com/kotlin-android-developer-masterclass/)
