@@ -29,4 +29,4 @@ build/
 .idea/
 kotlin-ultimate/
 /gradle/wrapper/gradle-wrapper.properties
-/res/kotlin-android-developer-masterclass
+src/res/kotlin-android-developer-masterclass
