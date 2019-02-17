@@ -32,24 +32,25 @@ fun riskLevel(): Int =
         }.sum()
 
 fun rescueTarget(): Int {
-    val minimumCosts: MutableMap<Pair<Point, Tool>, Int> = mutableMapOf(Point(0, 0) to Tool.TORCH to 0)
-    val possiblePaths = PriorityQueue<Path>()
-    possiblePaths.add(Path(0, 0, Tool.TORCH)) //Can also use .apply { ... }
-
-    while (!possiblePaths.isEmpty()) {
-        val currentPath = possiblePaths.poll()
-
-        if(isTargetAndTool(currentPath.xEnd, currentPath.yEnd, currentPath.tool)) {
-            //cheapest cost.add this
-        }
-
-        val next = mutableListOf<Path>()
-        possibleMoves(currentPath.xEnd, currentPath.yEnd).forEach {it ->
-            if(currentPath.tool in availableToolsAt(it.x, it.y)) {
-                next
-            }
-        }
-    }
+//    val minimumCosts: MutableMap<Pair<Point, Tool>, Int> = mutableMapOf(Point(0, 0) to Tool.TORCH to 0)
+//    val possiblePaths = PriorityQueue<Path>()
+//    possiblePaths.add(Path(0, 0, Tool.TORCH)) //Can also use .apply { ... }
+//
+//    while (!possiblePaths.isEmpty()) {
+//        val currentPath = possiblePaths.poll()
+//
+//        if(isTargetAndTool(currentPath.xEnd, currentPath.yEnd, currentPath.tool)) {
+//            //cheapest cost.add this
+//        }
+//
+//        val next = mutableListOf<Path>()
+//        possibleMoves(currentPath.xEnd, currentPath.yEnd).forEach {it ->
+//            if(currentPath.tool in availableToolsAt(it.x, it.y)) {
+//                next
+//            }
+//        }
+//    }
+    return 0
 }
 
 fun isTargetAndTool(x:Int, y:Int, tool:Tool) = x == targetX && y == targetY && tool == Tool.TORCH
