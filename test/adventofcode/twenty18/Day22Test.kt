@@ -5,7 +5,7 @@ import org.junit.Before
 import org.junit.Test
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/01/20 16:24
  */
 
