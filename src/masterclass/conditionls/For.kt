@@ -1,7 +1,7 @@
 package masterclass.conditionls
 
 /**
- * @author Martin Trollip <martint@discovery.co.za>
+ * @author Martin Trollip
  * @since 2019/02/17 17:00
  */
 fun main(args: Array<String>) {
