@@ -1,7 +1,7 @@
 package masterclass.operations
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/02/17 16:41
  */
 fun main(args: Array<String>) {

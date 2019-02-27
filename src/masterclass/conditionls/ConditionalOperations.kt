@@ -1,7 +1,7 @@
 package masterclass.conditionls
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/02/17 16:43
  */
 fun main(args: Array<String>) {
