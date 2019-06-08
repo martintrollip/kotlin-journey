@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Kotlin Masterclass Application</string>
+    <string name="shared_prefs_hint">Enter a name to save</string>
+    <string name="shared_prefs_button">Save</string>
 </resources>
