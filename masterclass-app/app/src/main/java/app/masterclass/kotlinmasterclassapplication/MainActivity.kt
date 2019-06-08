@@ -10,7 +10,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         txtHello.setOnClickListener {
             val intent = Intent(this, AnotherActivity::class.java)
             intent.putExtra("Name", "Martin")
