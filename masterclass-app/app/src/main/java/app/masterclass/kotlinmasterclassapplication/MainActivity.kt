@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import app.masterclass.kotlinmasterclassapplication.ui.PersonActivity
+import app.masterclass.kotlinmasterclassapplication.ui.RecipeActivity
 import app.masterclass.kotlinmasterclassapplication.ui.VolleyActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -28,6 +29,10 @@ class MainActivity : AppCompatActivity() {
 
         btnVolley.setOnClickListener {
             startActivity(Intent(this, VolleyActivity::class.java))
+        }
+
+        btnRecipe.setOnClickListener {
+            startActivity(Intent(this, RecipeActivity::class.java))
         }
     }
 
