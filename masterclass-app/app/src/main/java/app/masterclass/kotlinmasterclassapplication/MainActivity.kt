@@ -5,6 +5,8 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import app.masterclass.kotlinmasterclassapplication.ui.PersonActivity
+import app.masterclass.kotlinmasterclassapplication.ui.VolleyActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +24,10 @@ class MainActivity : AppCompatActivity() {
 
         btnSave.setOnClickListener {
             setSharedPreferences()
+        }
+
+        btnVolley.setOnClickListener {
+            startActivity(Intent(this, VolleyActivity::class.java))
         }
     }
 
@@ -41,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun passDataUsingIntentExtra() {
         txtHello.setOnClickListener {
-            val intent = Intent(this, AnotherActivity::class.java)
+            val intent = Intent(this, PersonActivity::class.java)
             intent.putExtra("Name", "Martin")
             startActivity(intent)
         }

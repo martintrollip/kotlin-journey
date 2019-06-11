@@ -1,13 +1,14 @@
-package app.masterclass.kotlinmasterclassapplication
+package app.masterclass.kotlinmasterclassapplication.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import app.masterclass.kotlinmasterclassapplication.R
 import app.masterclass.kotlinmasterclassapplication.data.PersonAdapter
 import app.masterclass.kotlinmasterclassapplication.model.Person
 import kotlinx.android.synthetic.main.activity_another.*
 
-class AnotherActivity : AppCompatActivity() {
+class PersonActivity : AppCompatActivity() {
 
     private var adapter: PersonAdapter? = null
 
