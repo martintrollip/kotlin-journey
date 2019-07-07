@@ -4,4 +4,6 @@
     <string name="shared_prefs_button">Save</string>
     <string name="volley">Volley!</string>
     <string name="recipe">Recipes!</string>
+    <string name="fire">Fire!</string>
+    <string name="fire_hardlogin">Login as Martin</string>
 </resources>
