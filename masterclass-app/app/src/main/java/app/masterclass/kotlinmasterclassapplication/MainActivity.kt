@@ -5,6 +5,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import app.masterclass.kotlinmasterclassapplication.ui.FirebaseActivity
 import app.masterclass.kotlinmasterclassapplication.ui.PersonActivity
 import app.masterclass.kotlinmasterclassapplication.ui.RecipeActivity
 import app.masterclass.kotlinmasterclassapplication.ui.VolleyActivity
@@ -33,6 +34,10 @@ class MainActivity : AppCompatActivity() {
 
         btnRecipe.setOnClickListener {
             startActivity(Intent(this, RecipeActivity::class.java))
+        }
+
+        btnFire.setOnClickListener {
+            startActivity(Intent(this, FirebaseActivity::class.java))
         }
     }
 
