@@ -6,4 +6,7 @@
     <string name="recipe">Recipes!</string>
     <string name="fire">Fire!</string>
     <string name="fire_hardlogin">Login as Martin</string>
+    <string name="fire_create_login">Create new user</string>
+    <string name="fire_email">Email address</string>
+    <string name="fire_password">Password</string>
 </resources>
