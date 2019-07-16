@@ -12,7 +12,7 @@ import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/06/03 19:14
  */
 class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

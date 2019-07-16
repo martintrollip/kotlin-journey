@@ -21,4 +21,5 @@
     <string name="whatsapp_login_header">Whatsapp login</string>
     <string name="whatsapp_register_header">Create a new account</string>
     <string name="whatsapp_name">Display name</string>
+    <string name="whatsapp_enter_all_fields">Please enter all fields</string>
 </resources>

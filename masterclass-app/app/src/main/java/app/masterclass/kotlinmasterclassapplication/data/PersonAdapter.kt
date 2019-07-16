@@ -1,6 +1,5 @@
 package app.masterclass.kotlinmasterclassapplication.data
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +7,7 @@ import app.masterclass.kotlinmasterclassapplication.R
 import app.masterclass.kotlinmasterclassapplication.model.Person
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/06/03 19:06
  */
 class PersonAdapter(private val names: List<Person>) :
