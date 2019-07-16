@@ -1,5 +1,6 @@
 package app.masterclass.kotlinmasterclassapplication.whatsapp
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -63,8 +64,8 @@ class WhatsappRegisterActivity : AppCompatActivity() {
     }
 
     private fun navigateToChats() {
-        //TODO update.
-        Toast.makeText(this, "Yay", Toast.LENGTH_LONG).show()
+        startActivity(Intent(this, WhatsappDashboardActivity::class.java))
+        finish()
     }
 
     private fun getCurrentUserUid(): String? {

@@ -12,6 +12,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".whatsapp.WhatsappDashboardActivity">
+        </activity>
         <activity android:name=".whatsapp.WhatsappRegisterActivity">
         </activity>
         <activity android:name=".whatsapp.WhatsappLoginActivity">

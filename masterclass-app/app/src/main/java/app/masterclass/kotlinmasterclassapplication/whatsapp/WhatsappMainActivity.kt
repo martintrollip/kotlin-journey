@@ -1,22 +1,54 @@
 package app.masterclass.kotlinmasterclassapplication.whatsapp
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import app.masterclass.kotlinmasterclassapplication.R
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_whatsapp_main.*
 
 class WhatsappMainActivity : AppCompatActivity() {
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var authListener: FirebaseAuth.AuthStateListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_whatsapp_main)
+        checkUserAuthentication()
+        setupUI()
+    }
 
-        btnLogin.setOnClickListener{
+    private fun checkUserAuthentication() {
+        authListener = FirebaseAuth.AuthStateListener {
+            val currentUser = auth.currentUser
+            if (currentUser != null) {
+                startActivity(Intent(this, WhatsappDashboardActivity::class.java))
+                finish()
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (authListener != null) {
+            auth.addAuthStateListener(authListener!!)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        if (authListener != null) {
+            auth.removeAuthStateListener(authListener!!)
+        }
+    }
+
+    private fun setupUI() {
+        btnLogin.setOnClickListener {
             startActivity(Intent(this, WhatsappLoginActivity::class.java))
         }
 
-        btnRegister.setOnClickListener{
+        btnRegister.setOnClickListener {
             startActivity(Intent(this, WhatsappRegisterActivity::class.java))
         }
     }
