@@ -1,7 +1,8 @@
 package app.masterclass.kotlinmasterclassapplication.whatsapp
 
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.widget.Toast
 import app.masterclass.kotlinmasterclassapplication.R
@@ -9,7 +10,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_whatsapp_login.*
-import kotlin.math.log
 
 class WhatsappLoginActivity : AppCompatActivity() {
 
@@ -39,7 +39,7 @@ class WhatsappLoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToChats() {
-        //TODO update.
-        Toast.makeText(this, "Yay", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, WhatsappDashboardActivity::class.java))
+        finish()
     }
 }
