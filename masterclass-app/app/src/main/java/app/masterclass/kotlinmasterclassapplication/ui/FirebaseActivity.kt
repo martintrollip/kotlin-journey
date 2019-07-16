@@ -25,7 +25,7 @@ class FirebaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(app.masterclass.kotlinmasterclassapplication.R.layout.activity_firebase)
+        setContentView(R.layout.activity_firebase)
 
         hardcodedLogin.setOnClickListener {
             hardLogin()

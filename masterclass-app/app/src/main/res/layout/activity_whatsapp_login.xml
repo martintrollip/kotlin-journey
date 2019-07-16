@@ -6,11 +6,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background"
+        android:padding="32dp"
         tools:context=".whatsapp.WhatsappLoginActivity">
 
     <android.support.v7.widget.CardView android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_margin="32dp"
                                         android:background="@color/colorPrimary"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintTop_toTopOf="parent"
