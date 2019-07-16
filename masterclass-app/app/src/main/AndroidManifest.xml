@@ -12,6 +12,12 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".whatsapp.WhatsappRegisterActivity">
+        </activity>
+        <activity android:name=".whatsapp.WhatsappLoginActivity">
+        </activity>
+        <activity android:name=".whatsapp.WhatsappMainActivity">
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

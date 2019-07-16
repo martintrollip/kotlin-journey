@@ -9,6 +9,7 @@ import app.masterclass.kotlinmasterclassapplication.ui.FirebaseActivity
 import app.masterclass.kotlinmasterclassapplication.ui.PersonActivity
 import app.masterclass.kotlinmasterclassapplication.ui.RecipeActivity
 import app.masterclass.kotlinmasterclassapplication.ui.VolleyActivity
+import app.masterclass.kotlinmasterclassapplication.whatsapp.WhatsappMainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +39,10 @@ class MainActivity : AppCompatActivity() {
 
         btnFire.setOnClickListener {
             startActivity(Intent(this, FirebaseActivity::class.java))
+        }
+
+        btnWhatsapp.setOnClickListener {
+            startActivity(Intent(this, WhatsappMainActivity::class.java))
         }
     }
 
