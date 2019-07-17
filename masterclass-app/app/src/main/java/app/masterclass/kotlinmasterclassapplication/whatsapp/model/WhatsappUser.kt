@@ -1,4 +1,4 @@
-package app.masterclass.kotlinmasterclassapplication.model
+package app.masterclass.kotlinmasterclassapplication.whatsapp.model
 
 /**
  * @author Martin Trollip

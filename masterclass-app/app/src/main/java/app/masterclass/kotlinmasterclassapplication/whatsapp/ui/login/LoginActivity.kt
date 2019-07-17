@@ -1,4 +1,4 @@
-package app.masterclass.kotlinmasterclassapplication.whatsapp
+package app.masterclass.kotlinmasterclassapplication.whatsapp.ui.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,12 +6,13 @@ import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.widget.Toast
 import app.masterclass.kotlinmasterclassapplication.R
+import app.masterclass.kotlinmasterclassapplication.whatsapp.ui.dashboard.DashboardActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_whatsapp_login.*
 
-class WhatsappLoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -39,7 +40,7 @@ class WhatsappLoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToChats() {
-        startActivity(Intent(this, WhatsappDashboardActivity::class.java))
+        startActivity(Intent(this, DashboardActivity::class.java))
         finish()
     }
 }
