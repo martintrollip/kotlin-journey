@@ -1,10 +1,10 @@
-package app.masterclass.kotlinmasterclassapplication.whatsapp
+package app.masterclass.kotlinmasterclassapplication.whatsapp.ui.dashboard
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import app.masterclass.kotlinmasterclassapplication.R
 
-class WhatsappDashboardActivity : AppCompatActivity() {
+class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
