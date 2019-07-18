@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_whatsapp_settings.*
@@ -25,6 +26,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private var database: DatabaseReference? = null
     private var currentUser: FirebaseUser? = null
+    private var user: WhatsappUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
             database = FirebaseDatabase.getInstance().reference
                 .child("WhatsappUsers")
                 .child(currentUser!!.uid)
-            getUser()
+            displayUser()
 
             updateStatus.setOnClickListener {
                 updateStatus()
@@ -51,21 +53,24 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun getUser() {
+    private fun displayUser() {
         if (database != null) {
             database!!.addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val user = dataSnapshot.getValue(WhatsappUser::class.java)
+                    user = dataSnapshot.getValue(WhatsappUser::class.java)
 
                     if (user != null) {
-                        userName.text = user.displayName
-                        editStatus.setText(user.status)
+                        userName.text = user!!.displayName
+                        editStatus.setText(user!!.status)
 
-                        if ("default" == user.image) {
+                        if ("default" == user!!.image) {
                             userImage.setImageResource(R.drawable.ic_profile)
                         } else {
-                            //TODO get image from storage
+                            Picasso
+                                .with(this@SettingsActivity).load(user!!.image)
+                                .placeholder(getDrawable(R.drawable.ic_profile))
+                                .into(userImage)
                         }
                     } else {
                         Toast.makeText(
@@ -108,10 +113,26 @@ class SettingsActivity : AppCompatActivity() {
 
         firebasePath.putBytes(bytes!!)
             .addOnCompleteListener { task: Task<UploadTask.TaskSnapshot> ->
-            if (task.isSuccessful) {
-                val url = task.result
-            } else {
-                Toast.makeText(this, "Failed to upload image " + task.exception, Toast.LENGTH_LONG).show()
+                if (task.isSuccessful) {
+                    savePhotoUri(firebasePath.downloadUrl)
+                } else {
+                    Toast.makeText(this, "Failed to upload image " + task.exception, Toast.LENGTH_LONG).show()
+                }
+            }
+    }
+
+    private fun savePhotoUri(uri: Task<Uri>) {
+        uri.addOnSuccessListener {
+            if (database != null && user != null) {
+                user!!.image = it.toString()
+                database!!.setValue(user).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Toast.makeText(this, "Image updated", Toast.LENGTH_LONG).show()
+                        displayUser()
+                    } else {
+                        Toast.makeText(this, "Image not updated " + it.exception, Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
     }
