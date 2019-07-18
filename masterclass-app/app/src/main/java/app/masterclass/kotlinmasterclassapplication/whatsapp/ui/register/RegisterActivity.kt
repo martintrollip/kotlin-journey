@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
 import app.masterclass.kotlinmasterclassapplication.R
+import app.masterclass.kotlinmasterclassapplication.whatsapp.model.WhatsappUser
 import app.masterclass.kotlinmasterclassapplication.whatsapp.ui.dashboard.DashboardActivity
-import app.masterclass.kotlinmasterclassapplication.whatsapp.ui.model.WhatsappUser
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth

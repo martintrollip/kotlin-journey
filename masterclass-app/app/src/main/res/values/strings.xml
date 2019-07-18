@@ -22,7 +22,6 @@
     <string name="whatsapp_register_header">Create a new account</string>
     <string name="whatsapp_name">Display name</string>
     <string name="whatsapp_enter_all_fields">Please enter all fields</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="whatsapp_logout">Logout</string>
+    <string name="whatsapp_settings">Settings</string>
 </resources>
