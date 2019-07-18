@@ -24,4 +24,6 @@
     <string name="whatsapp_enter_all_fields">Please enter all fields</string>
     <string name="whatsapp_logout">Logout</string>
     <string name="whatsapp_settings">Settings</string>
+    <string name="whatsapp_status">Enter your status…</string>
+    <string name="whatsapp_status_updated">Status updated</string>
 </resources>
