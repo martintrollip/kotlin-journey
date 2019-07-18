@@ -64,9 +64,7 @@ class SettingsActivity : AppCompatActivity() {
                         userName.text = user!!.displayName
                         editStatus.setText(user!!.status)
 
-                        if ("default" == user!!.image) {
-                            userImage.setImageResource(R.drawable.ic_profile)
-                        } else {
+                        if ("default" != user!!.image) {
                             Picasso
                                 .with(this@SettingsActivity).load(user!!.image)
                                 .placeholder(getDrawable(R.drawable.ic_profile))
