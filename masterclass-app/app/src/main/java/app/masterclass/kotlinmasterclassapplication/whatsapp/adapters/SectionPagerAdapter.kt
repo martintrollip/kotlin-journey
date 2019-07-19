@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import app.masterclass.kotlinmasterclassapplication.whatsapp.ui.dashboard.ChatsFragment
-import app.masterclass.kotlinmasterclassapplication.whatsapp.ui.dashboard.FriendsFragment
+import app.masterclass.kotlinmasterclassapplication.whatsapp.ui.friends.FriendsFragment
 
 /**
  * @author Martin Trollip
