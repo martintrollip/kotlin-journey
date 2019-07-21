@@ -1,4 +1,4 @@
-package app.masterclass.kotlinmasterclassapplication.whatsapp.adapters
+package app.masterclass.kotlinmasterclassapplication.whatsapp.ui.friends
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

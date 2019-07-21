@@ -52,7 +52,7 @@ class RegisterActivity : AppCompatActivity() {
         val uid = getCurrentUserUid()
         if (uid != null) {
             database.child("WhatsappUsers").child(uid)
-                .setValue(WhatsappUser(displayName)).addOnCompleteListener { task: Task<Void> ->
+                .setValue(WhatsappUser(uid = uid, displayName = displayName)).addOnCompleteListener { task: Task<Void> ->
                     if (task.isSuccessful) {
                         navigateToChats()
                     } else {

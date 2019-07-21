@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="app.masterclass.kotlinmasterclassapplication">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -14,6 +15,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".whatsapp.ui.chat.ChatActivity">
+        </activity>
         <activity android:name=".whatsapp.ui.settings.SettingsActivity">
         </activity>
         <activity android:name=".whatsapp.ui.dashboard.DashboardActivity">
