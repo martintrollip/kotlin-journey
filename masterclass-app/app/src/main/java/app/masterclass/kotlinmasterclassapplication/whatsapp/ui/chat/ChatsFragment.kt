@@ -1,4 +1,4 @@
-package app.masterclass.kotlinmasterclassapplication.whatsapp.ui.dashboard
+package app.masterclass.kotlinmasterclassapplication.whatsapp.ui.chat
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

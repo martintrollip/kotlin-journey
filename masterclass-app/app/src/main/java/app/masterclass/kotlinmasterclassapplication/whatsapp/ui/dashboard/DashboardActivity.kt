@@ -5,9 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import app.masterclass.kotlinmasterclassapplication.R
-import app.masterclass.kotlinmasterclassapplication.whatsapp.adapters.SectionPagerAdapter
 import app.masterclass.kotlinmasterclassapplication.whatsapp.ui.MainActivity
 import app.masterclass.kotlinmasterclassapplication.whatsapp.ui.settings.SettingsActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -52,7 +50,10 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager() {
-        dashboardViewPager.adapter = SectionPagerAdapter(supportFragmentManager)
+        dashboardViewPager.adapter =
+            SectionPagerAdapter(
+                supportFragmentManager
+            )
         tabLayout.setupWithViewPager(dashboardViewPager)
     }
 }
