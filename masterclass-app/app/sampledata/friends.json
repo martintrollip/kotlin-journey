@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "phone": "+27 82 123 1234",
+      "status": "Hi there! "
+    },
+    {
+      "phone": "+27 82 321 4321",
+      "status": "Status 2"
+    },
+    {
+      "phone": "with some long number to test the layout response",
+      "status": "Status 3 with some longer text in order to test the layout response"
+    }
+  ]
+}
