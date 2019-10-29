@@ -1,7 +1,30 @@
 <resources>
     <string name="app_name">Kotlin Masterclass Application</string>
+
     <string name="shared_prefs_hint">Enter a name to save</string>
     <string name="shared_prefs_button">Save</string>
+
     <string name="volley">Volley!</string>
+
     <string name="recipe">Recipes!</string>
+
+    <string name="fire">Fire!</string>
+    <string name="fire_hardlogin">Login as Martin</string>
+    <string name="fire_create_login">Create new user</string>
+    <string name="fire_email">Email address</string>
+    <string name="fire_password">Password</string>
+
+    <string name="whatsapp">Whatsapp Clone</string>
+    <string name="whatsapp_welcome">Welcome to the Whatsapp Clone! ^_^</string>
+    <string name="whatsapp_register">Register</string>
+    <string name="whatsapp_login">Login</string>
+    <string name="whatsapp_login_header">Whatsapp login</string>
+    <string name="whatsapp_register_header">Create a new account</string>
+    <string name="whatsapp_name">Display name</string>
+    <string name="whatsapp_enter_all_fields">Please enter all fields</string>
+    <string name="whatsapp_logout">Logout</string>
+    <string name="whatsapp_settings">Settings</string>
+    <string name="whatsapp_status">Enter your status…</string>
+    <string name="whatsapp_message">Enter your message…</string>
+    <string name="whatsapp_status_updated">Status updated</string>
 </resources>

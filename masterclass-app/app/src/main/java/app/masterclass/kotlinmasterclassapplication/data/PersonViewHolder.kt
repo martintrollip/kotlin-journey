@@ -9,7 +9,7 @@ import app.masterclass.kotlinmasterclassapplication.R
 import app.masterclass.kotlinmasterclassapplication.model.Person
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/06/03 19:14
  */
 class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

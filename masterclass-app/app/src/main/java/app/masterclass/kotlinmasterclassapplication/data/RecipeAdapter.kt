@@ -8,7 +8,7 @@ import app.masterclass.kotlinmasterclassapplication.model.Recipe
 import com.android.volley.toolbox.ImageLoader
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/06/11 19:04
  */
 class RecipeAdapter(private val recipes: List<Recipe>, private val imageLoader: ImageLoader) :

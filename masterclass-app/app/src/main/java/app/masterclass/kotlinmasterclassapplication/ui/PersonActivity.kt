@@ -16,7 +16,6 @@ class PersonActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_another)
-        val data = intent.extras
 
         val personList = ArrayList<Person>()
         val layoutManager = LinearLayoutManager(this)
