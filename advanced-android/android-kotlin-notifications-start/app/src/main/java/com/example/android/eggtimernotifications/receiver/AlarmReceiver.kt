@@ -27,12 +27,23 @@ import com.example.android.eggtimernotifications.util.sendNotification
 
 class AlarmReceiver: BroadcastReceiver() {
 
+    /**
+     * This is triggered when the egg timer's time is up
+     */
     override fun onReceive(context: Context, intent: Intent) {
-        // TODO: Step 1.10 [Optional] remove toast
-        Toast.makeText(context, context.getText(R.string.eggs_ready), Toast.LENGTH_SHORT).show()
+        // Step 1.10 [Optional] remove toast
+        // Toast.makeText(context, context.getText(R.string.eggs_ready), Toast.LENGTH_SHORT).show()
 
-        // TODO: Step 1.9 add call to sendNotification
+        // Step 1.9 add call to sendNotification
+        val notificationManager = ContextCompat.getSystemService(
+            context,
+            NotificationManager::class.java
+        ) as NotificationManager
 
+        notificationManager.sendNotification(
+            context.getText(R.string.eggs_ready).toString(),
+            context
+        )
     }
 
 }
