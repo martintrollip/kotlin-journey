@@ -52,9 +52,24 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         PendingIntent.FLAG_UPDATE_CURRENT //Don't want to send a new notification, rather update existing
     )
 
-    // TODO: Step 2.0 add style
+    // Step 2.0 add style
+    val eggImage = BitmapFactory.decodeResource(
+        applicationContext.resources,
+        R.drawable.cooked_egg
+    )
 
-    // TODO: Step 2.2 add snooze action
+    val bigPicStyle = NotificationCompat.BigPictureStyle()
+        .bigPicture(eggImage)
+        .bigLargeIcon(null)
+
+    // Step 2.2 add snooze action
+    val snoozeIntent = Intent(applicationContext, SnoozeReceiver::class.java)
+    val snoozePendingIntent: PendingIntent = PendingIntent.getBroadcast(
+        applicationContext,
+        REQUEST_CODE,
+        snoozeIntent,
+        FLAGS
+    )
 
     // Step 1.2 get an instance of NotificationCompat.Builder
     // Build the notification
@@ -67,12 +82,19 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         .setSmallIcon(R.drawable.cooked_egg)
         .setContentTitle(applicationContext.getString(R.string.notification_title))
         .setContentText(messageBody)
-    // Step 1.13 set content intent
+        // Step 1.13 set content intent
         .setContentIntent(contentPendingIntent)
         .setAutoCancel(true)
-        // TODO: Step 2.1 add style to builder
+        // Step 2.1 add style to builder
+        .setStyle(bigPicStyle)
+        .setLargeIcon(eggImage)
+        // Step 2.3 add snooze action
+        .addAction(
+        R.drawable.egg_icon,
+        applicationContext.getString(R.string.snooze),
+        snoozePendingIntent
+    )
 
-        // TODO: Step 2.3 add snooze action
 
         // TODO: Step 2.5 set priority
 
