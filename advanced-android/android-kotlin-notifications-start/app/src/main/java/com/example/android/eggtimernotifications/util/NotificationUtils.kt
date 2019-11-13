@@ -90,13 +90,12 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         .setLargeIcon(eggImage)
         // Step 2.3 add snooze action
         .addAction(
-        R.drawable.egg_icon,
-        applicationContext.getString(R.string.snooze),
-        snoozePendingIntent
-    )
-
-
-        // TODO: Step 2.5 set priority
+            R.drawable.egg_icon,
+            applicationContext.getString(R.string.snooze),
+            snoozePendingIntent
+        )
+        // Step 2.5 set priority on older versions
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
 
     // Step 1.4 call notify
     // It's a good idea to update existing notifications rather than sending new ones each time
