@@ -10,9 +10,24 @@ import java.io.File
 const val DAY5_INPUT = "src/res/day5_input"
 
 fun main(args: Array<String>) {
-    val alphabet = CharArray(26) { (it + 97).toChar() }.joinToString("")
 
-    var sequence = File(DAY5_INPUT).readText()
+    val sequence = File(DAY5_INPUT).readText()
+
+    val part1 = day5Part1(sequence) - 1
+    println("How many units remain after fully reacting the polymer you scanned? $part1")
+    println("What is the length of the shortest polymer you can produce? (-1 for last duplicate)" + day5Part2(sequence))
+}
+
+fun day5Part1(sequence: String): Int {
+    var sequenceCopy = "" + sequence //Deep copy
+    while (sequenceCopy.duplicates()) {
+        sequenceCopy = sequenceCopy.removeDuplicate()
+    }
+    return sequenceCopy.length
+}
+
+fun day5Part2(sequence: String): Map.Entry<Char, Int>? {
+    val alphabet = CharArray(26) { (it + 97).toChar() }.joinToString("")
 
     var lengths = LinkedHashMap<Char, Int>()
     alphabet.forEach {
@@ -26,7 +41,7 @@ fun main(args: Array<String>) {
         lengths.put(it, optimised.length)
     }
 
-    println(lengths.minBy { it.value })
+    return lengths.minBy { it.value }
 }
 
 fun String.duplicates(): Boolean {
