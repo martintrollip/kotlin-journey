@@ -20,13 +20,13 @@ class Day1(val input: String) {
         return File(input).readLines().map { it.toInt() }
     }
 
-    //Part1
+    //Part 1
     fun totalFuelRequiredPerModule(): Int {
         val moduleWeights = readInput()
-        return moduleWeights.sumBy { fuelRequiredPerModule(it) }
+        return moduleWeights.sumBy { fuelRequiredPerMass(it) }
     }
 
-    fun fuelRequiredPerModule(mass: Int): Int {
+    fun fuelRequiredPerMass(mass: Int): Int {
         return (Math.floor(mass / 3.0) - 2).toInt()
     }
 
@@ -41,7 +41,7 @@ class Day1(val input: String) {
         var massToCalculateFuelRequirement = mass
 
         while (true) {
-            val fuelRequired = (Math.floor(massToCalculateFuelRequirement / 3.0) - 2).toInt()
+            val fuelRequired = fuelRequiredPerMass(massToCalculateFuelRequirement)
             if (fuelRequired <= 0) {
                 return totalFuel
             }

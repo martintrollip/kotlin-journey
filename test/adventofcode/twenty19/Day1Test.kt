@@ -19,10 +19,10 @@ class Day1Test {
     @Test
     fun testModuleWeight() {
         val day1 = Day1(DAY1_INPUT_SMALL)
-        assertEquals(2, day1.fuelRequiredPerModule(12))
-        assertEquals(2, day1.fuelRequiredPerModule(14))
-        assertEquals(654, day1.fuelRequiredPerModule(1969))
-        assertEquals(33583, day1.fuelRequiredPerModule(100756))
+        assertEquals(2, day1.fuelRequiredPerMass(12))
+        assertEquals(2, day1.fuelRequiredPerMass(14))
+        assertEquals(654, day1.fuelRequiredPerMass(1969))
+        assertEquals(33583, day1.fuelRequiredPerMass(100756))
     }
 
     @Test
