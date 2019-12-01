@@ -13,7 +13,11 @@ var serial = -1
 
 fun main(args: Array<String>) {
     serial = File(DAY111_INPUT).readText().toInt()
-    val powerBank = Array(SIZE, { row -> Array(SIZE) { FuelCell(it + 1, row + 1) } })
+    println(day11())
+}
+
+fun day11(): String {
+    val powerBank = Array(SIZE) { row -> Array(SIZE) { FuelCell(it + 1, row + 1) } }
 
     var bestCell = FuelCell()
     var maxPower = -1
@@ -31,7 +35,7 @@ fun main(args: Array<String>) {
         }
     }
 
-    println("$bestCell with grid $gridSize")
+    return "$bestCell with grid $gridSize"
 }
 
 //Step 1: Find the fuel cell's rack ID, which is its X coordinate plus 10.
