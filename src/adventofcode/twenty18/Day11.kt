@@ -13,9 +13,50 @@ var serial = -1
 
 fun main(args: Array<String>) {
     serial = File(DAY111_INPUT).readText().toInt()
-    println(day11())
+    day11Part1Attempt2()
+    println()
+    day11Part2Attempt2()
 }
 
+fun day11Part1Attempt2() {
+    val powerBank = Array(SIZE) { row -> Array(SIZE) { FuelCell(it + 1, row + 1) } }
+
+    var bestCell: FuelCell
+    var maxPower = -1
+
+    for (x in 0 until SIZE) {
+        for (y in 0 until SIZE) {
+            val power = gridPower(powerBank[x][y], gridSize = 3)
+            if (power > maxPower) {
+                maxPower = power
+                bestCell = powerBank[x][y]
+                println("Best 3x3 cell is $bestCell")
+            }
+        }
+    }
+}
+
+fun day11Part2Attempt2() {
+    val powerBank = Array(SIZE) { row -> Array(SIZE) { FuelCell(it + 1, row + 1) } }
+
+    var bestCell: FuelCell
+    var maxPower = -1
+
+    for (gridSize in 0 until SIZE) {
+        for (x in 0 until SIZE) {
+            for (y in 0 until SIZE) {
+                val power = gridPower(powerBank[x][y], gridSize)
+                if (power > maxPower) {
+                    maxPower = power
+                    bestCell = powerBank[x][y]
+                    println("Best cell is $bestCell with a grid size of $gridSize")
+                }
+            }
+        }
+    }
+}
+
+@Deprecated("This is the old way and does not work as efficiently")
 fun day11(): String {
     val powerBank = Array(SIZE) { row -> Array(SIZE) { FuelCell(it + 1, row + 1) } }
 
@@ -64,13 +105,28 @@ fun hundreds(power: Int): Int {
 }
 
 //Step 6: Keep only the hundreds digit of the power level (so 12345 becomes 3; numbers with no hundreds digit become 0)
-fun substract(power: Int): Int {
+fun subtract(power: Int): Int {
     return power - 5
 }
 
-//Total power
-fun totalPower(cell: FuelCell): Int {
-    return substract(hundreds(multiply(increasePower(initialPower(cell)), rackId(cell))))
+//Total cell power
+fun cellPower(cell: FuelCell): Int {
+    return subtract(hundreds(multiply(increasePower(initialPower(cell)), rackId(cell))))
+}
+
+//Total grid power
+fun gridPower(cell: FuelCell, gridSize: Int): Int {
+    var gridPower = 0
+    for (x in cell.x until cell.x + gridSize) {
+        for (y in cell.y until cell.y + gridSize) {
+            if (x in 1..(SIZE - 1) && y in 1..(SIZE - 1)) {
+                gridPower += FuelCell(x, y).cellPower
+            } else {
+                return -1
+            }
+        }
+    }
+    return gridPower
 }
 
 fun Array<Array<FuelCell>>.calculateAreaPower(referenceCell: FuelCell, areaSize: Int): Int {
@@ -79,7 +135,7 @@ fun Array<Array<FuelCell>>.calculateAreaPower(referenceCell: FuelCell, areaSize:
     for (x in referenceCell.x - 1 until referenceCell.x - 1 + areaSize) {
         for (y in referenceCell.y - 1 until referenceCell.y - 1 + areaSize) {
             if (x in 1..(size - 1) && y in 1..(size - 1)) {
-                power += this[x][y].power
+                power += this[x][y].cellPower
             } else {
                 power -= 1000
             }
@@ -89,9 +145,9 @@ fun Array<Array<FuelCell>>.calculateAreaPower(referenceCell: FuelCell, areaSize:
     return power
 }
 
-data class FuelCell(var x: Int = -1, var y: Int = -1, var power: Int = -1) {
+data class FuelCell(var x: Int = -1, var y: Int = -1, var cellPower: Int = -1) {
     init {
-        power = totalPower(this)
+        cellPower = cellPower(this)
     }
 }
 
