@@ -5,7 +5,7 @@ package adventofcode.twenty18
  * @since 2018/12/17 08:45
  */
 const val PART1_INPUT = "37"
-const val STEPS = 939601L
+const val STEPS = 320851L
 
 fun main(args: Array<String>) {
     part1()
@@ -49,8 +49,8 @@ fun tens(nummber: Int): Int {
     return (nummber / 10).rem(10)
 }
 
-const val PART2_INPUT = "1012451589" //We know this to be true from part 1
-const val PART2_SEQUENCE = "939601"
+const val PART2_INPUT = "320851" //We know this to be true from part 1
+const val PART2_SEQUENCE = "7116398711"
 
 private fun part2() {
     var currentSequence = getInput(PART2_INPUT)
