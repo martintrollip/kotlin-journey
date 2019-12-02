@@ -6,7 +6,7 @@ import java.io.File
  * @author Martin Trollip
  * @since 2019/12/01 06:16
  */
-const val DAY1_INPUT = "src/res/twenty19/day1_input"
+private const val DAY1_INPUT = "src/res/twenty19/day1_input"
 
 fun main(args: Array<String>) {
     val day1 = Day1(DAY1_INPUT)
@@ -14,15 +14,20 @@ fun main(args: Array<String>) {
     println("What is the sum of the fuel requirements? ${day1.totalFuelRequiredPerModuleAndForFuel()}")
 }
 
-class Day1(val input: String) {
+class Day1(input: String) {
 
-    private fun readInput(): List<Int> {
-        return File(input).readLines().map { it.toInt() }
+    private val moduleWeights: List<Int>
+
+    init {
+        moduleWeights = readInput(input)
+    }
+
+    private fun readInput(fileName: String): List<Int> {
+        return File(fileName).readLines().map { it.toInt() }
     }
 
     //Part 1
     fun totalFuelRequiredPerModule(): Int {
-        val moduleWeights = readInput()
         return moduleWeights.sumBy { fuelRequiredPerMass(it) }
     }
 
@@ -32,7 +37,6 @@ class Day1(val input: String) {
 
     //Part 2
     fun totalFuelRequiredPerModuleAndForFuel(): Int {
-        val moduleWeights = readInput()
         return moduleWeights.sumBy { fuelRequiredPerModuleAndFuel(it) }
     }
 
