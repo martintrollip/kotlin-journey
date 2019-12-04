@@ -45,6 +45,35 @@ class Day3(val input: String) {
     }
 
     fun part2(): Int {
+        val size = 11500
+        val size2 = size / 2
+        val circuit = List(size) { row -> List(size) { col -> Block(Coordinate(row - size2, col - size2)) } }
+
+        val input = File(input).readLines()
+        plotWire(circuit, "A", input[0], size2)
+        plotWire(circuit, "B", input[1], size2)
+
+        var minCost = -1
+
+        for (row in circuit) {
+            for (col in row) {
+                if (col.wire.length > 1) {
+                    println(col)
+
+                    if (col.costToHere > 0 && minCost == -1 || col.costToHere < minCost) {
+                        minCost = col.costToHere
+                    }
+                }
+            }
+        }
+
+        return minCost
+    }
+
+    /**
+     * This one is not working, does not take into account the same wire crossing itself twice
+     */
+    fun part2NotWorking(): Int {
         val input = File(input).readLines()
         val wireA = createWire(input[0])
         val wireB = createWire(input[1])
@@ -102,6 +131,51 @@ class Day3(val input: String) {
 
     fun manhattanDistance(a: Coordinate, b: Coordinate): Int {
         return (a.x - b.x).absoluteValue + (a.y - b.y).absoluteValue
+    }
+
+    fun plotWire(circuit: List<List<Block>>, name: String, input: String, middle: Int) {
+        var x = middle
+        var y = middle
+        var costToHere = 0
+        input.split(",").map {
+            println(it)
+            val line = LINE_REGEX.find(it)
+            if (line != null) {
+                val (strDirection, length) = line.destructured
+                val direction = Direction.valueOf(strDirection)
+
+                for (i in 0 until length.toInt()) {
+                    val block = circuit[x][y]
+
+                    if (block.costToHere < 0) {
+                        block.costToHere = costToHere
+                    } else if (block.wire != name) {
+                        block.costToHere += costToHere
+                    }
+
+                    if (!block.wire.contains(name)) {
+                        block.wire += name
+                    }
+
+                    when (direction) {
+                        Direction.U -> {
+                            y--
+                        }
+                        Direction.D -> {
+                            y++
+                        }
+                        Direction.L -> {
+                            x--
+                        }
+                        Direction.R -> {
+                            x++
+                        }
+                    }
+
+                    costToHere++
+                }
+            }
+        }
     }
 }
 
@@ -189,3 +263,5 @@ data class Line(val start: Coordinate, val end: Coordinate) {
         return slope(this) != slope(another)
     }
 }
+
+data class Block(val coordinate: Coordinate, var wire: String = "", var costToHere: Int = -1)

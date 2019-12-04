@@ -159,10 +159,12 @@ class Day3Test {
      * U62,R66,U55,R34,D71,R55,D58,R83
      *
      * = 610 steps
+     *
+     * The simple case does work because the wire does not cross itself.
      */
     @Test
     fun testSteps() {
-        val distance = day3.part2()
+        val distance = day3.part2NotWorking()
         assertEquals(610, distance)
     }
 
@@ -182,5 +184,19 @@ class Day3Test {
         assertEquals(5, line2.lengthTo(Coordinate(5, 0)))
         assertEquals(9, line2.lengthTo(Coordinate(9, 0)))
         assertEquals(10, line2.lengthTo(Coordinate(10, 0)))
+    }
+
+    /**
+     * R75,D30,R83,U83,L12,D49,R71,U7,L72
+     * U62,R66,U55,R34,D71,R55,D58,R83
+     *
+     * = 610 steps
+     *
+     * Attempt 2 here
+     */
+    @Test
+    fun testPart2() {
+        val distance = day3.part2()
+        assertEquals(610, distance)
     }
 }
