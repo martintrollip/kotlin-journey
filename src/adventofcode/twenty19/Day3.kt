@@ -10,10 +10,10 @@ import kotlin.math.min
  * @author Martin Trollip
  * @since 2019/12/03 06:38
  */
-private const val DAY2_INPUT = "src/res/twenty19/day3_input"
+private const val DAY3_INPUT = "src/res/twenty19/day3_input"
 
 fun main(args: Array<String>) {
-    val day3 = Day3(DAY2_INPUT)
+    val day3 = Day3(DAY3_INPUT)
 
     println("What is the Manhattan distance from the central port to the closest intersection? ${day3.part1()}\n")
     println("What is the fewest combined steps the wires must take to reach an intersection? ${day3.part2()}")
