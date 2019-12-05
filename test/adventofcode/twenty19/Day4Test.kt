@@ -29,7 +29,7 @@ class Day4Test {
     }
 
     /**
-     * Two adjacent digits are the same (like 22 in 122345).
+     * Two adjacent digits are the same (like 22 in 122345).7u
      *
      * See https://regex101.com/r/WOCjyK/1
      */
@@ -74,6 +74,8 @@ class Day4Test {
 
     /**
      * The two adjacent matching digits are not part of a larger group of matching digits.
+     *
+     * See https://regex101.com/r/WOCjyK/4
      */
     @Test
     fun testAdjacentAlone() {
@@ -85,7 +87,6 @@ class Day4Test {
         assertTrue(day4.adjacentAloneDigits(111122))
         assertTrue(day4.adjacentAloneDigits(112233))
         assertFalse(day4.adjacentAloneDigits(123444))
-
     }
 
     /**
@@ -93,7 +94,6 @@ class Day4Test {
      *  123444 no longer meets the criteria (the repeated 44 is part of a larger group of 444).
      *  111122 meets the criteria (even though 1 is repeated more than twice, it still contains a double 22).
      *
-     *  See https://regex101.com/r/WOCjyK/3
      */
     @Test
     fun testMatchPart2() {

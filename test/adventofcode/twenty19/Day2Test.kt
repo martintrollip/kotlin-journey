@@ -12,6 +12,7 @@ class Day2Test {
     private val DAY2_INPUT_SMALL = "src/res/twenty19/day2_input_small"
 
     private var day2: Day2 = Day2(DAY2_INPUT_SMALL)
+    private val computer = IntcodeComputer()
 
     @Before
     fun before() {
@@ -30,12 +31,12 @@ class Day2Test {
      */
     @Test
     fun testOpcodes() {
-        assertEquals(Day2.Opcode.ADD, day2.getOpcode(1))
-        assertEquals(Day2.Opcode.MULTIPLY, day2.getOpcode(2))
-        assertEquals(Day2.Opcode.TERMINATE, day2.getOpcode(99))
-        assertEquals(Day2.Opcode.TERMINATE, day2.getOpcode(0))
-        assertEquals(Day2.Opcode.TERMINATE, day2.getOpcode(1234))
-        assertEquals(Day2.Opcode.TERMINATE, day2.getOpcode(5))
+        assertEquals(IntcodeComputer.Opcode.ADD, computer.getOpcode(1))
+        assertEquals(IntcodeComputer.Opcode.MULTIPLY, computer.getOpcode(2))
+        assertEquals(IntcodeComputer.Opcode.TERMINATE, computer.getOpcode(99))
+        assertEquals(IntcodeComputer.Opcode.TERMINATE, computer.getOpcode(0))
+        assertEquals(IntcodeComputer.Opcode.TERMINATE, computer.getOpcode(1234))
+        assertEquals(IntcodeComputer.Opcode.TERMINATE, computer.getOpcode(5))
     }
 
     /**
@@ -45,7 +46,7 @@ class Day2Test {
      */
     @Test
     fun testAdd() {
-        assertEquals(10, day2.add(6, 4))
+        assertEquals(10, computer.add(6, 4))
     }
 
     /**
@@ -54,7 +55,7 @@ class Day2Test {
      */
     @Test
     fun testMultiply() {
-        assertEquals(10, day2.multiply(5, 2))
+        assertEquals(10, computer.multiply(5, 2))
     }
 
     /**
@@ -64,21 +65,21 @@ class Day2Test {
      */
     @Test
     fun testBuildInstructions() {
-        var instructionAt = day2.getInstructionAt(day2.readInput(), 0)
+        var instructionAt = computer.getInstructionAt(day2.readInput(), 0)
 
-        assertEquals(Day2.Opcode.ADD, instructionAt.type)
+        assertEquals(IntcodeComputer.Opcode.ADD, instructionAt.type)
         assertEquals(9, instructionAt.a)
         assertEquals(10, instructionAt.b)
         assertEquals(3, instructionAt.result)
 
-        instructionAt = day2.getInstructionAt(day2.readInput(), 4)
-        assertEquals(Day2.Opcode.MULTIPLY, instructionAt.type)
+        instructionAt = computer.getInstructionAt(day2.readInput(), 4)
+        assertEquals(IntcodeComputer.Opcode.MULTIPLY, instructionAt.type)
         assertEquals(3, instructionAt.a)
         assertEquals(11, instructionAt.b)
         assertEquals(0, instructionAt.result)
 
-        instructionAt = day2.getInstructionAt(day2.readInput(), 8)
-        assertEquals(Day2.Opcode.TERMINATE, instructionAt.type)
+        instructionAt = computer.getInstructionAt(day2.readInput(), 8)
+        assertEquals(IntcodeComputer.Opcode.TERMINATE, instructionAt.type)
         assertEquals(-1, instructionAt.a)
         assertEquals(-1, instructionAt.b)
         assertEquals(-1, instructionAt.result)
@@ -92,7 +93,7 @@ class Day2Test {
      */
     @Test
     fun testExecution() {
-        assertEquals(3500, day2.execute(day2.readInput())[0])
+        assertEquals(3500, computer.execute(day2.readInput())[0])
     }
 
     /**
@@ -103,9 +104,9 @@ class Day2Test {
      */
     @Test
     fun testMoreExecutions() {
-        assertEquals(2, day2.execute(arrayOf(1, 0, 0, 0, 99))[0])
-        assertEquals(6, day2.execute(arrayOf(2, 3, 0, 3, 99))[3])
-        assertEquals(9801, day2.execute(arrayOf(2, 4, 4, 5, 99, 0))[5])
-        assertEquals(30, day2.execute(arrayOf(1, 1, 1, 4, 99, 5, 6, 0, 99))[0])
+        assertEquals(2, computer.execute(arrayOf(1, 0, 0, 0, 99))[0])
+        assertEquals(6, computer.execute(arrayOf(2, 3, 0, 3, 99))[3])
+        assertEquals(9801, computer.execute(arrayOf(2, 4, 4, 5, 99, 0))[5])
+        assertEquals(30, computer.execute(arrayOf(1, 1, 1, 4, 99, 5, 6, 0, 99))[0])
     }
 }
