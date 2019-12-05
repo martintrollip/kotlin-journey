@@ -10,10 +10,9 @@ private const val DAY5_INPUT = "src/res/twenty19/day5_input"
 
 fun main(args: Array<String>) {
     val day5 = Day5()
-    val input = File(DAY5_INPUT).readLines()
 
-    println("What diagnostic code does the program produce? ${day5.part1()}\n")
-    println("part2? ${day5.part2()}")
+    println("What diagnostic code does the program produce? ${day5.part1()}\n") //16225258
+    println("What is the diagnostic code for system ID 5?? ${day5.part2()}") //2808771
 }
 
 class Day5 {
@@ -29,6 +28,6 @@ class Day5 {
     }
 
     fun part2(): Int {
-       return 201
+        return computer.execute(readInput(DAY5_INPUT),5).get(0)
     }
 }

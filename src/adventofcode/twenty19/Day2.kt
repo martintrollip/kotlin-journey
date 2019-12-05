@@ -44,7 +44,7 @@ class Day2(val input: String) {
 //TODO Martin this can be simplified
 class IntcodeComputer {
     enum class Opcode {
-        ADD, MULTIPLY, TERMINATE, STORE, OUTPUT
+        ADD, MULTIPLY, TERMINATE, STORE, OUTPUT, JUMPTRUE, JUMPFALSE, LESSTHAN, EQUALS
     }
 
     enum class Mode {
@@ -59,6 +59,10 @@ class IntcodeComputer {
             2 -> Opcode.MULTIPLY
             3 -> Opcode.STORE
             4 -> Opcode.OUTPUT
+            5 -> Opcode.JUMPTRUE
+            6 -> Opcode.JUMPFALSE
+            7 -> Opcode.LESSTHAN
+            8 -> Opcode.EQUALS
             else -> Opcode.TERMINATE
         }
     }
@@ -93,14 +97,51 @@ class IntcodeComputer {
         return a
     }
 
+    fun jumptrue(a: Int, b: Int, address: Int): Int {
+        return if (a != 0) {
+            b
+        } else {
+            address
+        }
+    }
+
+    fun jumpfalse(a: Int, b: Int, address: Int): Int {
+        return if (a == 0) {
+            b
+        } else {
+            address
+        }
+    }
+
+    fun lessthan(a: Int, b: Int): Int {
+        return if (a < b) {
+            1
+        } else {
+            0
+        }
+    }
+
+    fun equals(a: Int, b: Int): Int {
+        return if (a == b) {
+            1
+        } else {
+            0
+        }
+    }
+
     fun getInstructionAt(instructions: Array<Int>, currentPosition: Int): Instruction {
         val opcode = getOpcode(instructions[currentPosition])
 
+        //TODO this should be simpler
         return when (opcode) {
             Opcode.ADD -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2], instructions[currentPosition + 3])
             Opcode.MULTIPLY -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2], instructions[currentPosition + 3])
             Opcode.STORE -> Instruction(opcode, instructions[currentPosition], result = instructions[currentPosition + 1])
             Opcode.OUTPUT -> Instruction(opcode, instructions[currentPosition], result = instructions[currentPosition + 1])
+            Opcode.JUMPTRUE -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2])
+            Opcode.JUMPFALSE -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2])
+            Opcode.LESSTHAN -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2], instructions[currentPosition + 3])
+            Opcode.EQUALS -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2], instructions[currentPosition + 3])
             Opcode.TERMINATE -> Instruction(opcode)
         }
     }
@@ -133,6 +174,30 @@ class IntcodeComputer {
                 Opcode.OUTPUT -> {
                     println(memory[instruction.result])
                     address += 2
+                }
+                Opcode.JUMPTRUE -> {
+                    val a = getValue(aMode, instruction.a, memory)
+                    if (a != 0) {
+                        address = getValue(bMode, instruction.b, memory)
+                    } else {
+                        address += 3
+                    }
+                }
+                Opcode.JUMPFALSE -> {
+                    val a = getValue(aMode, instruction.a, memory)
+                    if (a == 0) {
+                        address = getValue(bMode, instruction.b, memory)
+                    } else {
+                        address += 3
+                    }
+                }
+                Opcode.LESSTHAN -> {
+                    memory[instruction.result] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue in or up
+                    address += 4
+                }
+                Opcode.EQUALS -> {
+                    memory[instruction.result] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    address += 4
                 }
             }
         } while (instruction.type != Opcode.TERMINATE)

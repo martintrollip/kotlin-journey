@@ -10,20 +10,25 @@ import org.junit.Test
  */
 class Day5Test {
 
-    private val DAY5_INPUT_SMALL = "src/res/twenty19/day5_input_small"
-
     private val computer = IntcodeComputer()
 
     /**
      * Opcode 3 takes a single integer as input and saves it to the address given by its only parameter.
-     *
      * Opcode 4 outputs the value of its only parameter.
+     * Opcode 5 is jump-if-true: if the first parameter is non-zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
+     * Opcode 6 is jump-if-false: if the first parameter is zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
+     * Opcode 7 is less than: if the first parameter is less than the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
+     * Opcode 8 is equals: if the first parameter is equal to the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
      *
      */
     @Test
     fun testOpcodes() {
         Assert.assertEquals(IntcodeComputer.Opcode.STORE, computer.getOpcode(3))
         Assert.assertEquals(IntcodeComputer.Opcode.OUTPUT, computer.getOpcode(4))
+        Assert.assertEquals(IntcodeComputer.Opcode.JUMPTRUE, computer.getOpcode(5))
+        Assert.assertEquals(IntcodeComputer.Opcode.JUMPFALSE, computer.getOpcode(6))
+        Assert.assertEquals(IntcodeComputer.Opcode.LESSTHAN, computer.getOpcode(7))
+        Assert.assertEquals(IntcodeComputer.Opcode.EQUALS, computer.getOpcode(8))
     }
 
     /**
@@ -54,14 +59,153 @@ class Day5Test {
     }
 
     /**
+     * Opcode 5 is jump-if-true: if the first parameter is non-zero, it sets the instruction pointer to the value from the second parameter.
+     * Otherwise, it does nothing.
+     */
+    @Test
+    fun testJumpIfTrue() {
+        assertEquals(2, computer.jumptrue(1, 2, 3))
+        assertEquals(9999, computer.jumptrue(1, 9999, 3))
+        assertEquals(-1, computer.jumptrue(1, -1, 3))
+        assertEquals(5, computer.jumptrue(-1, 5, 3))
+
+        assertEquals(3, computer.jumptrue(0, 5, 3))
+    }
+
+    /**
+     *  Opcode 6 is jump-if-false: if the first parameter is zero, it sets the instruction pointer to the value from the second parameter.
+     *  Otherwise, it does nothing.
+     */
+    @Test
+    fun testJumpIfFalse() {
+        assertEquals(2, computer.jumpfalse(0, 2, 3))
+        assertEquals(9999, computer.jumpfalse(0, 9999, 3))
+        assertEquals(-1, computer.jumpfalse(0, -1, 3))
+        assertEquals(5, computer.jumpfalse(0, 5, 3))
+
+        assertEquals(3, computer.jumpfalse(9999, 5, 3))
+        assertEquals(3, computer.jumpfalse(-9999, 5, 3))
+    }
+
+    /**
+     *  Opcode 7 is less than: if the first parameter is less than the second parameter, it stores 1 in the position given by the third parameter.
+     *  Otherwise, it stores 0
+     */
+    @Test
+    fun testLessThan() {
+        assertEquals(1, computer.lessthan(1, 2))
+        assertEquals(1, computer.lessthan(-1, 2))
+        assertEquals(1, computer.lessthan(1, 1000))
+        assertEquals(1, computer.lessthan(-5, -1))
+
+        assertEquals(0, computer.lessthan(1, 1))
+        assertEquals(0, computer.lessthan(1, -1))
+        assertEquals(0, computer.lessthan(1000, 1))
+        assertEquals(0, computer.lessthan(-1, -5))
+    }
+
+    /**
+     * Opcode 8 is equals: if the first parameter is equal to the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
+     */
+    @Test
+    fun testEquals() {
+        assertEquals(1, computer.equals(1, 1))
+        assertEquals(1, computer.equals(-1, -1))
+        assertEquals(1, computer.equals(1000, 1000))
+        assertEquals(1, computer.equals(-5, -5))
+
+        assertEquals(0, computer.equals(1, 10))
+        assertEquals(0, computer.equals(1, 2))
+        assertEquals(0, computer.equals(1000, 1))
+        assertEquals(0, computer.equals(-1, -5))
+    }
+
+    /**
      * The program 3,0,4,0,99 outputs whatever it gets as input, then halts.
      */
     @Test
     fun testExecute() {
         val memory = arrayOf(3, 0, 4, 0, 99)
-        computer.execute(memory, 100)
+        computer.execute(memory, 100) //println 100
     }
 
+    /**
+     * 3,9,8,9,10,9,4,9,99,-1,8
+     * Using position mode, consider whether the input is equal to 8; output 1 (if it is) or 0 (if it is not).
+     */
+    @Test
+    fun testExecute2() {
+        //Store input in pos 9
+        //Equals pos 9 and pos 10
+        val memory = arrayOf(3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8)
+        computer.execute(memory, 8) //println 1
+        computer.execute(memory, -1) //println 0
+        computer.execute(memory, 100) //println 0
+    }
+
+    /**
+     *  3,9,7,9,10,9,4,9,99,-1,8
+     *  Using position mode, consider whether the input is less than 8; output 1 (if it is) or 0 (if it is not).
+     */
+    @Test
+    fun testExecute3() {
+        val memory = arrayOf(3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8)
+        computer.execute(memory, 7) //println 1
+        computer.execute(memory, -1) //println 1
+        computer.execute(memory, 8) //println 0
+        computer.execute(memory, 100) //println 0
+    }
+
+    /**
+     * 3,3,1108,-1,8,3,4,3,99
+     * Using immediate mode, consider whether the input is equal to 8; output 1 (if it is) or 0 (if it is not).
+     */
+    @Test
+    fun testExecute4() {
+        val memory = arrayOf(3, 3, 1108, -1, 8, 3, 4, 3, 99)
+        computer.execute(memory, 8) //println 1
+        computer.execute(memory, -1) //println 0
+        computer.execute(memory, 100) //println 0
+    }
+
+    /**
+     *  3,3,1107,-1,8,3,4,3,99
+     *  Using immediate mode, consider whether the input is less than 8; output 1 (if it is) or 0 (if it is not).
+     */
+    @Test
+    fun testExecute5() {
+        val memory = arrayOf(3, 3, 1107, -1, 8, 3, 4, 3, 99)
+        computer.execute(memory, 7) //println 1
+        computer.execute(memory, -1) //println 1
+        computer.execute(memory, 8) //println 0
+        computer.execute(memory, 100) //println 0
+    }
+
+    /**
+     * 3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9 (using position mode)
+     * take an input, then output 0 if the input was zero or 1 if the input was non-zero:
+     */
+    @Test
+    fun testExecute6() {
+        val memory = arrayOf(3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9)
+        computer.execute(memory, 7) //println 1
+        computer.execute(memory, -1) //println 1
+        computer.execute(memory, 0) //println 0
+    }
+
+    /**
+     * 3,3,1105,-1,9,1101,0,0,12,4,12,99,1 (using immediate  mode)
+     * take an input, then output 0 if the input was zero or 1 if the input was non-zero:
+     */
+    @Test
+    fun testExecute7() {
+        val memory = arrayOf(3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1)
+        computer.execute(memory, 0) //println 0
+        computer.execute(memory, 1101) //println 1
+        computer.execute(memory, 7) //println 1
+        computer.execute(memory, -1) //println 1
+        computer.execute(memory, 0) //println 0
+    }
 
     /**
      * the opcode is the rightmost two digits of the first value in an instruction.
@@ -80,6 +224,11 @@ class Day5Test {
         Assert.assertEquals(IntcodeComputer.Opcode.MULTIPLY, computer.getOpcode(1202))
         Assert.assertEquals(IntcodeComputer.Opcode.STORE, computer.getOpcode(1203))
         Assert.assertEquals(IntcodeComputer.Opcode.OUTPUT, computer.getOpcode(1204))
+        Assert.assertEquals(IntcodeComputer.Opcode.TERMINATE, computer.getOpcode(1299))
+        Assert.assertEquals(IntcodeComputer.Opcode.JUMPTRUE, computer.getOpcode(1205))
+        Assert.assertEquals(IntcodeComputer.Opcode.JUMPFALSE, computer.getOpcode(1206))
+        Assert.assertEquals(IntcodeComputer.Opcode.LESSTHAN, computer.getOpcode(1207))
+        Assert.assertEquals(IntcodeComputer.Opcode.EQUALS, computer.getOpcode(1208))
         Assert.assertEquals(IntcodeComputer.Opcode.TERMINATE, computer.getOpcode(1299))
     }
 
