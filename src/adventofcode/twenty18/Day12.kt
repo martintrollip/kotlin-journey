@@ -10,7 +10,7 @@ import java.lang.Math.pow
 
 const val initialState = "##.####..####...#.####..##.#..##..#####.##.#..#...#.###.###....####.###...##..#...##.#.#...##.##.."
 const val initialStateSmall = "#..#.#..##......###...###"
-const val DAY12_INPUT = "src/res/day12_input"
+private const val DAY12_INPUT = "src/res/day12_input"
 val PLANTS_REGEX = "([.#]{5}) => ([.#])".toRegex()
 
 const val RUNS = 50000000000L
