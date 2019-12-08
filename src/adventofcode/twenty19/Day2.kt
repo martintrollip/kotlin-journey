@@ -204,6 +204,129 @@ class IntcodeComputer {
         return memory
     }
 
+    fun executeList(memory: Array<Int>, input: Array<Int> = arrayOf()): MutableList<Int> {
+        val output = mutableListOf<Int>()
+
+        var address = 0
+        var inputCounter = 0
+
+        do {
+            val instruction = getInstructionAt(memory, address)
+            if (instruction.type == Opcode.TERMINATE) {
+                break
+            }
+
+            val aMode = getMode(instruction.mode, 0)
+            val bMode = getMode(instruction.mode, 1)
+
+            when (instruction.type) {
+                Opcode.ADD -> {
+                    memory[instruction.result] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    address += 4
+                }
+                Opcode.MULTIPLY -> {
+                    memory[instruction.result] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    address += 4
+                }
+                Opcode.STORE -> {
+                    memory[instruction.result] = store(input[inputCounter])
+                    inputCounter++
+                    address += 2
+                }
+                Opcode.OUTPUT -> {
+//                    println(memory[instruction.result])
+                    output.add(memory[instruction.result])
+                    address += 2
+                }
+                Opcode.JUMPTRUE -> {
+                    val a = getValue(aMode, instruction.a, memory)
+                    if (a != 0) {
+                        address = getValue(bMode, instruction.b, memory)
+                    } else {
+                        address += 3
+                    }
+                }
+                Opcode.JUMPFALSE -> {
+                    val a = getValue(aMode, instruction.a, memory)
+                    if (a == 0) {
+                        address = getValue(bMode, instruction.b, memory)
+                    } else {
+                        address += 3
+                    }
+                }
+                Opcode.LESSTHAN -> {
+                    memory[instruction.result] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue in or up
+                    address += 4
+                }
+                Opcode.EQUALS -> {
+                    memory[instruction.result] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    address += 4
+                }
+            }
+        } while (instruction.type != Opcode.TERMINATE)
+        return output
+    }
+
+    private var rememberAddress = 0
+    fun executeToOutput(memory: Array<Int>, input: Array<Int> = arrayOf()): Int {
+        var inputCounter = 0
+
+        do {
+            val instruction = getInstructionAt(memory, rememberAddress)
+            if (instruction.type == Opcode.TERMINATE) {
+                break
+            }
+
+            val aMode = getMode(instruction.mode, 0)
+            val bMode = getMode(instruction.mode, 1)
+
+            when (instruction.type) {
+                Opcode.ADD -> {
+                    memory[instruction.result] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    rememberAddress += 4
+                }
+                Opcode.MULTIPLY -> {
+                    memory[instruction.result] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    rememberAddress += 4
+                }
+                Opcode.STORE -> {
+                    memory[instruction.result] = store(input[inputCounter])
+                    inputCounter++
+                    rememberAddress += 2
+                }
+                Opcode.OUTPUT -> {
+                    rememberAddress += 2
+                    return memory[instruction.result]
+                }
+                Opcode.JUMPTRUE -> {
+                    val a = getValue(aMode, instruction.a, memory)
+                    if (a != 0) {
+                        rememberAddress = getValue(bMode, instruction.b, memory)
+                    } else {
+                        rememberAddress += 3
+                    }
+                }
+                Opcode.JUMPFALSE -> {
+                    val a = getValue(aMode, instruction.a, memory)
+                    if (a == 0) {
+                        rememberAddress = getValue(bMode, instruction.b, memory)
+                    } else {
+                        rememberAddress += 3
+                    }
+                }
+                Opcode.LESSTHAN -> {
+                    memory[instruction.result] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue in or up
+                    rememberAddress += 4
+                }
+                Opcode.EQUALS -> {
+                    memory[instruction.result] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    rememberAddress += 4
+                }
+            }
+        } while (instruction.type != Opcode.TERMINATE)
+        return -9999
+    }
+
     private fun getValue(aMode: Mode, register: Int, memory: Array<Int>): Int {
         return if (aMode == Mode.POSITION) {
             memory[register]
