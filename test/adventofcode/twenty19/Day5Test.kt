@@ -25,9 +25,9 @@ class Day5Test {
     fun testOpcodes() {
         Assert.assertEquals(IntcodeComputer.Opcode.STORE, computer.getOpcode(3))
         Assert.assertEquals(IntcodeComputer.Opcode.OUTPUT, computer.getOpcode(4))
-        Assert.assertEquals(IntcodeComputer.Opcode.JUMPTRUE, computer.getOpcode(5))
-        Assert.assertEquals(IntcodeComputer.Opcode.JUMPFALSE, computer.getOpcode(6))
-        Assert.assertEquals(IntcodeComputer.Opcode.LESSTHAN, computer.getOpcode(7))
+        Assert.assertEquals(IntcodeComputer.Opcode.JUMP_TRUE, computer.getOpcode(5))
+        Assert.assertEquals(IntcodeComputer.Opcode.JUMP_FALSE, computer.getOpcode(6))
+        Assert.assertEquals(IntcodeComputer.Opcode.LESS_THAN, computer.getOpcode(7))
         Assert.assertEquals(IntcodeComputer.Opcode.EQUALS, computer.getOpcode(8))
     }
 
@@ -37,10 +37,10 @@ class Day5Test {
      */
     @Test
     fun testStore() {
-        val memory = Array(100) { it }
-        memory[0] = computer.store(1)
-        memory[50] = computer.store(1234)
-        memory[99] = computer.store(9999)
+        val memory = Array(100) { it.toLong() }
+        memory[0] = computer.store(1L)
+        memory[50] = computer.store(1234L)
+        memory[99] = computer.store(9999L)
 
         assertEquals(1, memory[0])
         assertEquals(1234, memory[50])
@@ -69,7 +69,7 @@ class Day5Test {
         assertEquals(-1, computer.jumptrue(1, -1, 3))
         assertEquals(5, computer.jumptrue(-1, 5, 3))
 
-        assertEquals(3, computer.jumptrue(0, 5, 3))
+        assertEquals(6, computer.jumptrue(0, 5, 3))
     }
 
     /**
@@ -83,8 +83,9 @@ class Day5Test {
         assertEquals(-1, computer.jumpfalse(0, -1, 3))
         assertEquals(5, computer.jumpfalse(0, 5, 3))
 
-        assertEquals(3, computer.jumpfalse(9999, 5, 3))
-        assertEquals(3, computer.jumpfalse(-9999, 5, 3))
+        //6 it moved to the next pointer
+        assertEquals(6, computer.jumpfalse(9999, 5, 3))
+        assertEquals(6, computer.jumpfalse(-9999, 5, 3))
     }
 
     /**
@@ -125,8 +126,8 @@ class Day5Test {
      */
     @Test
     fun testExecute() {
-        val memory = arrayOf(3, 0, 4, 0, 99)
-        computer.execute(memory, 100) //println 100
+        val memory = arrayOf(3L, 0, 4, 0, 99)
+        assertEquals(100, computer.execute(memory, 100)[0]) //println 100
     }
 
     /**
@@ -137,10 +138,10 @@ class Day5Test {
     fun testExecute2() {
         //Store input in pos 9
         //Equals pos 9 and pos 10
-        val memory = arrayOf(3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8)
-        computer.execute(memory, 8) //println 1
-        computer.execute(memory, -1) //println 0
-        computer.execute(memory, 100) //println 0
+        val memory = arrayOf(3L, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8)
+        assertEquals(1L, computer.execute(memory, 8)[0]) //println 1
+        assertEquals(0L, computer.execute(memory, -1)[0]) //println 0
+        assertEquals(0L, computer.execute(memory, 100)[0]) //println 0
     }
 
     /**
@@ -149,11 +150,11 @@ class Day5Test {
      */
     @Test
     fun testExecute3() {
-        val memory = arrayOf(3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8)
-        computer.execute(memory, 7) //println 1
-        computer.execute(memory, -1) //println 1
-        computer.execute(memory, 8) //println 0
-        computer.execute(memory, 100) //println 0
+        val memory = arrayOf(3L, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8)
+        assertEquals(1, computer.execute(memory, 7)[0]) //println 1
+        assertEquals(1, computer.execute(memory, -1)[0]) //println 1
+        assertEquals(0, computer.execute(memory, 8)[0]) //println 0
+        assertEquals(0, computer.execute(memory, 100)[0]) //println 0
     }
 
     /**
@@ -162,10 +163,10 @@ class Day5Test {
      */
     @Test
     fun testExecute4() {
-        val memory = arrayOf(3, 3, 1108, -1, 8, 3, 4, 3, 99)
-        computer.execute(memory, 8) //println 1
-        computer.execute(memory, -1) //println 0
-        computer.execute(memory, 100) //println 0
+        val memory = arrayOf(3L, 3, 1108, -1, 8, 3, 4, 3, 99)
+        assertEquals(1, computer.execute(memory, 8)[0]) //println 1
+        assertEquals(0, computer.execute(memory, -1)[0]) //println 0
+        assertEquals(0, computer.execute(memory, 100)[0]) //println 0
     }
 
     /**
@@ -174,11 +175,11 @@ class Day5Test {
      */
     @Test
     fun testExecute5() {
-        val memory = arrayOf(3, 3, 1107, -1, 8, 3, 4, 3, 99)
-        computer.execute(memory, 7) //println 1
-        computer.execute(memory, -1) //println 1
-        computer.execute(memory, 8) //println 0
-        computer.execute(memory, 100) //println 0
+        val memory = arrayOf(3L, 3, 1107, -1, 8, 3, 4, 3, 99)
+        assertEquals(1, computer.execute(memory, 7)[0]) //println 1
+        assertEquals(1, computer.execute(memory, -1)[0]) //println 1
+        assertEquals(0, computer.execute(memory, 8)[0]) //println 0
+        assertEquals(0, computer.execute(memory, 100)[0]) //println 0
     }
 
     /**
@@ -187,10 +188,10 @@ class Day5Test {
      */
     @Test
     fun testExecute6() {
-        val memory = arrayOf(3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9)
-        computer.execute(memory, 7) //println 1
-        computer.execute(memory, -1) //println 1
-        computer.execute(memory, 0) //println 0
+        val memory = arrayOf(3L, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9)
+        assertEquals(1, computer.execute(memory.copyOf(), 7)[0])//println 1
+        assertEquals(1, computer.execute(memory.copyOf(), -1)[0]) //println 1
+        assertEquals(0, computer.execute(memory.copyOf(), 0)[0]) //println 0
     }
 
     /**
@@ -199,12 +200,12 @@ class Day5Test {
      */
     @Test
     fun testExecute7() {
-        val memory = arrayOf(3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1)
-        computer.execute(memory, 0) //println 0
-        computer.execute(memory, 1101) //println 1
-        computer.execute(memory, 7) //println 1
-        computer.execute(memory, -1) //println 1
-        computer.execute(memory, 0) //println 0
+        val memory = arrayOf(3L, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1)
+        assertEquals(0, computer.execute(memory.copyOf(), 0)[0]) //println 0
+        assertEquals(1, computer.execute(memory.copyOf(), 1101)[0]) //println 1
+        assertEquals(1, computer.execute(memory.copyOf(), 7)[0]) //println 1
+        assertEquals(1, computer.execute(memory.copyOf(), -1)[0]) //println 1
+        assertEquals(0, computer.execute(memory.copyOf(), 0)[0]) //println 0
     }
 
     /**
@@ -225,9 +226,9 @@ class Day5Test {
         Assert.assertEquals(IntcodeComputer.Opcode.STORE, computer.getOpcode(1203))
         Assert.assertEquals(IntcodeComputer.Opcode.OUTPUT, computer.getOpcode(1204))
         Assert.assertEquals(IntcodeComputer.Opcode.TERMINATE, computer.getOpcode(1299))
-        Assert.assertEquals(IntcodeComputer.Opcode.JUMPTRUE, computer.getOpcode(1205))
-        Assert.assertEquals(IntcodeComputer.Opcode.JUMPFALSE, computer.getOpcode(1206))
-        Assert.assertEquals(IntcodeComputer.Opcode.LESSTHAN, computer.getOpcode(1207))
+        Assert.assertEquals(IntcodeComputer.Opcode.JUMP_TRUE, computer.getOpcode(1205))
+        Assert.assertEquals(IntcodeComputer.Opcode.JUMP_FALSE, computer.getOpcode(1206))
+        Assert.assertEquals(IntcodeComputer.Opcode.LESS_THAN, computer.getOpcode(1207))
         Assert.assertEquals(IntcodeComputer.Opcode.EQUALS, computer.getOpcode(1208))
         Assert.assertEquals(IntcodeComputer.Opcode.TERMINATE, computer.getOpcode(1299))
     }
@@ -301,8 +302,8 @@ class Day5Test {
      */
     @Test
     fun testOpcodeWithModesExecution() {
-        val memory = arrayOf(1002, 4, 3, 4, 33)
-        assertEquals(99, computer.execute(memory)[4])
+        val memory = arrayOf(1002L, 4, 3, 4, 33)
+        computer.execute(memory)//Inspsect to see memory
     }
 }
 

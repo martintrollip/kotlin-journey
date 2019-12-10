@@ -19,15 +19,15 @@ class Day5 {
 
     val computer = IntcodeComputer()
 
-    fun readInput(input: String): Array<Int> {
-        return File(input).readLines()[0].split(",").map { it.toInt() }.toTypedArray()
+    fun readInput(input: String): Array<Long> {
+        return File(input).readLines()[0].split(",").map { it.toLong() }.toTypedArray()
     }
 
     fun part1(): Int {
-        return computer.execute(readInput(DAY5_INPUT),1).get(0)
+        return computer.execute(readInput(DAY5_INPUT), 1)[0].toInt()
     }
 
     fun part2(): Int {
-        return computer.execute(readInput(DAY5_INPUT),5).get(0)
+        return computer.execute(readInput(DAY5_INPUT), 5)[0].toInt()
     }
 }

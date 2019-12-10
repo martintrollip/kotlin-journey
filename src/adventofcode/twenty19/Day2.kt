@@ -12,26 +12,26 @@ fun main(args: Array<String>) {
     val day2 = Day2(DAY2_INPUT)
     val computer = IntcodeComputer()
     //Input was updated manually; before running the program, replace position 1 (was 0) with the value 12 and replace position 2 (was 0) with the value 2.
-    println("What value is left at position 0 after the program halts? ${computer.execute(day2.readInput())[0]}") //4462686
-    println("Noun and verb causing output of 19690720")                                                           //noun=59 verb=36 ans=5936
+    println("What value is left at position 0 after the program halts? ${computer.execute(day2.readInput(), 0)[0]}") //4462686
+    println("Noun and verb causing output of 19690720")//noun=59 verb=36 ans=5936
     day2.executeNounVerb(computer)
 }
 
 
 class Day2(val input: String) {
 
-    fun readInput(): Array<Int> {
-        return File(input).readLines()[0].split(",").map { it.toInt() }.toTypedArray()
+    fun readInput(): Array<Long> {
+        return File(input).readLines()[0].split(",").map { it.toLong() }.toTypedArray()
     }
 
     //Part 2
     fun executeNounVerb(computer: IntcodeComputer) {
-        for (noun in 0..99) {
-            for (verb in 0..99) {
+        for (noun in 0..99L) {
+            for (verb in 0..99L) {
                 val readInput = readInput()
                 readInput[1] = noun
                 readInput[2] = verb
-                if (computer.execute(readInput)[0] == 19690720) {
+                if (computer.execute(readInput, 0)[0] == 19690720L) {
                     println("noun=$noun verb=$verb ans=${noun * 100 + verb}")
                     return
                 }
@@ -44,76 +44,104 @@ class Day2(val input: String) {
 //TODO Martin this can be simplified
 class IntcodeComputer {
     enum class Opcode {
-        ADD, MULTIPLY, TERMINATE, STORE, OUTPUT, JUMPTRUE, JUMPFALSE, LESSTHAN, EQUALS
+        ADD, MULTIPLY, TERMINATE, STORE, OUTPUT, JUMP_TRUE, JUMP_FALSE, LESS_THAN, EQUALS, RELATIVE_BASE
     }
 
     enum class Mode {
-        POSITION, IMMEDIATE
+        POSITION, IMMEDIATE, RELATIVE
     }
 
-    data class Instruction(val type: Opcode, val mode: Int = 0, val a: Int = -1, val b: Int = -1, val result: Int = -1)
+    data class Instruction(val type: Opcode, val mode: Long = 0, val a: Long = -1, val b: Long = -1, val result: Long = -1)
 
-    fun getOpcode(opcode: Int): Opcode {
+    fun getOpcode(opcode: Long): Opcode {
         return when (opcode % 100) {
-            1 -> Opcode.ADD
-            2 -> Opcode.MULTIPLY
-            3 -> Opcode.STORE
-            4 -> Opcode.OUTPUT
-            5 -> Opcode.JUMPTRUE
-            6 -> Opcode.JUMPFALSE
-            7 -> Opcode.LESSTHAN
-            8 -> Opcode.EQUALS
+            1L -> Opcode.ADD
+            2L -> Opcode.MULTIPLY
+            3L -> Opcode.STORE
+            4L -> Opcode.OUTPUT
+            5L -> Opcode.JUMP_TRUE
+            6L -> Opcode.JUMP_FALSE
+            7L -> Opcode.LESS_THAN
+            8L -> Opcode.EQUALS
+            9L -> Opcode.RELATIVE_BASE
             else -> Opcode.TERMINATE
         }
     }
 
-    fun getMode(opcode: Int, parameterPos: Int): Mode {
+    fun getMode(opcode: Long, parameterPos: Int): Mode {
         val string = opcode.toString() //TODO martin do this the right way
-        val pos = string.length - 3 /*for opcode instruction and zero indexed*/ - parameterPos
+        val pos = string.length - 3 /*for opcode instruction (2) and zero indexed (1)*/ - parameterPos
 
         return if (pos < 0) {
             Mode.POSITION
         } else {
             when (string[pos]) {
                 '1' -> Mode.IMMEDIATE
+                '2' -> Mode.RELATIVE
                 else -> Mode.POSITION
             }
         }
     }
 
-    fun add(a: Int, b: Int): Int {
+    fun getValue(aMode: Mode, register: Long, memory: Array<Long>): Long {
+        return when (aMode) {
+            Mode.POSITION -> memory[register.toInt()]
+            Mode.IMMEDIATE -> register
+            Mode.RELATIVE -> memory[(relativeBase + register).toInt()]
+        }
+    }
+
+    fun getOutputAddress(resultMode: Mode, register: Long): Int {
+        return if (resultMode == Mode.RELATIVE) {
+            relativeBase.toInt() + register.toInt()
+        } else {
+            register.toInt()
+        }
+    }
+
+    //TODO Martin can this be simplified if a map is used?
+    fun increaseMemorySize(memory: Array<Long>): Array<Long> {
+        val original = memory.toMutableList()
+        val increaseMemory = Array(memory.size * 10) { 0L }
+
+        original.addAll(increaseMemory)
+
+        return original.toTypedArray()
+    }
+
+    fun add(a: Long, b: Long): Long {
         return a + b
     }
 
-    fun multiply(a: Int, b: Int): Int {
+    fun multiply(a: Long, b: Long): Long {
         return a * b
     }
 
-    fun store(a: Int): Int {
+    fun store(a: Long): Long {
         return a
     }
 
-    fun output(a: Int): Int {
+    fun output(a: Long): Long {
         return a
     }
 
-    fun jumptrue(a: Int, b: Int, address: Int): Int {
-        return if (a != 0) {
+    fun jumptrue(a: Long, b: Long, address: Int): Long {
+        return if (a != 0L) {
             b
         } else {
-            address
+            address.toLong() + 3
         }
     }
 
-    fun jumpfalse(a: Int, b: Int, address: Int): Int {
-        return if (a == 0) {
+    fun jumpfalse(a: Long, b: Long, address: Int): Long {
+        return if (a == 0L) {
             b
         } else {
-            address
+            address.toLong() + 3
         }
     }
 
-    fun lessthan(a: Int, b: Int): Int {
+    fun lessthan(a: Long, b: Long): Long {
         return if (a < b) {
             1
         } else {
@@ -121,7 +149,7 @@ class IntcodeComputer {
         }
     }
 
-    fun equals(a: Int, b: Int): Int {
+    fun equals(a: Long, b: Long): Long {
         return if (a == b) {
             1
         } else {
@@ -129,7 +157,12 @@ class IntcodeComputer {
         }
     }
 
-    fun getInstructionAt(instructions: Array<Int>, currentPosition: Int): Instruction {
+    fun updateRelative(a: Long): Long {
+        relativeBase += a
+        return relativeBase
+    }
+
+    fun getInstructionAt(instructions: Array<Long>, currentPosition: Int): Instruction {
         val opcode = getOpcode(instructions[currentPosition])
 
         //TODO this should be simpler
@@ -138,16 +171,19 @@ class IntcodeComputer {
             Opcode.MULTIPLY -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2], instructions[currentPosition + 3])
             Opcode.STORE -> Instruction(opcode, instructions[currentPosition], result = instructions[currentPosition + 1])
             Opcode.OUTPUT -> Instruction(opcode, instructions[currentPosition], result = instructions[currentPosition + 1])
-            Opcode.JUMPTRUE -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2])
-            Opcode.JUMPFALSE -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2])
-            Opcode.LESSTHAN -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2], instructions[currentPosition + 3])
+            Opcode.JUMP_TRUE -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2])
+            Opcode.JUMP_FALSE -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2])
+            Opcode.LESS_THAN -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2], instructions[currentPosition + 3])
             Opcode.EQUALS -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1], instructions[currentPosition + 2], instructions[currentPosition + 3])
+            Opcode.RELATIVE_BASE -> Instruction(opcode, instructions[currentPosition], instructions[currentPosition + 1])
             Opcode.TERMINATE -> Instruction(opcode)
         }
     }
 
-    fun execute(memory: Array<Int>, input: Int = 0): Array<Int> {
+    private var relativeBase = 0L
+    fun execute(memory: Array<Long>, input: Long = 0): Array<Long> {
         var address = 0
+        val output = mutableListOf<Long>()
 
         do {
             val instruction = getInstructionAt(memory, address)
@@ -157,55 +193,58 @@ class IntcodeComputer {
 
             val aMode = getMode(instruction.mode, 0)
             val bMode = getMode(instruction.mode, 1)
+            val resultMode = getMode(instruction.mode, 2)
 
             when (instruction.type) {
                 Opcode.ADD -> {
-                    memory[instruction.result] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[getOutputAddress(resultMode, instruction.result)] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     address += 4
                 }
                 Opcode.MULTIPLY -> {
-                    memory[instruction.result] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[getOutputAddress(resultMode, instruction.result)] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     address += 4
                 }
                 Opcode.STORE -> {
-                    memory[instruction.result] = store(input)
+                    memory[getOutputAddress(resultMode, instruction.result)] = store(input)
                     address += 2
                 }
                 Opcode.OUTPUT -> {
-                    println(memory[instruction.result])
+                    val ans = getValue(aMode, instruction.result, memory)
+                    output.add(ans)
+                    println(ans)
                     address += 2
                 }
-                Opcode.JUMPTRUE -> {
-                    val a = getValue(aMode, instruction.a, memory)
-                    if (a != 0) {
-                        address = getValue(bMode, instruction.b, memory)
-                    } else {
-                        address += 3
-                    }
+                Opcode.JUMP_TRUE -> {
+                    address = jumptrue(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), address).toInt()
                 }
-                Opcode.JUMPFALSE -> {
-                    val a = getValue(aMode, instruction.a, memory)
-                    if (a == 0) {
-                        address = getValue(bMode, instruction.b, memory)
-                    } else {
-                        address += 3
-                    }
+                Opcode.JUMP_FALSE -> {
+                    address = jumpfalse(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), address).toInt()
                 }
-                Opcode.LESSTHAN -> {
-                    memory[instruction.result] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue in or up
+                Opcode.LESS_THAN -> {
+                    memory[getOutputAddress(resultMode, instruction.result)] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue
                     address += 4
                 }
                 Opcode.EQUALS -> {
-                    memory[instruction.result] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[getOutputAddress(resultMode, instruction.result)] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     address += 4
+                }
+                Opcode.RELATIVE_BASE -> {
+                    updateRelative(instruction.a)
+                    address += 2
                 }
             }
         } while (instruction.type != Opcode.TERMINATE)
-        return memory
+
+        //If output array is empty, return whole memory
+        return if (output.isEmpty()) {
+            memory
+        } else {
+            output.toTypedArray()
+        }
     }
 
-    fun executeList(memory: Array<Int>, input: Array<Int> = arrayOf()): MutableList<Int> {
-        val output = mutableListOf<Int>()
+    fun executeList(memory: Array<Long>, input: Array<Long> = arrayOf()): MutableList<Long> {
+        val output = mutableListOf<Long>()
 
         var address = 0
         var inputCounter = 0
@@ -221,46 +260,40 @@ class IntcodeComputer {
 
             when (instruction.type) {
                 Opcode.ADD -> {
-                    memory[instruction.result] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[instruction.result.toInt()] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     address += 4
                 }
                 Opcode.MULTIPLY -> {
-                    memory[instruction.result] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[instruction.result.toInt()] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     address += 4
                 }
                 Opcode.STORE -> {
-                    memory[instruction.result] = store(input[inputCounter])
+                    memory[instruction.result.toInt()] = store(input[inputCounter])
                     inputCounter++
                     address += 2
                 }
                 Opcode.OUTPUT -> {
 //                    println(memory[instruction.result])
-                    output.add(memory[instruction.result])
+                    output.add(memory[instruction.result.toInt()])
                     address += 2
                 }
-                Opcode.JUMPTRUE -> {
-                    val a = getValue(aMode, instruction.a, memory)
-                    if (a != 0) {
-                        address = getValue(bMode, instruction.b, memory)
-                    } else {
-                        address += 3
-                    }
+                Opcode.JUMP_TRUE -> {
+                    address = jumptrue(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), address).toInt()
                 }
-                Opcode.JUMPFALSE -> {
-                    val a = getValue(aMode, instruction.a, memory)
-                    if (a == 0) {
-                        address = getValue(bMode, instruction.b, memory)
-                    } else {
-                        address += 3
-                    }
+                Opcode.JUMP_FALSE -> {
+                    address = jumpfalse(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), address).toInt()
                 }
-                Opcode.LESSTHAN -> {
-                    memory[instruction.result] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue in or up
+                Opcode.LESS_THAN -> {
+                    memory[instruction.result.toInt()] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue in or up
                     address += 4
                 }
                 Opcode.EQUALS -> {
-                    memory[instruction.result] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[instruction.result.toInt()] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     address += 4
+                }
+                Opcode.RELATIVE_BASE -> {
+                    updateRelative(getValue(aMode, instruction.result, memory))
+                    rememberAddress += 2
                 }
             }
         } while (instruction.type != Opcode.TERMINATE)
@@ -268,7 +301,7 @@ class IntcodeComputer {
     }
 
     private var rememberAddress = 0
-    fun executeToOutput(memory: Array<Int>, input: Array<Int> = arrayOf()): Int {
+    fun executeToOutput(memory: Array<Long>, input: Array<Long> = arrayOf()): Long {
         var inputCounter = 0
 
         do {
@@ -282,56 +315,38 @@ class IntcodeComputer {
 
             when (instruction.type) {
                 Opcode.ADD -> {
-                    memory[instruction.result] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[instruction.result.toInt()] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     rememberAddress += 4
                 }
                 Opcode.MULTIPLY -> {
-                    memory[instruction.result] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[instruction.result.toInt()] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     rememberAddress += 4
                 }
                 Opcode.STORE -> {
-                    memory[instruction.result] = store(input[inputCounter])
+                    memory[instruction.result.toInt()] = store(input[inputCounter])
                     inputCounter++
                     rememberAddress += 2
                 }
                 Opcode.OUTPUT -> {
                     rememberAddress += 2
-                    return memory[instruction.result]
+                    return memory[instruction.result.toInt()]
                 }
-                Opcode.JUMPTRUE -> {
-                    val a = getValue(aMode, instruction.a, memory)
-                    if (a != 0) {
-                        rememberAddress = getValue(bMode, instruction.b, memory)
-                    } else {
-                        rememberAddress += 3
-                    }
+                Opcode.JUMP_TRUE -> {
+                    rememberAddress = jumptrue(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), rememberAddress).toInt()
                 }
-                Opcode.JUMPFALSE -> {
-                    val a = getValue(aMode, instruction.a, memory)
-                    if (a == 0) {
-                        rememberAddress = getValue(bMode, instruction.b, memory)
-                    } else {
-                        rememberAddress += 3
-                    }
+                Opcode.JUMP_FALSE -> {
+                    rememberAddress = jumpfalse(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), rememberAddress).toInt()
                 }
-                Opcode.LESSTHAN -> {
-                    memory[instruction.result] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue in or up
+                Opcode.LESS_THAN -> {
+                    memory[instruction.result.toInt()] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue in or up
                     rememberAddress += 4
                 }
                 Opcode.EQUALS -> {
-                    memory[instruction.result] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[instruction.result.toInt()] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     rememberAddress += 4
                 }
             }
         } while (instruction.type != Opcode.TERMINATE)
         return -9999
-    }
-
-    private fun getValue(aMode: Mode, register: Int, memory: Array<Int>): Int {
-        return if (aMode == Mode.POSITION) {
-            memory[register]
-        } else {
-            register
-        }
     }
 }

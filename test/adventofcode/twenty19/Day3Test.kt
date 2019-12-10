@@ -3,6 +3,7 @@ package adventofcode.twenty19
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 /**
@@ -194,6 +195,7 @@ class Day3Test {
      *
      * Attempt 2 here
      */
+    @Ignore("Takes too long")
     @Test
     fun testPart2() {
         val distance = day3.part2()

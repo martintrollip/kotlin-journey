@@ -24,15 +24,15 @@ class Day7 {
     val computerD = IntcodeComputer()
     val computerE = IntcodeComputer()
 
-    private fun readInput(input: String): Array<Int> {
-        return File(input).readLines()[0].split(",").map { it.toInt() }.toTypedArray()
+    private fun readInput(input: String): Array<Long> {
+        return File(input).readLines()[0].split(",").map { it.toLong() }.toTypedArray()
     }
 
-    fun part1(): Int {
+    fun part1(): Long {
         val memory = readInput(DAY7_INPUT)
 
-        val permutations = permutations(listOf(0, 1, 2, 3, 4))
-        var max = 0
+        val permutations = permutations(listOf(0L, 1L, 2L, 3L, 4L))
+        var max = 0L
         for (phase in permutations) {
             val resultA = computerA.executeList(memory.copyOf(), arrayOf(phase[0], 0))
             val resultB = computerB.executeList(memory.copyOf(), arrayOf(phase[1], resultA[0]))
@@ -47,11 +47,11 @@ class Day7 {
         return max
     }
 
-    fun part2(): Int {
+    fun part2(): Long {
         val memory = readInput(DAY7_INPUT)
 
-        val permutations = permutations(listOf(5, 6, 7, 8, 9))
-        var max = 0
+        val permutations = permutations(listOf(5L, 6L, 7L, 8L, 9L))
+        var max = 0L
         for (phase in permutations) {
             val computerA = IntcodeComputer()
             val memoryA = memory.copyOf()
@@ -64,13 +64,13 @@ class Day7 {
             val computerE = IntcodeComputer()
             val memoryE = memory.copyOf()
 
-            var resultA: Int
-            var resultB: Int
-            var resultC: Int
-            var resultD: Int
-            var resultE = 0
+            var resultA: Long
+            var resultB: Long
+            var resultC: Long
+            var resultD: Long
+            var resultE = 0L
 
-            var finalOutput = 0
+            var finalOutput = 0L
             var loop = 0
             do {
                 if (loop == 0) {
@@ -88,12 +88,12 @@ class Day7 {
                     resultE = computerE.executeToOutput(memoryE, arrayOf(resultD))
                 }
 
-                if (resultE != -9999) {
+                if (resultE != -9999L) {
                     finalOutput = resultE
                 }
 
                 loop++
-            } while (resultE != -9999)
+            } while (resultE != -9999L)
 
             if (finalOutput > max) {
                 max = finalOutput
@@ -104,9 +104,9 @@ class Day7 {
     }
 
 
-    fun permutations(input: List<Int>): List<List<Int>> {
+    fun permutations(input: List<Long>): List<List<Long>> {
         if (input.size == 1) return listOf(input)
-        val perms = mutableListOf<List<Int>>()
+        val perms = mutableListOf<List<Long>>()
         val toInsert = input[0]
         for (perm in permutations(input.drop(1))) {
             for (i in 0..perm.size) {
