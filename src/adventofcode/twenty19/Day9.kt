@@ -18,8 +18,8 @@ private const val DAY9_INPUT = "src/res/twenty19/day9_input"
 fun main(args: Array<String>) {
     val day9 = Day9()
 
-    println("What BOOST keycode does it produce? ${day9.part1(1L)}\n")  //> 203
-    println("part 2 ${day9.part2()}")
+    println("What BOOST keycode does it produce? ${day9.part1(1L)}\n")  //4288078517
+    println("What are the coordinates of the distress signal? ${day9.part2(2L)}")
 
 }
 
@@ -34,8 +34,8 @@ class Day9 {
         return computer.execute(readInput(), input)[0]
     }
 
-    fun part2(): Int {
-        return 2
+    fun part2(input: Long): Long {
+        return computer.execute(readInput(), input)[0]
     }
 
 }

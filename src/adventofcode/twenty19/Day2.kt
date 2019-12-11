@@ -1,6 +1,7 @@
 package adventofcode.twenty19
 
 import java.io.File
+import java.rmi.UnexpectedException
 
 /**
  * @author Martin Trollip
@@ -64,7 +65,8 @@ class IntcodeComputer {
             7L -> Opcode.LESS_THAN
             8L -> Opcode.EQUALS
             9L -> Opcode.RELATIVE_BASE
-            else -> Opcode.TERMINATE
+            99L -> Opcode.TERMINATE
+            else -> throw UnexpectedException("Invalid opcode $opcode")
         }
     }
 
@@ -205,7 +207,7 @@ class IntcodeComputer {
                     address += 4
                 }
                 Opcode.STORE -> {
-                    memory[getOutputAddress(resultMode, instruction.result)] = store(input)
+                    memory[getOutputAddress(aMode, instruction.result)] = store(input)
                     address += 2
                 }
                 Opcode.OUTPUT -> {
@@ -229,7 +231,7 @@ class IntcodeComputer {
                     address += 4
                 }
                 Opcode.RELATIVE_BASE -> {
-                    updateRelative(instruction.a)
+                    updateRelative(getValue(aMode, instruction.a, memory))
                     address += 2
                 }
             }

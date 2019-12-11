@@ -34,7 +34,6 @@ class Day2Test {
         assertEquals(IntcodeComputer.Opcode.ADD, computer.getOpcode(1))
         assertEquals(IntcodeComputer.Opcode.MULTIPLY, computer.getOpcode(2))
         assertEquals(IntcodeComputer.Opcode.TERMINATE, computer.getOpcode(99))
-        assertEquals(IntcodeComputer.Opcode.TERMINATE, computer.getOpcode(0))
         assertEquals(IntcodeComputer.Opcode.OUTPUT, computer.getOpcode(1204))
         assertEquals(IntcodeComputer.Opcode.JUMP_TRUE, computer.getOpcode(5))
     }
