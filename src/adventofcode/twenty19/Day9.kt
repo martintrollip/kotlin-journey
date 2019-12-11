@@ -25,17 +25,16 @@ fun main(args: Array<String>) {
 
 class Day9 {
 
-    val computer = IntcodeComputer()
     fun readInput(): Array<Long> {
-        return computer.increaseMemorySize(File(DAY9_INPUT).readLines()[0].split(",").map { it.toLong() }.toTypedArray())
+        return IntcodeComputer().increaseMemorySize(File(DAY9_INPUT).readLines()[0].split(",").map { it.toLong() }.toTypedArray())
     }
 
     fun part1(input: Long): Long {
-        return computer.execute(readInput(), input)[0]
+        return IntcodeComputer().execute(readInput(), input)[0]
     }
 
     fun part2(input: Long): Long {
-        return computer.execute(readInput(), input)[0]
+        return IntcodeComputer().execute(readInput(), input)[0]
     }
 
 }

@@ -2,6 +2,7 @@ package adventofcode.twenty19
 
 import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 /**
@@ -10,7 +11,12 @@ import org.junit.Test
  */
 class Day5Test {
 
-    private val computer = IntcodeComputer()
+    private var computer = IntcodeComputer()
+
+    @Before
+    fun before() {
+        computer = IntcodeComputer()
+    }
 
     /**
      * Opcode 3 takes a single integer as input and saves it to the address given by its only parameter.
@@ -139,9 +145,9 @@ class Day5Test {
         //Store input in pos 9
         //Equals pos 9 and pos 10
         val memory = arrayOf(3L, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8)
-        assertEquals(1L, computer.execute(memory, 8)[0]) //println 1
-        assertEquals(0L, computer.execute(memory, -1)[0]) //println 0
-        assertEquals(0L, computer.execute(memory, 100)[0]) //println 0
+        assertEquals(1L, IntcodeComputer().execute(memory, 8)[0]) //println 1
+        assertEquals(0L, IntcodeComputer().execute(memory, -1)[0]) //println 0
+        assertEquals(0L, IntcodeComputer().execute(memory, 100)[0]) //println 0
     }
 
     /**
@@ -151,10 +157,10 @@ class Day5Test {
     @Test
     fun testExecute3() {
         val memory = arrayOf(3L, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8)
-        assertEquals(1, computer.execute(memory, 7)[0]) //println 1
-        assertEquals(1, computer.execute(memory, -1)[0]) //println 1
-        assertEquals(0, computer.execute(memory, 8)[0]) //println 0
-        assertEquals(0, computer.execute(memory, 100)[0]) //println 0
+        assertEquals(1, IntcodeComputer().execute(memory, 7)[0]) //println 1
+        assertEquals(1, IntcodeComputer().execute(memory, -1)[0]) //println 1
+        assertEquals(0, IntcodeComputer().execute(memory, 8)[0]) //println 0
+        assertEquals(0, IntcodeComputer().execute(memory, 100)[0]) //println 0
     }
 
     /**
@@ -164,9 +170,9 @@ class Day5Test {
     @Test
     fun testExecute4() {
         val memory = arrayOf(3L, 3, 1108, -1, 8, 3, 4, 3, 99)
-        assertEquals(1, computer.execute(memory, 8)[0]) //println 1
-        assertEquals(0, computer.execute(memory, -1)[0]) //println 0
-        assertEquals(0, computer.execute(memory, 100)[0]) //println 0
+        assertEquals(1, IntcodeComputer().execute(memory, 8)[0]) //println 1
+        assertEquals(0, IntcodeComputer().execute(memory, -1)[0]) //println 0
+        assertEquals(0, IntcodeComputer().execute(memory, 100)[0]) //println 0
     }
 
     /**
@@ -176,10 +182,10 @@ class Day5Test {
     @Test
     fun testExecute5() {
         val memory = arrayOf(3L, 3, 1107, -1, 8, 3, 4, 3, 99)
-        assertEquals(1, computer.execute(memory, 7)[0]) //println 1
-        assertEquals(1, computer.execute(memory, -1)[0]) //println 1
-        assertEquals(0, computer.execute(memory, 8)[0]) //println 0
-        assertEquals(0, computer.execute(memory, 100)[0]) //println 0
+        assertEquals(1, IntcodeComputer().execute(memory, 7)[0]) //println 1
+        assertEquals(1, IntcodeComputer().execute(memory, -1)[0]) //println 1
+        assertEquals(0, IntcodeComputer().execute(memory, 8)[0]) //println 0
+        assertEquals(0, IntcodeComputer().execute(memory, 100)[0]) //println 0
     }
 
     /**
@@ -189,9 +195,9 @@ class Day5Test {
     @Test
     fun testExecute6() {
         val memory = arrayOf(3L, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9)
-        assertEquals(1, computer.execute(memory.copyOf(), 7)[0])//println 1
-        assertEquals(1, computer.execute(memory.copyOf(), -1)[0]) //println 1
-        assertEquals(0, computer.execute(memory.copyOf(), 0)[0]) //println 0
+        assertEquals(1, IntcodeComputer().execute(memory.copyOf(), 7)[0])//println 1
+        assertEquals(1, IntcodeComputer().execute(memory.copyOf(), -1)[0]) //println 1
+        assertEquals(0, IntcodeComputer().execute(memory.copyOf(), 0)[0]) //println 0
     }
 
     /**
@@ -201,11 +207,11 @@ class Day5Test {
     @Test
     fun testExecute7() {
         val memory = arrayOf(3L, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1)
-        assertEquals(0, computer.execute(memory.copyOf(), 0)[0]) //println 0
-        assertEquals(1, computer.execute(memory.copyOf(), 1101)[0]) //println 1
-        assertEquals(1, computer.execute(memory.copyOf(), 7)[0]) //println 1
-        assertEquals(1, computer.execute(memory.copyOf(), -1)[0]) //println 1
-        assertEquals(0, computer.execute(memory.copyOf(), 0)[0]) //println 0
+        assertEquals(0, IntcodeComputer().execute(memory.copyOf(), 0)[0]) //println 0
+        assertEquals(1, IntcodeComputer().execute(memory.copyOf(), 1101)[0]) //println 1
+        assertEquals(1, IntcodeComputer().execute(memory.copyOf(), 7)[0]) //println 1
+        assertEquals(1, IntcodeComputer().execute(memory.copyOf(), -1)[0]) //println 1
+        assertEquals(0, IntcodeComputer().execute(memory.copyOf(), 0)[0]) //println 0
     }
 
     /**

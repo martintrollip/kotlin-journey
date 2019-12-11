@@ -103,9 +103,9 @@ class Day2Test {
      */
     @Test
     fun testMoreExecutions() {
-        assertEquals(2, computer.execute(arrayOf(1, 0, 0, 0, 99))[0])
-        assertEquals(6, computer.execute(arrayOf(2, 3, 0, 3, 99))[3])
-        assertEquals(9801, computer.execute(arrayOf(2, 4, 4, 5, 99, 0))[5])
-        assertEquals(30, computer.execute(arrayOf(1, 1, 1, 4, 99, 5, 6, 0, 99))[0])
+        assertEquals(2, IntcodeComputer().execute(arrayOf(1, 0, 0, 0, 99))[0])
+        assertEquals(6, IntcodeComputer().execute(arrayOf(2, 3, 0, 3, 99))[3])
+        assertEquals(9801, IntcodeComputer().execute(arrayOf(2, 4, 4, 5, 99, 0))[5])
+        assertEquals(30, IntcodeComputer().execute(arrayOf(1, 1, 1, 4, 99, 5, 6, 0, 99))[0])
     }
 }

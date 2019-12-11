@@ -183,12 +183,12 @@ class IntcodeComputer {
     }
 
     private var relativeBase = 0L
+    private var rememberAddress = 0
     fun execute(memory: Array<Long>, input: Long = 0): Array<Long> {
-        var address = 0
         val output = mutableListOf<Long>()
 
         do {
-            val instruction = getInstructionAt(memory, address)
+            val instruction = getInstructionAt(memory, rememberAddress)
             if (instruction.type == Opcode.TERMINATE) {
                 break
             }
@@ -200,39 +200,39 @@ class IntcodeComputer {
             when (instruction.type) {
                 Opcode.ADD -> {
                     memory[getOutputAddress(resultMode, instruction.result)] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
-                    address += 4
+                    rememberAddress += 4
                 }
                 Opcode.MULTIPLY -> {
                     memory[getOutputAddress(resultMode, instruction.result)] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
-                    address += 4
+                    rememberAddress += 4
                 }
                 Opcode.STORE -> {
                     memory[getOutputAddress(aMode, instruction.result)] = store(input)
-                    address += 2
+                    rememberAddress += 2
                 }
                 Opcode.OUTPUT -> {
                     val ans = getValue(aMode, instruction.result, memory)
                     output.add(ans)
                     println(ans)
-                    address += 2
+                    rememberAddress += 2
                 }
                 Opcode.JUMP_TRUE -> {
-                    address = jumptrue(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), address).toInt()
+                    rememberAddress = jumptrue(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), rememberAddress).toInt()
                 }
                 Opcode.JUMP_FALSE -> {
-                    address = jumpfalse(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), address).toInt()
+                    rememberAddress = jumpfalse(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), rememberAddress).toInt()
                 }
                 Opcode.LESS_THAN -> {
                     memory[getOutputAddress(resultMode, instruction.result)] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue
-                    address += 4
+                    rememberAddress += 4
                 }
                 Opcode.EQUALS -> {
                     memory[getOutputAddress(resultMode, instruction.result)] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
-                    address += 4
+                    rememberAddress += 4
                 }
                 Opcode.RELATIVE_BASE -> {
                     updateRelative(getValue(aMode, instruction.a, memory))
-                    address += 2
+                    rememberAddress += 2
                 }
             }
         } while (instruction.type != Opcode.TERMINATE)
@@ -302,7 +302,6 @@ class IntcodeComputer {
         return output
     }
 
-    private var rememberAddress = 0
     fun executeToOutput(memory: Array<Long>, input: Array<Long> = arrayOf()): Long {
         var inputCounter = 0
 
@@ -314,18 +313,19 @@ class IntcodeComputer {
 
             val aMode = getMode(instruction.mode, 0)
             val bMode = getMode(instruction.mode, 1)
+            val resultMode = getMode(instruction.mode, 2)
 
             when (instruction.type) {
                 Opcode.ADD -> {
-                    memory[instruction.result.toInt()] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[getOutputAddress(resultMode, instruction.result)] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     rememberAddress += 4
                 }
                 Opcode.MULTIPLY -> {
-                    memory[instruction.result.toInt()] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[getOutputAddress(resultMode, instruction.result)] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     rememberAddress += 4
                 }
                 Opcode.STORE -> {
-                    memory[instruction.result.toInt()] = store(input[inputCounter])
+                    memory[getOutputAddress(aMode, instruction.result)] = store(input[inputCounter])
                     inputCounter++
                     rememberAddress += 2
                 }
@@ -340,15 +340,20 @@ class IntcodeComputer {
                     rememberAddress = jumpfalse(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), rememberAddress).toInt()
                 }
                 Opcode.LESS_THAN -> {
-                    memory[instruction.result.toInt()] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue in or up
+                    memory[getOutputAddress(resultMode, instruction.result)] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue
                     rememberAddress += 4
                 }
                 Opcode.EQUALS -> {
-                    memory[instruction.result.toInt()] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    memory[getOutputAddress(resultMode, instruction.result)] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
                     rememberAddress += 4
+                }
+                Opcode.RELATIVE_BASE -> {
+                    updateRelative(getValue(aMode, instruction.a, memory))
+                    rememberAddress += 2
                 }
             }
         } while (instruction.type != Opcode.TERMINATE)
+
         return -9999
     }
 }
