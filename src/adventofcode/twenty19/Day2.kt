@@ -184,7 +184,8 @@ class IntcodeComputer {
 
     private var relativeBase = 0L
     private var rememberAddress = 0
-    fun execute(memory: Array<Long>, input: Long = 0): Array<Long> {
+    var running = true
+    fun execute(memory: Array<Long>, input: Long = 0, returnAfter: Int = -1): Array<Long> {
         val output = mutableListOf<Long>()
 
         do {
@@ -213,8 +214,12 @@ class IntcodeComputer {
                 Opcode.OUTPUT -> {
                     val ans = getValue(aMode, instruction.result, memory)
                     output.add(ans)
-                    println(ans)
+//                    println(ans)
                     rememberAddress += 2
+
+                    if (returnAfter > 0 && output.size == returnAfter) {
+                        return output.toTypedArray()
+                    }
                 }
                 Opcode.JUMP_TRUE -> {
                     rememberAddress = jumptrue(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), rememberAddress).toInt()
@@ -238,6 +243,7 @@ class IntcodeComputer {
         } while (instruction.type != Opcode.TERMINATE)
 
         //If output array is empty, return whole memory
+        running = false
         return if (output.isEmpty()) {
             memory
         } else {
