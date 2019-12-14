@@ -136,5 +136,17 @@ class Day12Test {
         assertEquals(179, bodies.totalEnery())
     }
 
+    @Test
+    fun testSimilarState() {
+        val day12 = Day12()
+        val input = listOf(
+                "<x=-1, y=0, z=2>",
+                "<x=2, y=-10, z=-7>",
+                "<x=4, y=-8, z=8>",
+                "<x=3, y=5, z=-1>")
+
+        assertEquals(2772, day12.findRepeated(day12.readBodies(input)))
+    }
+
 
 }

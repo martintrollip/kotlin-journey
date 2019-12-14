@@ -29,13 +29,17 @@ class Day12 {
     }
 
     fun part2(): Int {
-        var states = mutableMapOf<Int, Int>()
-        var step = 0
         val bodies = readBodies(File(DAY12_INPUT).readLines())
+        return findRepeated(bodies)
+    }
+
+    fun findRepeated(bodies: List<Body>): Int {
+        val states = mutableMapOf<Int, String>()
+        var step = 0
 
         while (!states.contains(bodies.totalEnery())) {
-            step ++
-            states[bodies.totalEnery()] = step
+            step++
+            states[bodies.totalEnery()] = bodies.toString()
             simulate(bodies)
         }
 
