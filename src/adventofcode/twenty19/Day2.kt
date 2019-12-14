@@ -251,6 +251,83 @@ class IntcodeComputer {
         }
     }
 
+    fun executeBlocking(memory: Array<Long>, returnAfter: Int = -1, player: Arcade.Player, manual: Boolean): Array<Long> {
+        val output = mutableListOf<Long>()
+
+        do {
+            val instruction = getInstructionAt(memory, rememberAddress)
+            if (instruction.type == Opcode.TERMINATE) {
+                break
+            }
+
+            val aMode = getMode(instruction.mode, 0)
+            val bMode = getMode(instruction.mode, 1)
+            val resultMode = getMode(instruction.mode, 2)
+
+            when (instruction.type) {
+                Opcode.ADD -> {
+                    memory[getOutputAddress(resultMode, instruction.result)] = add(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    rememberAddress += 4
+                }
+                Opcode.MULTIPLY -> {
+                    memory[getOutputAddress(resultMode, instruction.result)] = multiply(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    rememberAddress += 4
+                }
+                Opcode.STORE -> {
+                    if (manual) {
+                        print("\uD83E\uDC44a  d\uD83E\uDC46: ")
+                        val userInput = readLine()!!
+                        val input = when (userInput) {
+                            "a" -> -1
+                            "d" -> 1
+                            else -> 0
+                        }
+                        memory[getOutputAddress(aMode, instruction.result)] = store(input.toLong())
+                    } else {
+                        memory[getOutputAddress(aMode, instruction.result)] = player.play().toLong()
+                    }
+                    rememberAddress += 2
+                }
+                Opcode.OUTPUT -> {
+                    val ans = getValue(aMode, instruction.result, memory)
+                    output.add(ans)
+//                    println(ans)
+                    rememberAddress += 2
+
+                    if (returnAfter > 0 && output.size == returnAfter) {
+                        return output.toTypedArray()
+                    }
+                }
+                Opcode.JUMP_TRUE -> {
+                    rememberAddress = jumptrue(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), rememberAddress).toInt()
+                }
+                Opcode.JUMP_FALSE -> {
+                    rememberAddress = jumpfalse(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory), rememberAddress).toInt()
+                }
+                Opcode.LESS_THAN -> {
+                    memory[getOutputAddress(resultMode, instruction.result)] = lessthan(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))//TODO martin move getValue
+                    rememberAddress += 4
+                }
+                Opcode.EQUALS -> {
+                    memory[getOutputAddress(resultMode, instruction.result)] = equals(getValue(aMode, instruction.a, memory), getValue(bMode, instruction.b, memory))
+                    rememberAddress += 4
+                }
+                Opcode.RELATIVE_BASE -> {
+                    updateRelative(getValue(aMode, instruction.a, memory))
+                    rememberAddress += 2
+                }
+            }
+        } while (instruction.type != Opcode.TERMINATE)
+
+        //If output array is empty, return whole memory
+        running = false
+        return if (output.isEmpty()) {
+            memory
+        } else {
+            output.toTypedArray()
+        }
+    }
+
     fun executeList(memory: Array<Long>, input: Array<Long> = arrayOf()): MutableList<Long> {
         val output = mutableListOf<Long>()
 
