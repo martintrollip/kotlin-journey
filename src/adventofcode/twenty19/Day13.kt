@@ -175,7 +175,7 @@ class Arcade {
         Thread.sleep(10)
 
         //For console output
-      /*  print("\u001b[H\u001b[2J")
+        print("\u001b[H\u001b[2J")
         val maxX = screen.maxBy { it.key.x }!!.key.x
         val minX = screen.minBy { it.key.x }!!.key.x
         val maxY = screen.maxBy { it.key.y }!!.key.y
@@ -206,7 +206,7 @@ class Arcade {
             if (count > 0) {
                 println()
             }
-        }*/
+        }
     }
 
     class Player {
