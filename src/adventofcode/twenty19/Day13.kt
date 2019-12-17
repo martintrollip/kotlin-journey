@@ -159,7 +159,6 @@ class Arcade {
         frame.add(panel, BorderLayout.CENTER)
     }
 
-
     /**
      * 0 is an empty tile. No game object appears in this tile.
      * 1 is a wall tile. Walls are indestructible barriers.

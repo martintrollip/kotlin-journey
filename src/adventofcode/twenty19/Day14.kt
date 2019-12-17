@@ -1,6 +1,5 @@
 package adventofcode.twenty19
 
-import adventofcode.twenty18.FuelCell
 import java.io.File
 import kotlin.math.absoluteValue
 
@@ -15,7 +14,7 @@ fun main(args: Array<String>) {
     val day14 = Day14()
 
     println("What is the minimum amount of ORE required to produce exactly 1 FUEL? ${day14.part1()}\n") //198984
-    println("What is the maximum amount of FUEL you can produce with 1 trillion ORE? ${day14.part2()}")
+    println("What is the maximum amount of FUEL you can produce with 1 trillion ORE? ${day14.part2()}") //7659732
 
 }
 
@@ -83,7 +82,6 @@ class Day14 {
             storage -= findOre("FUEL", 1, reactions, stash)
         }
 
-        println("maxFuel=${maxFuel - 1}")
         return maxFuel - 1
     }
 
