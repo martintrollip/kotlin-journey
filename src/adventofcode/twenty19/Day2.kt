@@ -439,4 +439,13 @@ class IntcodeComputer {
 
         return -9999
     }
+
+    fun copy(): IntcodeComputer {
+        val copy = IntcodeComputer()
+        copy.rememberAddress = this.rememberAddress
+        copy.relativeBase = this.relativeBase
+        copy.running = this.running
+
+        return copy
+    }
 }

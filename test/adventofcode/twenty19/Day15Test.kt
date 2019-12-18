@@ -1,6 +1,6 @@
 package adventofcode.twenty19
 
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Test
 import java.awt.Point
 
@@ -44,5 +44,11 @@ class Day15Test {
         assertEquals(Point(1, 0), repairDroid.move(DroidDirection.EAST, point))
     }
 
+    @Test
+    fun testPossibleDirections() {
+        val repairDroid = RepairDroid()
+        val point = Point(0, 0)
 
+        assertEquals(4, repairDroid.getPossibleDirections(DroidDirection.NORTH, point, mapOf()).size)
+    }
 }
