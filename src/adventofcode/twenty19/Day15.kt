@@ -8,7 +8,7 @@ import javax.swing.JPanel
 import kotlin.math.absoluteValue
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/12/17 15:24
  */
 
@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
     val day15 = Day15()
 
     println("What is the fewest number of movement commands? ${day15.part1()}\n") //228
-    println("How many minutes will it take to fill with oxygen? ${day15.part2()}") // < 798 < 797 < 349
+    println("How many minutes will it take to fill with oxygen? ${day15.part2()}") //348
 
 }
 
