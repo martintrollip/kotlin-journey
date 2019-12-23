@@ -145,8 +145,8 @@ class Day16Test {
     fun testTenThousandTimesWithOffset() {
         val day16 = Day16()
         assertEquals("[8, 4, 4, 6, 2, 0, 2, 6]", day16.fft2("03036732577212944063491565474664", 100).toString())
-//        assertEquals("[7, 8, 7, 2, 5, 2, 7, 0]", day16.fft2("02935109699940807407585447034323", 100).toString())
-//        assertEquals("[5, 3, 5, 5, 3, 7, 3, 1]", day16.fft2("03081770884921959731165446850517", 100).toString())
+        assertEquals("[7, 8, 7, 2, 5, 2, 7, 0]", day16.fft2("02935109699940807407585447034323", 100).toString())
+        assertEquals("[5, 3, 5, 5, 3, 7, 3, 1]", day16.fft2("03081770884921959731165446850517", 100).toString())
     }
 
     private fun readShortInput(): List<Int> {
