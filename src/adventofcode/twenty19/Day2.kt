@@ -214,7 +214,7 @@ class IntcodeComputer {
                 Opcode.OUTPUT -> {
                     val ans = getValue(aMode, instruction.result, memory)
                     output.add(ans)
-//                    println(ans)
+//                    print(ans)
                     rememberAddress += 2
 
                     if (returnAfter > 0 && output.size == returnAfter) {
