@@ -2,6 +2,7 @@ package adventofcode.twenty19
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Ignore
 import org.junit.Test
 
 /**
@@ -102,8 +103,11 @@ class Day14Test {
      * After collecting ORE for a while, you check your cargo hold: 1 trillion (1000000000000) units of ORE.
      *
      * The 13312 ORE-per-FUEL example could produce 82892753 FUEL.
+     *
+     * @Ignore takes a minute
      */
     @Test
+    @Ignore
     fun testBigExamplePart2() {
         val day14 = Day14()
         val input = listOf(
