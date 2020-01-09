@@ -56,6 +56,15 @@ class EggTimerFragment : Fragment() {
             getString(R.string.egg_notification_channel_name)
         )
 
+        // Step 3.1 create a new channel for FCM
+        createChannel(
+            getString(R.string.breakfast_notification_channel_id),
+            getString(R.string.breakfast_notification_channel_name)
+        )
+
+        // Step 3.4 call subscribe topics on start
+        subscribeTopic()
+
         return binding.root
     }
 
@@ -83,8 +92,34 @@ class EggTimerFragment : Fragment() {
         }
     }
 
+    // Step 3.3 subscribe to breakfast topic
+    private fun subscribeTopic() {
+        //Usually want user to opt in to something like this
+        // [START subscribe_topics]
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+            .addOnCompleteListener { task ->
+                var msg = getString(R.string.message_subscribed)
+                if (!task.isSuccessful) {
+                    msg = getString(R.string.message_subscribe_failed)
+                }
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            }
+        // [END subscribe_topics]
+    }
     companion object {
         fun newInstance() = EggTimerFragment()
     }
 }
+
+/**
+ * FCM Notifications
+ *
+ *                                Foreground                Background
+ * Notification           |   onMessageReceived     |       System Tray
+ *                        |                         |
+ * Data                   |    onMessageReceived    |     onMessageReceived
+ *                        |                         |
+ * Notification and Data  |    onMessageReceived    | Notification: System Tray    If your app is in the background, the FCM message will trigger an automatic notification and onMessageReceived function will receive the remoteMessage object only when the user clicks the notification.
+ *                                                    Data: onMessageReceived
+ */
 
