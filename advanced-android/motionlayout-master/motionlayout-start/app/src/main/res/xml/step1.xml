@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--The motion layout will figure out how to transition between the sart and the end -->
+
+
+    <!--Define a transition-->
+    <Transition
+        app:constraintSetEnd="@+id/end"
+        app:constraintSetStart="@+id/start"
+        app:duration="300">
+        <!-- Can have drag events or click event or no events if we wish to control this via code -->
+        <OnClick
+            app:clickAction="toggle"
+            app:targetId="@id/red_star" />
+    </Transition>
+
+    <!--Define a @id/start constraint set -->
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/red_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </ConstraintSet>
+
+    <!--Define a @id/end constraint set -->
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/red_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </ConstraintSet>
+</MotionScene>

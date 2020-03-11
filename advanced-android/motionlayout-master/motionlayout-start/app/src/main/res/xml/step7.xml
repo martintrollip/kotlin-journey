@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~   Copyright (C) 2019 The Android Open Source Project
+  ~   Licensed under the Apache License, Version 2.0 (the "License");
+  ~   you may not use this file except in compliance with the License.
+  ~   You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~   Unless required by applicable law or agreed to in writing, software
+  ~   distributed under the License is distributed on an "AS IS" BASIS,
+  ~   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~   See the License for the specific language governing permissions and
+  ~   limitations under the License.
+  -->
+
+<!-- Describe the animation for activity_step3.xml -->
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- A transition describes an animation via start and end state -->
+    <Transition
+
+        app:constraintSetEnd="@+id/end"
+        app:constraintSetStart="@+id/start"
+        app:duration="3000">
+
+        <!-- Fix OnSwipe by changing touchAnchorSide -->
+        <!-- Consider what happens when the user is touching just below the top of the arc.
+        Because the OnSwipe tag has an app:touchAnchorSide="bottom"
+        otionLayout will try to make the distance between the finger and the bottom of the view constant throughout the animation.
+        But, since the bottom of the moon doesn't always go in the same direction, it goes up then comes back down,
+        MotionLayout doesn't know what to do when the user has just passed the top of the arc.
+        To consider this, since we're tracking the bottom of the moon where should it be placed when the user is touching here?
+
+         To avoid bugs like this, it is important to always choose a touchAnchorId and
+         touchAnchorSide that always progresses in one direction throughout the duration of the entire animation.
+
+         The touchAnchorSide passed to OnSwipe must progress in a single direction through the entire animation.
+         If the anchored side reverses its path, or pauses, MotionLayout will get confused and not progress in a smooth motion.
+
+        This may happen if every side follows a complex path through the motion or views resize in ways
+        that would cause surprising animations. In these situations, consider adding an invisible view that follows a simpler path to track.
+
+         -->
+        <OnSwipe
+            app:touchAnchorId="@id/moon"
+            app:touchAnchorSide="bottom"
+            app:dragDirection="dragRight"
+            />
+
+
+        <KeyFrameSet>
+            <KeyPosition
+                app:framePosition="20"
+                app:keyPositionType="parentRelative"
+                app:motionTarget="@id/moon"
+                app:percentY="0.65" />
+            <KeyPosition
+                app:framePosition="50"
+                app:keyPositionType="parentRelative"
+                app:motionTarget="@id/moon"
+                app:percentY="0.5" />
+            <KeyPosition
+                app:framePosition="80"
+                app:keyPositionType="parentRelative"
+                app:motionTarget="@id/moon"
+                app:percentY="0.65" />
+
+            <KeyAttribute
+                android:rotation="-720"
+                android:scaleX="0.3"
+                android:scaleY="0.3"
+                app:framePosition="50"
+                app:motionTarget="@id/moon" />
+            <KeyAttribute
+                android:rotation="-1440"
+                app:framePosition="100"
+                app:motionTarget="@id/moon" />
+
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="85"
+                app:motionTarget="@id/credits" />
+
+            <!--Custom attributes-->
+            <!-- Custom attributes can animate anything with a getter/setter-->
+            <KeyAttribute
+                app:framePosition="0"
+                app:motionTarget="@id/moon">
+                <!--Call getColourFilter and setColorFilter on the ImageView -->
+                <!-- There's a lot of custom attributes -->
+                <CustomAttribute
+                    app:attributeName="colorFilter"
+                    app:customColorValue="#FFFFFF" />
+            </KeyAttribute>
+            <KeyAttribute
+                app:framePosition="50"
+                app:motionTarget="@id/moon">
+                <CustomAttribute
+                    app:attributeName="colorFilter"
+                    app:customColorValue="#FFB612" />
+            </KeyAttribute>
+            <KeyAttribute
+                app:framePosition="100"
+                app:motionTarget="@id/moon">
+                <CustomAttribute
+                    app:attributeName="colorFilter"
+                    app:customColorValue="#FFFFFF" />
+            </KeyAttribute>
+
+        </KeyFrameSet>
+    </Transition>
+
+    <!-- Constraints to apply at the start of the animation -->
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@id/moon"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@id/credits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:alpha="0.0"
+            app:layout_constraintBottom_toBottomOf="@id/moon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/moon" />
+    </ConstraintSet>
+
+    <!-- Constraints to apply at the end of the animation -->
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@id/moon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+        <Constraint
+            android:id="@id/credits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:alpha="1.0"
+            app:layout_constraintBottom_toBottomOf="@id/moon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/moon" />
+    </ConstraintSet>
+</MotionScene>
