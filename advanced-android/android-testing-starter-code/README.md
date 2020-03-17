@@ -88,11 +88,11 @@ Tests acts as **documentation**. Make it readable
 ###  Test scope
 How much code an automated test touches, Unit tests, Integration tests, End-to-end tests.  Include test of all types.
 
-**Unit tests:** Single function or class so it's easy to pinpoint the failure. It's fast and executed often.  Local and low fidelity.
+**Unit tests:** Single function or class so it's easy to pinpoint the failure. It's fast and executed often.  Local and low fidelity. `@SmallTest`
 <br/>
-**Integration tests:** Several classes or a single feature, ensure they work together, can be local or instrumented and usually run fast and have average fidelity.
+**Integration tests:** Several classes or a single feature, ensure they work together, can be local or instrumented and usually run fast and have average fidelity. `@MediumTest`
 <br/>
-**End to end tests:** Test combinations of features working together, large portions of the app, simulate real usage closely, usually slow but high fidelity. Confirm that the app works as a whole.  Probably an instrumented test
+**End to end tests:** Test combinations of features working together, large portions of the app, simulate real usage closely, usually slow but high fidelity. Confirm that the app works as a whole.  Probably an instrumented test. `@LargeTest`
 
 Unit test are testing the integrity of each link in a chain. But it doesn't tell us if the links actually create a chain together. We need integration tests for that.  Integration test checks that all the links will form a strong chaing.
 ![Unit vs. Integration tests](unitintegration.png)
@@ -236,7 +236,10 @@ Check the [example app](https://github.com/android/architecture-samples/tree/rea
 
 ## Integration tests
 A good candidate for integration tests is always a Fragment since it goes hand-in-hand with it's view model.  Check that the view module is actually updating the UI.  We can also test navigation.
-This is still not an end-end test since things like the activity will just be generic "empty activities". And the data layer will be Fakes.
+This is still not an end-end test since things like the activity will just be generic "empty activities". And the data layer will be Fakes.  These usually goes in the `androidTest` directrory since it's a visual
+component and it's a good idea to render these on a device.
+
+Rule of thumb, if you test something visual, make it an instrumentation test.
 
 ## Fragment integration tests
 
@@ -244,9 +247,28 @@ This is still not an end-end test since things like the activity will just be ge
 
 `FragmentScenario` library gives control over starting state and lifecycle of Fragments. Can create a fragment and pass any bundle to it. Can move between states by calling a method.
 
-This api is also suitable for both local and instrumented tests since it's in the `AndroidX` dependency.
+This api is also suitable for both local and instrumented tests since it's in the `AndroidX` dependency.  When testing a fragment we can launch it using `launchFragmentInContainer`. We specify the apptheme because launchFragmentInContainer uses an empty activity, with no theme, and fragments usually inherit the theme from the activity
 
 ### Service locator pattern
+
+With Fragments we can't simply pass the Repository in via Constructor DI since the constructor of a Fragment (or Activity) takes a Bundle only. And we can't easily modify the constructors of Fragments or Activities.   We need a clever way to handle this.
+
+That is where the service locator pattern comes in.
+
+The Service Locator is a singleton class whose purpose is to store and provide dependencies.  It does this for the main code and test code.  Now instead of having 3 classes manage an instance of 1 dependency, the ServiceLocator can mange that instance on behalf of the 3 classes.
+
+![Service locator](servicelocator.png)
+
+For tests the service locator can provide a test/fake dependency depending on the use case.
+
+This pattern also has a benefit over the setter DI mentioned earlier and that is that we don't have to set the correct dependency each and every time we make an instance of a class.  With the service locator we set the dependencies once
+and we can rest assured that the correct dependencies will be provided.
+
+Note: A Kotlin object (vs a class) is a Singleton.  
+Note: `@Volatile` is added when something can be accessed via multiple threads.  Keep threading in mind, especially when creating new repos and databases.
+
+Keep an instance of the tasks repository on the `Application` to ensure we only have one instance thereof.
+
 ### Espresso
 ### Mockito
 ### Testing Navigation

@@ -34,13 +34,12 @@ class ViewModelFactory constructor(
     override fun <T : ViewModel> create(modelClass: Class<T>) =
             with(modelClass) {
                 when {
-//TODO Convert the commented code to also do constructor injection
-//                    isAssignableFrom(StatisticsViewModel::class.java) ->
-//                        StatisticsViewModel(tasksRepository)
+                    isAssignableFrom(StatisticsViewModel::class.java) ->
+                        StatisticsViewModel(tasksRepository)
                     isAssignableFrom(TaskDetailViewModel::class.java) ->
                         TaskDetailViewModel(tasksRepository)
-//                    isAssignableFrom(AddEditTaskViewModel::class.java) ->
-//                        AddEditTaskViewModel(tasksRepository)
+                    isAssignableFrom(AddEditTaskViewModel::class.java) ->
+                        AddEditTaskViewModel(tasksRepository)
                     isAssignableFrom(TasksViewModel::class.java) ->
                         TasksViewModel(tasksRepository)
                     else ->
