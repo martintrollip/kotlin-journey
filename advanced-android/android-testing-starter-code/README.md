@@ -269,6 +269,8 @@ Note: `@Volatile` is added when something can be accessed via multiple threads. 
 
 Keep an instance of the tasks repository on the `Application` to ensure we only have one instance thereof.
 
+Tests can swop in different implementations of the dependencies provided by the service locator, such as Fakes.
+
 ### Espresso
 ### Mockito
 ### Testing Navigation
