@@ -34,6 +34,17 @@ android {
         enabled = true
         enabledForTests = true
     }
+
+    //Allows classes to be shared between `androidTest` and `test`
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+    }
 }
 
 dependencies {
@@ -62,18 +73,21 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
     // Dependencies for local unit tests
-    testImplementation "junit:junit:$junitVersion"
+    testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
     testImplementation "androidx.test.ext:junit:$androidXTestExtKotlinRunnerVersion"
     testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
-    testImplementation "org.robolectric:robolectric:$robolectricVersion"
-    testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
+    testImplementation "junit:junit:$junitVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
 
     // AndroidX Test - Instrumented testing
-    androidTestImplementation "androidx.test.ext:junit:$androidXTestExtKotlinRunnerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion" //More advance view tests
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidXTestExtKotlinRunnerVersion"
     androidTestImplementation "junit:junit:$junitVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion" //This is to allow the usage of mockito in an android project, mockito need to generate classes at runtime (dex byte code)
+    androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
     debugImplementation "androidx.fragment:fragment-testing:$fragmentVersion"// Testing code should not be included in the main code. // Once https://issuetracker.google.com/128612536 is fixed this can be fixed.
     implementation "androidx.test:core:$androidXTestCoreVersion"
 

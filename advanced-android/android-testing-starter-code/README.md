@@ -45,6 +45,8 @@ Getting Started
 
 # My notes
 
+This course is set out in a nice way.  We get the theory, then a quiz, then self practice and then a runthrough of the answer.   This helps to drive the point home and it's a really fun course.
+
 You start of a new project with main `code`, `test` and `androidTest` folders (source sets).  
 The main source set does not know about the test and androidTest directory.  
 test and androidTest also dont know about each other.   Also no test code will be compiled to the APK.
@@ -64,6 +66,8 @@ Need to have @Test inside a test source set.  Using Junit library.
 
 `androidTest` can get a context using `InstrumentationRegistry`.  Instrument test when
 it will benefit from running on an Android device.   Remember to use `@RunWith(AndroidJunit4::class)`.
+
+You can share classes between `test` and `androidTest`. It's done [via Gradle](https://github.com/android/architecture-samples/blob/f4128dd8dbea5d1aac5d5acd5f346bb82187fbe6/app/build.gradle#L20) and an example is [here](https://github.com/android/architecture-samples/tree/reactive/app/src) .
 
 ## Why test
 
@@ -98,7 +102,6 @@ Unit test are testing the integrity of each link in a chain. But it doesn't tell
 ![Unit vs. Integration tests](unitintegration.png)
 
 **Testing Pyramid:** We usually want around 70% unit tests, 20% integration tests and 10% end-to-end tests.
-
 
 ### Use application architecture
 
@@ -269,11 +272,52 @@ Note: `@Volatile` is added when something can be accessed via multiple threads. 
 
 Keep an instance of the tasks repository on the `Application` to ensure we only have one instance thereof.
 
-Tests can swop in different implementations of the dependencies provided by the service locator, such as Fakes.
+Tests can swop in different implementations of the dependencies provided by the service locator, such as Fakes. Remember that you want tests to be completely independent of each other, not flaky.  So clear any state on @Before.  There is no predefined order in which tests are executed so we cant make any assumptions in that regard.
+
+`VisibleForTesting` is a nice way to indicate that certain methods should only be called in testing code and not in main code.
 
 ### Espresso
+
+Assertion statements for the UI.  You can interact with views and check their state.
+
+Parts of espresso statement
+1. [Static espresso method](https://developer.android.com/reference/androidx/test/espresso/Espresso.html#onView%28org.hamcrest.Matcher%3Candroid.view.View%3E%29)
+    For example `onView`. Do something with a view
+2. [ViewMatcher](https://developer.android.com/reference/androidx/test/espresso/matcher/ViewMatchers.html)
+    For example `withId`. Find your view.  You want to uniquely identify your views or you might get `AmbiguousViewMatcherException`.
+3. [ViewAction](https://developer.android.com/reference/androidx/test/espresso/ViewAction.html)
+    Something which can be done to a view. Example `click()`
+4. [ViewAssertions](https://developer.android.com/reference/androidx/test/espresso/assertion/ViewAssertions#matches)
+    Assert something about the view.  Also takes a view matcher
+
+![Espresso statement](espresso.png)
+
+Tip:  Turn off Animations.  It's best practice and also runs faster. (**Settings > Developer Options > disable Window Animation Scale, Transition animation scale and Animator duration scale**).  Animations can make tests flaky.
+
 ### Mockito
+
+We've learned a bout Fake test doubles.  Another type of test double is a Mock.  It's a type of test double that tracks which of its methods were called.  Mocks pass or fail a test depending on whether their methods were called correctly.
+
+Be careful when to use mocks.  In some cases it might be easier to test the end state rather than to assert if the method updating that state was called.
+
+- Mocks doesn't check state
+- Mocks are implementation dependent
+
+For cases where we want to test something that does not result in a clear state change or where testing the state change is tricky we can use mocks. A good candidate for this is the navigation component.  We dont want to test 2 fragments to assert that a certain navigation happened when clicking on a item, because then we have to  
+handle the dependencies of both fragments and it gets tricky.  So we rather check that the appropriate navigation method was called.
+
+Asses the situation an check if we actually need to use a mock.
+
 ### Testing Navigation
+
+We're going to mock the navigation controller. Navigation is a good candidate to mock because
+
+1. The end state of the test is outside of the scope of the test (we only want to test the one fragment)
+2. The Navigation Controller is unlikely to change in the future.
+
+Use `Mockito`
+
+Framework to create test doubles. Ii provides more than mocking though.  It can also create stubs and spies.
 
 License
 -------

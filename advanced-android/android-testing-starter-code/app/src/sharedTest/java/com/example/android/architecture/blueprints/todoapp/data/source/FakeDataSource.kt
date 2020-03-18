@@ -46,46 +46,46 @@ class FakeDataSource(var tasks: MutableList<Task>? = mutableListOf()) : TasksDat
     }
 
     override fun observeTasks(): LiveData<Result<List<Task>>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override suspend fun refreshTasks() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun observeTask(taskId: String): LiveData<Result<Task>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override suspend fun getTask(taskId: String): Result<Task> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override suspend fun refreshTask(taskId: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override suspend fun completeTask(task: Task) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override suspend fun completeTask(taskId: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override suspend fun activateTask(task: Task) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override suspend fun activateTask(taskId: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override suspend fun clearCompletedTasks() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override suspend fun deleteTask(taskId: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 }
