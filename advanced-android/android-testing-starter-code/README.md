@@ -319,6 +319,8 @@ Use `Mockito`
 
 Framework to create test doubles. Ii provides more than mocking though.  It can also create stubs and spies.
 
+Use Mockito to create a mock for NavController,  attache said mocked controller to the fragment and verify that the navigate method was called.
+
 License
 -------
 
