@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer
 import androidx.test.core.app.ApplicationProvider //The usage of this as well as the @RunWith AndroidJUnit4 can actually be avoided if we use the FakeTaskRepository instead of the actually Repository
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.android.architecture.blueprints.todoapp.Event
+import com.example.android.architecture.blueprints.todoapp.MainCoroutineRule
 import com.example.android.architecture.blueprints.todoapp.R
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.data.source.FakeTasksRepository
@@ -34,9 +35,12 @@ import org.junit.runner.RunWith
 @ExperimentalCoroutinesApi
 class TasksViewModelTest {
 
-    val testDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()
+//    val testDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher() //This can be done in @MainCoroutineRule so we dont have to do it in every @Before and @After.
 
     private lateinit var tasksRepository: FakeTasksRepository
+
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule() //Runs all architecture components background tasks on the same thread. Add this when testing LiveData
@@ -46,7 +50,7 @@ class TasksViewModelTest {
 
     @Before
     fun setupViewModel() {
-        Dispatchers.setMain(testDispatcher)
+//        Dispatchers.setMain(testDispatcher) //Moved to MainCoroutineRule
 
         tasksRepository = FakeTasksRepository()
 
@@ -60,8 +64,9 @@ class TasksViewModelTest {
 
     @After
     fun tearDown() {
-        Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
+//        Dispatchers.setMain(testDispatcher) //Moved to MainCoroutineRule
+//        Dispatchers.resetMain()
+//        testDispatcher.cleanupTestCoroutines()
     }
 
     //Can't use the ViewModelProvider here since it's not an `androidTest`.

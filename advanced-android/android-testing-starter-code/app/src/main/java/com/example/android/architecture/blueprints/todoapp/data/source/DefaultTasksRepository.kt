@@ -134,7 +134,8 @@ class DefaultTasksRepository constructor(
     }
 
     override suspend fun completeTask(taskId: String) {
-        withContext(ioDispatcher) {
+        withContext(ioDispatcher) {//Use dependency injection rather
+//        withContext(Dispatchers.IO) { //Avoid using the hardcoded version!!
             (getTaskWithId(taskId) as? Success)?.let { it ->
                 completeTask(it.data)
             }
