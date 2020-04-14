@@ -321,6 +321,29 @@ Framework to create test doubles. Ii provides more than mocking though.  It can 
 
 Use Mockito to create a mock for NavController,  attache said mocked controller to the fragment and verify that the navigate method was called.
 
+## End to end tests
+
+Up to now we've tested synchronous code.  We will need to deal will async code in order to implement proper end to end test.  We need a synchronisation mechanism to make sure that all of the async tasks
+has been completed before we attempt to assert any values.  Asynchronous work can be flaky if one task is not guaranteed to finish before another (no-deterministic).
+
+#### Co-routines
+
+*Don't use `Thread.sleep()` or something similar.  It slows down the test and it's not the proper way to test things.  We want deterministic and synchronous tests.
+
+Use `runBlockingTest`.  It ensures the test thread blocks until the co-routine task finishes. It uses a TestCoroutingDispatcher. It controls which thread and when task should be executed. Use `kotlinx-coroutines-test` which is currently still experimental.
+
+`runBlocking` used outside of tests. It's a good representation of what the code does and used with fakes.
+
+**Co-routine Scope** Controls the lifecycle of a coroutine.  A common use case if a view model starting and running a coroutine. `viewModleScope` is a spectial co-routine scope associated with each ViewModel. Scope is canceled when `onClear` on ViewModel was called. If ViewModel goes away, so does all of the work we started on the coroutine.
+Avoid wasted work and memory leaks.  And scope uses `Dispatchers.main` to determine which coroutine this work runs on.  Take note here, `Dispatchers.main` uses the Android's main looper which is not available to local tests.  (This is when there is an error is tests regarding could not init main dispatcher).  So for tests `Dispatchers.setMain` from `kotlinx-coroutines-test` module can be used, this will swop out the dispatcher.  To do this you can write `@Before` and `@After` functions calling `Dispatchers.setMain(TestCoroutineDispatcher)` and `testDispatcher.cleanupTestCoroutines()` respectively.
+
+A Coroutine scope controls the lifetime of a coroutine.
+
+It's common to start a longrunning task from a ViewModel so we'll often find that we start coroutines on a ViewModel.
+
+#### JUnit rules
+Custom rules for generic testing code which can happend before during or after tests.  This can be nice if we want to avoid having the same setup code in all of the view model classes.
+
 License
 -------
 
