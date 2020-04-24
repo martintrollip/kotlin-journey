@@ -59,3 +59,5 @@ class StatisticsViewModelTest {
         assertThat(statisticsViewModel.dataLoading.getOrAwaitValue(), `is`(false))
     }
 }
+
+//TODO continue with 7.

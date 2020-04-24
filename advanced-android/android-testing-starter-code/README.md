@@ -340,7 +340,7 @@ Avoid wasted work and memory leaks.  And scope uses `Dispatchers.main` to determ
 It's common to start a long running task from a ViewModel so we'll often find that we start coroutines on a ViewModel.
 
 ##### JUnit rules
-Custom rules for generic testing code which can happend before during or after tests.  This can be nice if we want to avoid having the same setup code in all of the view model classes.
+Custom rules for generic testing code which can happened before during or after tests.  This can be nice if we want to avoid having the same setup code in all of the view model classes.
 
 Example of `MainCoroutineRule`:
 - Creates a `TestCoroutineDispatcher
@@ -350,6 +350,8 @@ Example of `MainCoroutineRule`:
 **Note** If you use `runBlocking` test it will actually create a new test dispatcher. So you can use `mainCoroutineRule.runBlockingTest` to make sure that we don't make multiple dispatchers.
 
 **Note** IF your code switches dispatchers for some reason, like in `DefaultTasksRepository.completeTask` then we might run into some problems sine it will use something other than our test dispatcher. Then the coroutine test might not run deterministically. For this reason, avoid hardcoding the dispatcher, rather use dependency injection so that we can swop the test coroutine dispatcher when required.
+
+The Test coroutine dispatcher has timing functions such as pause, resume, advanceTimeBy, advanceUntilldle and runCurrent
 
 - In summary; For local tests use `MainCoroutineRule` to Swap out `Discpatchers.Main` with a `TestCoroutineDispatcher`.  Also use `mainCoroutineDispatcher.runBlockingTest`.  Inject dispatchers instead of hardcoding it.
 
