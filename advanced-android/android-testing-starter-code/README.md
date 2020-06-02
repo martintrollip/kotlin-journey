@@ -355,6 +355,12 @@ The Test coroutine dispatcher has timing functions such as pause, resume, advanc
 
 - In summary; For local tests use `MainCoroutineRule` to Swap out `Discpatchers.Main` with a `TestCoroutineDispatcher`.  Also use `mainCoroutineDispatcher.runBlockingTest`.  Inject dispatchers instead of hardcoding it.
 
+#### Error state
+
+You need to test the happy days as well as the error cases. For example if data can't be loaded because the network is down.
+
+For the fakes you can use a flag, such as `shouldReturnError` in FakeTasksRepository to return error cases for testing.
+
 License
 -------
 

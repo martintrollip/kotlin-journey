@@ -51,13 +51,24 @@ class StatisticsViewModelTest {
         //But since we're using the test coroutine dispatcher, all of the refresh code is run deterministically and the dataLoading state is set to false before we hit the next line and the loading indicator is gone (
         //This is good for fast tests.  But in this particular case we want to test this specific state in the middle of execution
         //We want to assert before the coroutine starts and just when it finished
-        //Add the puase and resume dispatchers of the test coroutine dispatcher
+        //Add the pause and resume dispatchers of the test coroutine dispatcher
         assertThat(statisticsViewModel.dataLoading.getOrAwaitValue(), `is`(true))
 
-        mainCoroutineRule.resumeDispatcher()
         //Some time later we want that spinner to go away
+        mainCoroutineRule.resumeDispatcher()
         assertThat(statisticsViewModel.dataLoading.getOrAwaitValue(), `is`(false))
+
+        //Test coroutine dispatcher includes more fine grained timing functions
+    }
+
+    @Test
+    fun loadStatisticsWhenTasksAreUnavailable_callErrorToDisplay() {
+        // Make the repository return errors.
+        tasksRepository.setReturnError(true)
+        statisticsViewModel.refresh()
+
+        // Then empty and error are true (which triggers an error message to be shown).
+        assertThat(statisticsViewModel.empty.getOrAwaitValue(), `is`(true))
+        assertThat(statisticsViewModel.error.getOrAwaitValue(), `is`(true))
     }
 }
-
-//TODO continue with 7.
