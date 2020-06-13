@@ -12,7 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/04/14 10:50
  */
 @ExperimentalCoroutinesApi

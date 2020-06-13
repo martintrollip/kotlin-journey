@@ -1,6 +1,5 @@
 package com.example.android.architecture.blueprints.todoapp.data.source
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
@@ -9,14 +8,14 @@ import com.example.android.architecture.blueprints.todoapp.data.Result.Error
 import com.example.android.architecture.blueprints.todoapp.data.Result.Success
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import kotlinx.coroutines.runBlocking
-import java.util.LinkedHashMap
+import java.util.*
 
 /**
  * This class is a fake an it allows us to test the entire view model, without us having to worry about its dependencies.
  *
  * The Fake class and the real class will share a common interface.
  *
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/03/16 19:22
  */
 class FakeTasksRepository : TasksRepository {

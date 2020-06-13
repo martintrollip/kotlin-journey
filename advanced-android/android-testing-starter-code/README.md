@@ -361,6 +361,14 @@ You need to test the happy days as well as the error cases. For example if data 
 
 For the fakes you can use a flag, such as `shouldReturnError` in FakeTasksRepository to return error cases for testing.
 
+#### Room database
+
+We want this to be instrumented so that we run the same room version as on the device (my machines room might be very different). Different versions of Android might have different versions of SQLite.
+
+#### Testing local datasource
+
+This is intergaration tets.
+
 License
 -------
 

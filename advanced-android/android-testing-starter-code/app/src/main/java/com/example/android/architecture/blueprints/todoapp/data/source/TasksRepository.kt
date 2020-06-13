@@ -5,7 +5,7 @@ import com.example.android.architecture.blueprints.todoapp.data.Result
 import com.example.android.architecture.blueprints.todoapp.data.Task
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/03/16 19:24
  */
 interface TasksRepository {

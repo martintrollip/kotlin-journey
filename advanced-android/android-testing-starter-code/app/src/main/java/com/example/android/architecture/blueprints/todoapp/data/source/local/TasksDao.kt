@@ -26,6 +26,8 @@ import com.example.android.architecture.blueprints.todoapp.data.Task
 
 /**
  * Data Access Object for the tasks table.
+ *
+ * Room turns this into classes via annotation processing
  */
 @Dao
 interface TasksDao {

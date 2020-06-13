@@ -28,7 +28,7 @@ import org.junit.runner.RunWith
  *
  * Pure ViewModel tests can goto `test` (local tests) folder since the ViewModelCode should not depend on the Android framework
  *
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/03/14 18:17
  */
 //@RunWith(AndroidJUnit4::class)  //Only needed if we need some Android constructs

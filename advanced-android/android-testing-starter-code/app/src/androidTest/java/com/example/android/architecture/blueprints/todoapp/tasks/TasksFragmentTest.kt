@@ -28,7 +28,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/03/18 07:42
  */
 @RunWith(AndroidJUnit4::class)

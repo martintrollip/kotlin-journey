@@ -7,7 +7,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/03/14 13:57
  */
 class StatisticsUtilsTest {

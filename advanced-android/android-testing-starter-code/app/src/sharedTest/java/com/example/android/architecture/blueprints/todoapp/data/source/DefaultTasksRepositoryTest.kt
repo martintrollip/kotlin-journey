@@ -13,7 +13,7 @@ import org.junit.Rule
 import org.junit.Test
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/03/16 18:46
  */
 class DefaultTasksRepositoryTest {

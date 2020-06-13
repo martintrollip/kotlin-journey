@@ -20,7 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/03/17 18:40
  */
 @RunWith(AndroidJUnit4::class)

@@ -12,7 +12,7 @@ import com.example.android.architecture.blueprints.todoapp.data.source.remote.Ta
 import kotlinx.coroutines.runBlocking
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/03/17 19:22
  */
 //
