@@ -3,7 +3,7 @@ package adventofcode.twenty19
 /**
  * Input part 1 is 108457-562041
  *
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/12/04 16:06
  */
 fun main(args: Array<String>) {

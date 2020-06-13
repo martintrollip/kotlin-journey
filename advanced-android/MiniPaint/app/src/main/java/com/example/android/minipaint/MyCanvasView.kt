@@ -16,7 +16,7 @@ import androidx.core.content.res.ResourcesCompat
 
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/02/24 19:09
  */
 

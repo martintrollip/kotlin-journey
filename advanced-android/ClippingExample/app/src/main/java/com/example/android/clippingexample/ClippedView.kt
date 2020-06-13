@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2020/02/25 15:57
  */
 //@JvmOverloads Instructs the Kotlin compiler to generate overloads for this function that substitute default parameter values.

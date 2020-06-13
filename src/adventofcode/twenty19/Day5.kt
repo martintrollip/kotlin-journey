@@ -3,7 +3,7 @@ package adventofcode.twenty19
 import java.io.File
 
 /**
- * @author Martin Trollip ***REMOVED***
+ * @author Martin Trollip
  * @since 2019/12/05 06:53
  */
 private const val DAY5_INPUT = "src/res/twenty19/day5_input"
