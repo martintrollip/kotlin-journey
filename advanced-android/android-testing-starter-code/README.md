@@ -47,6 +47,8 @@ Getting Started
 
 This course is set out in a nice way.  We get the theory, then a quiz, then self practice and then a runthrough of the answer.   This helps to drive the point home and it's a really fun course.
 
+![Course overview](testing.jpg)
+
 You start of a new project with main `code`, `test` and `androidTest` folders (source sets).  
 The main source set does not know about the test and androidTest directory.  
 test and androidTest also dont know about each other.   Also no test code will be compiled to the APK.
