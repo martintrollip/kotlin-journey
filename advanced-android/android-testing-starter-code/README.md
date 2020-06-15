@@ -387,6 +387,10 @@ The `DataBindingIdlingResource` will only return idle if there's no `pendingBind
 
 As a rule of thumb, always use the DataBindingIdlingResource with Espresso tests where data binding is involved.
 
+#### Navigation drawer
+
+Test global navigation in end to end tests.  Back button, up button and the drawer can be tested.
+
 Remember to turn off animations.  
 ![Disable Animations](animations.png)
 
