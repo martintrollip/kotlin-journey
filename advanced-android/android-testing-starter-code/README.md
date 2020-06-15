@@ -396,6 +396,12 @@ Test global navigation in end to end tests.  Back button, up button and the draw
 Remember to turn off animations.  
 ![Disable Animations](animations.png)
 
+# Android samples and best practices
+
+[Architecture sample](https://github.com/android/architecture-samples)
+
+[Jetpack sample](https://github.com/android/sunflower)
+
 License
 -------
 
