@@ -35,7 +35,7 @@ class TasksDaoTest {
     @Before
     fun initDb() {
         // Using an in-memory database so that the information stored here disappears when the
-        // process is killed.
+        // process is killed. For test this is exactly what we want.
         database = Room.inMemoryDatabaseBuilder(
                 getApplicationContext(),
                 ToDoDatabase::class.java
