@@ -367,7 +367,28 @@ We want this to be instrumented so that we run the same room version as on the d
 
 #### Testing local datasource
 
-This is intergaration tets.
+These are intergaration tets.
+
+#### End-to-end tests with Espresso
+
+It boots up an app, launch fragments and interacts with the UI.
+
+Also, black box tests. It checks that the outcome is what we expect without knowing how it works.
+
+**Espresso** is good for UI tests.  It has synchronisation mechanisms built in so we don't have to
+wait for the click event to finish etc.  Espresso usually knows to wait, but if we do our own coroutines we might have to provide our own synchronisation mechanism.   This is done
+by using **idling resource**.  The idle resource tracks whether the app is working or idling.  If the app is idle, then Espresso knows it can continue, otherwise Espresso knows to wait until
+the work is done.  See `EspressoIdlingResource.kt` for an example on how to use it.
+
+Read more on [Espresso's Idling resource](https://medium.com/androiddevelopers/android-testing-with-espressos-idling-resources-and-testing-fidelity-8b8647ed57f4)
+
+With **Data binding** you'll add a custom idling resource. Espresso uses a different mechanism than data binding, the [Choreographer](https://developer.android.com/reference/android/view/Choreographer) class, to synchronize its view updates, so it is not aware of data binding changes.
+The `DataBindingIdlingResource` will only return idle if there's no `pendingBindings` for any of the view data bindings.
+
+As a rule of thumb, always use the DataBindingIdlingResource with Espresso tests where data binding is involved.
+
+Remember to turn off animations.  
+![Disable Animations](animations.png)
 
 License
 -------
