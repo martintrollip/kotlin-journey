@@ -62,7 +62,7 @@ class Day18 {
                 Direction.RIGHT -> Point()
 
             }
-            steps +=
+//            steps +=
         }
 
         if (input.filterValues { it != EMPTY }.isEmpty()) {
