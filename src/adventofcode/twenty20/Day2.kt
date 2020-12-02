@@ -49,10 +49,15 @@ class Day2(input: String) {
             val line = PASSWORDS_REGEX.find(it)
             val (positionA, positionB, letter, password) = line!!.destructured
 
-            if (password[positionA.toInt() - 1] == letter[0] || password[positionB.toInt() - 1] == letter[0]) {
-                if (!(password[positionA.toInt() - 1] == letter[0] && password[positionB.toInt() - 1] == letter[0])) {
-                    validPasswordsNewPolicy++
-                }
+            val indexA = positionA.toInt() - 1
+            val indexB = positionB.toInt() - 1
+            val character = letter[0]
+
+            val containsA = password[indexA] == character
+            val containsB = password[indexB] == character
+
+            if (containsA.xor(containsB)) {
+                validPasswordsNewPolicy++
             }
         }
     }
