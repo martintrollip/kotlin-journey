@@ -56,7 +56,7 @@ class Day2(input: String) {
             val containsA = password[indexA] == character
             val containsB = password[indexB] == character
 
-            if (containsA.xor(containsB)) {
+            if (containsA xor containsB) {
                 validPasswordsNewPolicy++
             }
         }
