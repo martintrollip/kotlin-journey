@@ -72,6 +72,7 @@ class Day5(input: String) {
     }
 
     fun part2() {
+        //TODO Got this by inspecting the list, try using reduce or similar
         seatNumbers.sort()
         println(seatNumbers.reduce { acc, next -> acc + next })
     }
