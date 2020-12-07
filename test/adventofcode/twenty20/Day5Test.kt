@@ -85,7 +85,7 @@ class Day5Test {
     @Test
     fun day5_part2() {
         val day5 = Day5(DAY5_INPUT)
-        assertEquals(617, day5.part2())
+        assertEquals(619, day5.part2())
     }
 
     fun String.removeFirst(): String {

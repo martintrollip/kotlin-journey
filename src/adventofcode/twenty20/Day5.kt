@@ -42,11 +42,11 @@ class Day5(input: String) {
         }
     }
 
-    fun part1() : Int {
+    fun part1(): Int {
         return highestId
     }
 
-    fun calculateRowID(row : Int, col: Int): Int {
+    fun calculateRowID(row: Int, col: Int): Int {
         return (row * 8) + col
     }
 
@@ -71,10 +71,11 @@ class Day5(input: String) {
         return Pair(low, input)
     }
 
-    fun part2() {
-        //TODO Got this by inspecting the list, try using reduce or similar
+    fun part2() : Int {
         seatNumbers.sort()
-        println(seatNumbers.reduce { acc, next -> acc + next })
+        val initial = seatNumbers[0]
+
+        return seatNumbers.filterIndexed { index, item -> item - index != initial}.first() - 1
     }
 
     private fun String.removeFirst(): String {
