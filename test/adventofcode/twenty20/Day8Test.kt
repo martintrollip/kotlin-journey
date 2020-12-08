@@ -32,7 +32,7 @@ class Day8Test {
     @Test
     fun day8_part2() {
         val day8 = Day8(DAY8_INPUT)
-        assertEquals(8, day8.part2())
+        assertEquals(1149, day8.part2())
     }
 
 }

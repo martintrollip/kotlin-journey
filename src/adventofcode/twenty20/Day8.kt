@@ -11,7 +11,7 @@ private const val DAY8_INPUT = "src/res/twenty20/day8_input"
 fun main(args: Array<String>) {
     val day8 = Day8(DAY8_INPUT)
     println("Acc value when it starts to repeat ${day8.part1()}")
-    println("${day8.part2()}")
+    println("Acc value when we fixed the loop ${day8.part2()}")
 }
 
 class Day8(input: String) {
@@ -27,7 +27,6 @@ class Day8(input: String) {
         return File(fileName).readLines().map {
             val line = INSTRUCTION_REGEX.find(it)
             val (operation, parameter) = line!!.destructured
-
             HandHeldGameConsole.Instruction(HandHeldGameConsole.Operation.valueOf(operation.toUpperCase()), parameter.toInt())
         }
     }
@@ -35,7 +34,6 @@ class Day8(input: String) {
     fun part1(): Int {
         val handHeldGameConsole = HandHeldGameConsole(instructions)
         handHeldGameConsole.execute()
-
         return handHeldGameConsole.accMemory
     }
 
@@ -60,7 +58,7 @@ class Day8(input: String) {
             return instructions
         }
 
-        if (instructions[indexToChange].operation != HandHeldGameConsole.Operation.NOP && instructions[indexToChange].operation != HandHeldGameConsole.Operation.JMP) {
+        if (!allowedToChangeOperation(indexToChange)) {
             //Don't execute a list which didn't change
             return emptyList()
         }
@@ -68,22 +66,24 @@ class Day8(input: String) {
         val newInstructions = mutableListOf<HandHeldGameConsole.Instruction>()
 
         instructions.forEachIndexed { index, instruction ->
-            val newInstruction = if (index == indexToChange) {
+            newInstructions.add(if (index == indexToChange) {
                 HandHeldGameConsole.Instruction(changeOperation(instruction.operation), instruction.parameter)
             } else {
                 HandHeldGameConsole.Instruction(instruction.operation, instruction.parameter)
-            }
-            newInstructions.add(newInstruction)
+            })
         }
 
         return newInstructions
     }
 
+    private fun allowedToChangeOperation(indexToChange: Int) =
+            instructions[indexToChange].operation == HandHeldGameConsole.Operation.NOP || instructions[indexToChange].operation == HandHeldGameConsole.Operation.JMP
+
     private fun changeOperation(operation: HandHeldGameConsole.Operation): HandHeldGameConsole.Operation {
         return when (operation) {
-            HandHeldGameConsole.Operation.ACC -> HandHeldGameConsole.Operation.ACC
             HandHeldGameConsole.Operation.JMP -> HandHeldGameConsole.Operation.NOP
             HandHeldGameConsole.Operation.NOP -> HandHeldGameConsole.Operation.JMP
+            else -> operation
         }
     }
 
@@ -99,7 +99,7 @@ class HandHeldGameConsole(var instructions: List<Instruction>, var instructionPo
     data class Instruction(val operation: Operation, val parameter: Int, var executed: Boolean = false)
 
     fun execute() {
-        while (instructionPointer >= 0 && instructionPointer < instructions.size) {
+        while (instructionPointerIsValid()) {
             val instruction = instructions[instructionPointer]
 
             if (instruction.executed) {
@@ -109,19 +109,10 @@ class HandHeldGameConsole(var instructions: List<Instruction>, var instructionPo
 
             val (operation, parameter, _) = instruction
             when (operation) {
-                Operation.ACC -> {
-                    acc(parameter)
-                    instructionPointer++
-                }
-                Operation.JMP -> {
-                    jmp(parameter)
-                }
-                Operation.NOP -> {
-                    nop(parameter)
-                    instructionPointer++
-                }
+                Operation.ACC -> acc(parameter)
+                Operation.JMP -> jmp(parameter)
+                Operation.NOP -> nop()
             }
-
             instruction.executed = true
         }
     }
@@ -133,15 +124,19 @@ class HandHeldGameConsole(var instructions: List<Instruction>, var instructionPo
         this.loopDetected = false
     }
 
+    private fun instructionPointerIsValid() = instructionPointer >= 0 && instructionPointer < instructions.size
+
     private fun acc(parameter: Int) {
         accMemory += parameter
+        instructionPointer++
     }
 
     private fun jmp(parameter: Int) {
         instructionPointer += parameter
     }
 
-    private fun nop(parameter: Int) {
+    private fun nop() {
         //Do nothing
+        instructionPointer++
     }
 }
