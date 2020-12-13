@@ -14,16 +14,7 @@ fun main(args: Array<String>) {
     println("${day10.part2()}")
 }
 
-class Day10(input: String) {
-
-    private val socketJolts = 0
-    private val adapters: MutableList<Int>
-    val myDeviceJolts: Int
-
-    init {
-        adapters = read(input).sorted().toMutableList()
-        myDeviceJolts = adapters.max()!! + 3
-    }
+class Day10(val input: String) {
 
     private fun read(fileName: String): List<Int> {
         return File(fileName).readLines().map {
@@ -32,7 +23,9 @@ class Day10(input: String) {
     }
 
     fun part1(): Int {
-        var currentJolts = socketJolts
+        val adapters = read(input).sorted().toMutableList()
+        val myDeviceJolts = adapters.max()!! + 3
+        var currentJolts = 0
         val adapterOrder = mutableListOf<Pair<Int, Int>>()
 
         while (adapters.isNotEmpty()) {
@@ -51,11 +44,54 @@ class Day10(input: String) {
 
         adapterOrder.add(Pair(myDeviceJolts, myDeviceJolts - currentJolts))
 
-        return adapterOrder.count { it.second == 1 } * adapterOrder.count {it.second == 3}
+        return adapterOrder.count { it.second == 1 } * adapterOrder.count { it.second == 3 }
     }
 
 
-    fun part2(): Int {
-        return -2
+    fun part2(): Long {
+        val adapters = read(input).toMutableList()
+        val myDeviceJolts = adapters.max()!! + 3
+        adapters.add(myDeviceJolts)
+        adapters.sort()
+
+//        return checkAdapter(path = "0", currentJolts = 0, requiredJolts = myDeviceJolts, adapters = adapters)
+        return checkAdapter2(adapters)
+    }
+
+    fun checkAdapter(path: String, currentJolts: Int, requiredJolts: Int, adapters: List<Int>): Int {
+        var validCombo = 0
+        //TODO keep list of valid adapters, but take into account that a valid adapter might have many valid paths after it too
+        if (currentJolts < requiredJolts - 3 || currentJolts > requiredJolts) {
+            val compatibleAdapters = adapters.filter { it in currentJolts..currentJolts + 3 }
+
+            if (compatibleAdapters.isNotEmpty()) {
+                for (remainingAdapter in compatibleAdapters) {
+                    validCombo += checkAdapter("$path -> $remainingAdapter", remainingAdapter, requiredJolts, adapters.filter { it > remainingAdapter })
+                }
+            }
+        }
+
+        if (currentJolts >= requiredJolts - 3 && currentJolts <= requiredJolts) {
+            validCombo++
+        }
+
+        return validCombo
+    }
+
+    fun checkAdapter2(adapters: List<Int>): Long {
+        val validAdapters: MutableMap<Int, Long> = mutableMapOf()
+
+        for (adapter in adapters) {
+            if (validAdapters.isEmpty()) {
+                validAdapters[0] = 1
+            }
+            var countPaths = 0L
+            for (compatibleAdapter in adapter - 1 downTo adapter - 3) {
+                countPaths += validAdapters.getOrDefault(compatibleAdapter, 0)
+            }
+            validAdapters[adapter] = countPaths
+        }
+
+        return validAdapters.maxBy { it.value }!!.value
     }
 }

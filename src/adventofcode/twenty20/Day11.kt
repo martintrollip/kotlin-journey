@@ -162,7 +162,7 @@ class Day11(input: String) {
 
         val directions = hashMapOf<Double, Triple<Int, Int, Double>>()// Angel - X,Y,distance
 
-        //Calculate distance and angle, keeping only the closest
+        //Calculate distance and angle, keeping only the closest //TODO this can be simplified
         lineOfSight.forEach {
             val angle = angle(currentRow.toDouble(), currentCol.toDouble(), it.key.first.toDouble(), it.key.second.toDouble())
             val distance = distance(currentRow.toDouble(), currentCol.toDouble(), it.key.first.toDouble(), it.key.second.toDouble())
