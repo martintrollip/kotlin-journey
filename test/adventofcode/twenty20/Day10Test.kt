@@ -45,6 +45,18 @@ class Day10Test {
     @Test
     fun day10_part2() {
         val day10 = Day10(DAY10_INPUT)
-        assertEquals(24803586664192L, day10.part2())
+//        assertEquals(24803586664192L, day10.part2())
+        println(939/7)
+        println(939/13)
+        println(939/59)
+        println(939/31)
+        println(939/19)
+
+        println()
+        println(7*135)
+        println(13*73)
+        println(59*16)
+        println(31*31)
+        println(19*50)
     }
 }
