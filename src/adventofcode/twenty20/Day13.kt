@@ -1,9 +1,8 @@
 package adventofcode.twenty20
 
-import com.sun.org.apache.xpath.internal.operations.Bool
 import java.io.File
-import kotlin.math.*
-
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * @author Martin Trollip
@@ -141,6 +140,4 @@ class Day13(val input: String) {
         }
         return x
     }
-
-
 }
