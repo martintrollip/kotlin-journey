@@ -1,11 +1,8 @@
 package adventofcode.twenty20
 
-import java.io.File
-import java.lang.Math.pow
-
 /**
  * @author Martin Trollip
- * @since 2020/12/14 14:18
+ * @since 2020/12/17 10:53
  */
 private const val DAY15_INPUT = "src/res/twenty20/day15_input"
 
