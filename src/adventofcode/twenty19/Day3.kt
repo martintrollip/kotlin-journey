@@ -41,7 +41,7 @@ class Day3(val input: String) {
             }
         }
 
-        return distances.minBy { it }!!
+        return distances.minByOrNull  { it }!!
     }
 
     fun part2(): Int {
@@ -104,7 +104,7 @@ class Day3(val input: String) {
             }
         }
 
-        return steps.minBy { it }!!
+        return steps.minByOrNull  { it }!!
     }
 
     fun createWire(input: String): List<Line> {

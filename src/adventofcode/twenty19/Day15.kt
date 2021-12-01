@@ -65,10 +65,10 @@ class Day15 {
         var nextPosition = Point(0, 0)
 
         override fun paintComponent(g: Graphics) {
-            val maxX = screen.maxBy { it.key.x }!!.key.x
-            val minX = screen.minBy { it.key.x }!!.key.x
-            val maxY = screen.maxBy { it.key.y }!!.key.y
-            val minY = screen.minBy { it.key.y }!!.key.y
+            val maxX = screen.maxByOrNull  { it.key.x }!!.key.x
+            val minX = screen.minByOrNull  { it.key.x }!!.key.x
+            val maxY = screen.maxByOrNull  { it.key.y }!!.key.y
+            val minY = screen.minByOrNull  { it.key.y }!!.key.y
 
             val width = 20
             val height = 20

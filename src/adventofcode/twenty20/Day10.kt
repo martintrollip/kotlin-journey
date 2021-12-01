@@ -24,7 +24,7 @@ class Day10(val input: String) {
 
     fun part1(): Int {
         val adapters = read(input).sorted().toMutableList()
-        val myDeviceJolts = adapters.max()!! + 3
+        val myDeviceJolts = adapters.maxOrNull()!! + 3
         var currentJolts = 0
         val adapterOrder = mutableListOf<Pair<Int, Int>>()
 
@@ -50,7 +50,7 @@ class Day10(val input: String) {
 
     fun part2(): Long {
         val adapters = read(input).toMutableList()
-        val myDeviceJolts = adapters.max()!! + 3
+        val myDeviceJolts = adapters.maxOrNull()!! + 3
         adapters.add(myDeviceJolts)
         adapters.sort()
 
@@ -92,6 +92,6 @@ class Day10(val input: String) {
             validAdapters[adapter] = countPaths
         }
 
-        return validAdapters.maxBy { it.value }!!.value
+        return validAdapters.maxByOrNull  { it.value }!!.value
     }
 }

@@ -23,11 +23,11 @@ fun main(args: Array<String>) {
         Coordinate(x.toInt() + OFFSET / 2, y.toInt() + OFFSET / 2, ManhattanDistance(symbols[count++].toString(), 0))
     }
 
-    val xMin = points.minBy { it.x }?.x
-    val xMax = points.maxBy { it.x }?.x
+    val xMin = points.minByOrNull  { it.x }?.x
+    val xMax = points.maxByOrNull  { it.x }?.x
 
-    val yMin = points.minBy { it.y }?.y
-    val yMax = points.maxBy { it.y }?.y
+    val yMin = points.minByOrNull  { it.y }?.y
+    val yMax = points.maxByOrNull  { it.y }?.y
 
     val map = Array(xMax!! + OFFSET, { Array(yMax!! + OFFSET, { Coordinate() }) })
 
@@ -99,7 +99,7 @@ private fun Array<Array<Coordinate>>.largestArea(xMin: Int?, xMax: Int?, yMin: I
 
     println(areas)
 
-    return areas.maxBy { it.value }?.value
+    return areas.maxByOrNull  { it.value }?.value
 }
 
 private fun Array<Array<Coordinate>>.sumOfDistanceLessThan(upperBound: Int) : Int {

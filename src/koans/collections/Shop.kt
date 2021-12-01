@@ -102,15 +102,15 @@ val Shop.allOrderedProducts: Set<Product>
  *
  * <code>
  * listOf(1, 42, 4).max() == 42
- * listOf("a", "ab").minBy { it.length } == "a"
+ * listOf("a", "ab").minByOrNull  { it.length } == "a"
  * </code>
  */
 
 // Return a customer whose order count is the highest among all customers
-fun Shop.getCustomerWithMaximumNumberOfOrders(): Customer? = customers.maxBy { it.orderedProducts.size }
+fun Shop.getCustomerWithMaximumNumberOfOrders(): Customer? = customers.maxByOrNull  { it.orderedProducts.size }
 
 // Return the most expensive product which has been ordered
-fun Customer.getMostExpensiveOrderedProduct(): Product? = orders.flatMap { it.products }.maxBy { it.price }
+fun Customer.getMostExpensiveOrderedProduct(): Product? = orders.flatMap { it.products }.maxByOrNull  { it.price }
 
 /**
  * Sort
@@ -202,7 +202,7 @@ fun Shop.getSetOfProductsOrderedByEveryCustomer(): Set<Product> {
 // Return the most expensive product among all delivered products
 // (use the Order.isDelivered flag)
 fun Customer.getMostExpensiveDeliveredProduct(): Product? {
-    return orders.filter { it.isDelivered }.flatMap { it.products }.maxBy { it.price }
+    return orders.filter { it.isDelivered }.flatMap { it.products }.maxByOrNull  { it.price }
 }
 
 // Return how many times the given product was ordered.
@@ -255,7 +255,7 @@ fun doSomethingStrangeWithCollection(collection: Collection<String>): Collection
 
     val groupsByLength = collection. groupBy { s -> s.length }
 
-    val maximumSizeOfGroup = groupsByLength.values.map { group -> group.size }.max()
+    val maximumSizeOfGroup = groupsByLength.values.map { group -> group.size }.maxOrNull()
 
     return groupsByLength.values.firstOrNull { group -> group.size == maximumSizeOfGroup }
 }

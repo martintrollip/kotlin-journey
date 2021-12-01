@@ -30,8 +30,8 @@ class Day11(input: String) {
 
     init {
         floor = read(input)
-        maxRowIndex = floor.maxBy { it.key.first }!!.key.first
-        maxColIndex = floor.maxBy { it.key.second }!!.key.second
+        maxRowIndex = floor.maxByOrNull  { it.key.first }!!.key.first
+        maxColIndex = floor.maxByOrNull  { it.key.second }!!.key.second
     }
 
     private fun read(fileName: String): Map<Pair<Int, Int>, Char> {

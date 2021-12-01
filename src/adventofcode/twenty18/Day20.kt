@@ -16,7 +16,7 @@ fun main(args: Array<String>) {
 }
 
 fun roomsPart1(parsed: Map<Room, Int>): Int {
-    return parsed.maxBy { it.value }!!.value
+    return parsed.maxByOrNull  { it.value }!!.value
 }
 
 fun roomsPart2(parsed: Map<Room, Int>): Int {

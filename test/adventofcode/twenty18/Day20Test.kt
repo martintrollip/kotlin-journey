@@ -19,31 +19,31 @@ class Day20Test {
     @Test
     fun testSimpleCase() {
         val parsed = parse(DAY20_INPUT_SIMPLE)
-        assertEquals(3, parsed.maxBy { it.value }!!.value)
+        assertEquals(3, parsed.maxByOrNull  { it.value }!!.value)
     }
 
     @Test
     fun testExample1() {
         val parsed = parse(DAY20_INPUT_EXAMPLE_1)
-        assertEquals(10, parsed.maxBy { it.value }!!.value)
+        assertEquals(10, parsed.maxByOrNull  { it.value }!!.value)
     }
 
     @Test
     fun testExample2() {
         val parsed = parse(DAY20_INPUT_EXAMPLE_2)
-        assertEquals(18, parsed.maxBy { it.value }!!.value)
+        assertEquals(18, parsed.maxByOrNull  { it.value }!!.value)
     }
 
     @Test
     fun testExample3() {
         val parsed = parse(DAY20_INPUT_EXAMPLE_3)
-        assertEquals(23, parsed.maxBy { it.value }!!.value)
+        assertEquals(23, parsed.maxByOrNull  { it.value }!!.value)
     }
 
     @Test
     fun testExample4() {
         val parsed = parse(DAY20_INPUT_EXAMPLE_4)
-        assertEquals(31, parsed.maxBy { it.value }!!.value)
+        assertEquals(31, parsed.maxByOrNull  { it.value }!!.value)
     }
 
     @Test

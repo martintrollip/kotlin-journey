@@ -107,11 +107,11 @@ fun buildCartAndTrack(coordinate: TrackCoordinate, cartChar: Char): CartOnTrack 
 fun LinkedHashMap<TrackCoordinate, Track>.print(carts: ArrayList<Cart>) {
     val padding = 1
 
-    val minX = minBy { it.key.x }?.key?.x!!
-    val maxX = maxBy { it.key.x }?.key?.x!!
+    val minX = minByOrNull  { it.key.x }?.key?.x!!
+    val maxX = maxByOrNull  { it.key.x }?.key?.x!!
 
-    val minY = minBy { it.key.y }?.key?.y!!
-    val maxY = maxBy { it.key.y }?.key?.y!!
+    val minY = minByOrNull  { it.key.y }?.key?.y!!
+    val maxY = maxByOrNull  { it.key.y }?.key?.y!!
 
     var print = ""
     for (y in minY..maxY) {

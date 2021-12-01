@@ -61,15 +61,15 @@ fun List<LightPoint>.reverse() {
 }
 
 fun List<LightPoint>.height(): Long {
-    val yMin = minBy { it.y }?.y!!
-    val yMax = maxBy { it.y }?.y!!
+    val yMin = minByOrNull  { it.y }?.y!!
+    val yMax = maxByOrNull  { it.y }?.y!!
 
     return (yMax - yMin).absoluteValue
 }
 
 fun List<LightPoint>.normalise() {
-    val xOffset = minBy { it.x }?.x
-    val yOffset = minBy { it.y }?.y
+    val xOffset = minByOrNull  { it.x }?.x
+    val yOffset = minByOrNull  { it.y }?.y
 
     forEach {
         it.x -= xOffset?.absoluteValue!!
@@ -81,10 +81,10 @@ fun buildArray(points: List<LightPoint>): Array<Array<LightPoint>> {
     points.normalise()
     val sorted = points.sortedWith(compareBy({ it.x }, { it.y }))
 
-    val xMax = sorted.maxBy { it.x }?.x!!
-    val xMin = sorted.minBy { it.x }?.x!!
-    val yMax = sorted.maxBy { it.y }?.y!!
-    val yMin = sorted.minBy { it.y }?.y!!
+    val xMax = sorted.maxByOrNull  { it.x }?.x!!
+    val xMin = sorted.minByOrNull  { it.x }?.x!!
+    val yMax = sorted.maxByOrNull  { it.y }?.y!!
+    val yMin = sorted.minByOrNull  { it.y }?.y!!
     val width = distance(xMin, xMax)
     val height = distance(yMin, yMax)
 

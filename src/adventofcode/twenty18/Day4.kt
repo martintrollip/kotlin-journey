@@ -39,8 +39,8 @@ fun main(args: Array<String>) {
             asleepMinute = 0
         }
     }
-    val maxSleep = guards.maxBy { it.value.total }
-    val mostAsleepMinute = maxSleep?.value?.minutes?.indexOf(maxSleep.value.minutes.max())
+    val maxSleep = guards.maxByOrNull  { it.value.total }
+    val mostAsleepMinute = maxSleep?.value?.minutes?.indexOf(maxSleep.value.minutes.maxOrNull())
 
     println(guards)
 
@@ -48,7 +48,7 @@ fun main(args: Array<String>) {
     println("Minute most asleep: $mostAsleepMinute")
     println("Mulitply those two: ${maxSleep?.key?.toInt()?.times(mostAsleepMinute!!)}")
 
-    val maxSameTime = guards.maxBy { it.value.maxFrequency }
+    val maxSameTime = guards.maxByOrNull  { it.value.maxFrequency }
     println("Maximum same frequency is Guard ${maxSameTime?.key} during minute ${maxSameTime?.value?.maxIndex}")
     println("Mulitply those two:  ${maxSameTime?.key?.toInt()?.times(maxSameTime.value.maxIndex)}")
 }
@@ -86,8 +86,8 @@ fun Sleep.markMinutes(asleepTime: Int, awakeTime: Int) {
     for (i in asleepTime until awakeTime) {
         counts[i] += 1
     }
-    this.maxFrequency = counts.max()!!
-    this.maxIndex = counts.indexOf(counts.maxBy { it }!!)
+    this.maxFrequency = counts.maxOrNull()!!
+    this.maxIndex = counts.indexOf(counts.maxByOrNull  { it }!!)
 
     this.minutes = counts
 }

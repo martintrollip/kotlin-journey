@@ -178,10 +178,10 @@ private fun generateCaveFromInput(): Array<Array<Ground>> {
 }
 
 fun List<Ground>.getBounds(): CaveBounds {
-    val xMin = minBy { it.x }?.x!!
-    val xMax = maxBy { it.x }?.x!!
-    val yMin = minBy { it.y }?.y!!
-    val yMax = maxBy { it.y }?.y!!
+    val xMin = minByOrNull  { it.x }?.x!!
+    val xMax = maxByOrNull  { it.x }?.x!!
+    val yMin = minByOrNull  { it.y }?.y!!
+    val yMax = maxByOrNull  { it.y }?.y!!
     return CaveBounds(xMin, xMax, yMin, yMax)
 }
 

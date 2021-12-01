@@ -57,7 +57,7 @@ class Day13(val input: String) {
     fun part2(): Long {
         val (_, ids) = read(input)
 
-        val minId = ids.minBy { it.second }!!
+        val minId = ids.minByOrNull  { it.second }!!
 
         var currentTime = 0L
         while (true) {

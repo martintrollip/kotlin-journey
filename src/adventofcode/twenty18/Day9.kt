@@ -55,7 +55,7 @@ fun playGame(playerCount: Int, lastScore: Int) {
 //        currentNode.print()
     }
 
-    val maxScore = scores.maxBy { it.value }
+    val maxScore = scores.maxByOrNull  { it.value }
     println("The winner is $maxScore")
 }
 

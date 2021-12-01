@@ -41,7 +41,7 @@ fun day5Part2(sequence: String): Map.Entry<Char, Int>? {
         lengths.put(it, optimised.length)
     }
 
-    return lengths.minBy { it.value }
+    return lengths.minByOrNull  { it.value }
 }
 
 fun String.duplicates(): Boolean {

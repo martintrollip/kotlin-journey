@@ -57,10 +57,10 @@ class Day11 {
         }
 
         fun render(panels: MutableMap<Point, Int>) {
-            val maxX = panels.maxBy { it.key.x }!!.key.x
-            val minX = panels.minBy { it.key.x }!!.key.x
-            val maxY = panels.maxBy { it.key.y }!!.key.y
-            val minY = panels.minBy { it.key.y }!!.key.y
+            val maxX = panels.maxByOrNull  { it.key.x }!!.key.x
+            val minX = panels.minByOrNull  { it.key.x }!!.key.x
+            val maxY = panels.maxByOrNull  { it.key.y }!!.key.y
+            val minY = panels.minByOrNull  { it.key.y }!!.key.y
 
             for (row in minY..maxY) {
                 for (col in minX..maxX) {
