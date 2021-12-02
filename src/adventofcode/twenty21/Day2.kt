@@ -12,7 +12,12 @@ fun main() {
     val day2 = Day2()
     val input = day2.readInput(DAY2_INPUT)
     println(
-        "What do you get if you multiply your final horizontal position by your final depth? ${1 * day2.getCoordinatesMutiplied(input)}")
+        "What do you get if you multiply your final horizontal position by your final depth? ${
+            1 * day2.getCoordinatesMultiplied(
+                input
+            )
+        }"
+    )
 //     println("How many sums are larger than the previous sum? ${day1.numberOfIncreasingSumOfWindowedElementsInList(input)}")
 }
 
@@ -32,13 +37,13 @@ class Day2 {
     }
 
     /**
-     * @return the final coordinates after the instructions have been applied in the form of a Pair<Int, Int> with <horizontal, depth>
+     * @return the final coordinates after the instructions have been applied. In the form of a Pair<horizontal: Int, depth: Int>
      */
-    fun calculateCoordinates(input: List<Pair<String, Int>>) : Pair<Int, Int> {
+    private fun calculateCoordinates(input: List<Pair<String, Int>>): Pair<Int, Int> {
         var horizontal = 0
         var depth = 0
         input.forEach {
-            when(it.first) {
+            when (it.first) {
                 "up" -> depth -= it.second
                 "down" -> depth += it.second
                 "forward" -> horizontal += it.second
@@ -48,8 +53,40 @@ class Day2 {
         return Pair(horizontal, depth)
     }
 
-    fun getCoordinatesMutiplied(input:  List<Pair<String, Int>>): Int {
+    private fun calculateCoordinatesWithAim(input: List<Pair<String, Int>>): Pair<Int, Int> {
+        var horizontal = 0
+        var depth = 0
+        var aim = 0
+
+        input.forEach {
+            when (it.first) {
+                "up" -> aim -= it.second
+                "down" -> aim += it.second
+                "forward" -> {
+                    horizontal += it.second
+                    depth += aim * it.second
+                }
+                else -> throw IllegalArgumentException("Invalid direction: ${it.first}")
+            }
+        }
+        return Pair(horizontal, depth)
+    }
+
+    /**
+     * @param input the input list of instructions where each pair contains an instruction:String and a delta:Int
+     * @return the final coordinates multiplied together, after the instructions have been applied
+     */
+    fun getCoordinatesMultiplied(input: List<Pair<String, Int>>): Int {
         val coordinates = calculateCoordinates(input)
+        return coordinates.first * coordinates.second
+    }
+
+    /**
+     * @param input the input list of instructions where each pair contains an instruction:String and a delta:Int
+     * @return the final coordinates multiplied together, after the instructions have been applied
+     */
+    fun getCoordinatesMultipliedWithAim(input: List<Pair<String, Int>>): Int {
+        val coordinates = calculateCoordinatesWithAim(input)
         return coordinates.first * coordinates.second
     }
 }
