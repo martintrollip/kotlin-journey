@@ -18,7 +18,13 @@ fun main() {
             )
         }"
     )
-//     println("How many sums are larger than the previous sum? ${day1.numberOfIncreasingSumOfWindowedElementsInList(input)}")
+    println(
+        "What do you get if you multiply your final horizontal position by your final depth? ${
+            day2.getCoordinatesMultipliedWithAim(
+                input
+            )
+        }"
+    )
 }
 
 class Day2 {
