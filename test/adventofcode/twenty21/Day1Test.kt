@@ -12,10 +12,6 @@ class Day1Test {
     private val DAY1_INPUT_EXAMPLE = "src/res/twenty21/day1_input_example"
     private val DAY1_INPUT = "src/res/twenty21/day1_input"
 
-    private fun readFromFile(fileName: String): List<Int> {
-        return File(fileName).readLines().map { it.toInt() }
-    }
-
     /**
      * For example, suppose you had the following report:
      *
@@ -35,14 +31,14 @@ class Day1Test {
     @Test
     fun day1_numberOfIncreasingElements_giveCorrectAnswer() {
         val day1 = Day1()
-        val exampleInput = readFromFile(DAY1_INPUT_EXAMPLE);
+        val exampleInput = day1.readInput(DAY1_INPUT_EXAMPLE);
         assertEquals(7, day1.numberOfIncreasingElementsInList(exampleInput))
     }
 
     @Test
     fun day1_numberOfIncreasingElements_giveCorrectAnswer_input() {
         val day1 = Day1()
-        val input = readFromFile(DAY1_INPUT);
+        val input = day1.readInput(DAY1_INPUT);
         assertEquals(1692, day1.numberOfIncreasingElementsInList(input))
     }
 
@@ -53,14 +49,14 @@ class Day1Test {
     @Test
     fun day1_windowedSum_giveCorrectAnswer() {
         val day1 = Day1()
-        val exampleInput = readFromFile(DAY1_INPUT_EXAMPLE);
+        val exampleInput = day1.readInput(DAY1_INPUT_EXAMPLE);
         assertEquals(5, day1.numberOfIncreasingSumOfWindowedElementsInList(exampleInput))
     }
 
     @Test
     fun day1_windowedSum_giveCorrectAnswer_input() {
         val day1 = Day1()
-        val input = readFromFile(DAY1_INPUT);
+        val input = day1.readInput(DAY1_INPUT);
         assertEquals(1724, day1.numberOfIncreasingSumOfWindowedElementsInList(input))
     }
 }
