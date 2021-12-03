@@ -13,13 +13,13 @@ fun main() {
     val input = day2.readInput(DAY2_INPUT)
     println(
         "What do you get if you multiply your final horizontal position by your final depth? ${
-            1 * day2.getCoordinatesMultiplied(
+            day2.getCoordinatesMultiplied(
                 input
             )
         }"
     )
     println(
-        "What do you get if you multiply your final horizontal position by your final depth? ${
+        "What do you get if you multiply your final horizontal position by your final depth (with aim)? ${
             day2.getCoordinatesMultipliedWithAim(
                 input
             )
