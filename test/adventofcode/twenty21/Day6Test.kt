@@ -19,6 +19,27 @@ class Day6Test {
     @Test
     fun day6_runFor80Days_givesCorrectAnswer() {
         val day6 = Day6()
-        assertEquals(5934, day6.run(day6.readInput(DAY6_INPUT_EXAMPLE),80))
+        assertEquals(5934, day6.run(day6.readInput(DAY6_INPUT_EXAMPLE), 80))
+    }
+
+    @Test
+    fun day6_runFor80Days_givesCorrectAnswer_forInput() {
+        val day6 = Day6()
+        assertEquals(1234, day6.run(day6.readInput(DAY6_INPUT), 80))
+    }
+
+    /**
+     * After 256 days in the example above, there would be a total of 26984457539 lanternfish!
+     */
+    @Test
+    fun day6_runFor256Days_givesCorrectAnswer() {
+        val day6 = Day6()
+        assertEquals(26984457539, day6.run(day6.readInput(DAY6_INPUT_EXAMPLE), 256))
+    }
+
+    @Test
+    fun day6_runFor256Days_givesCorrectAnswer_forInput() {
+        val day6 = Day6()
+        assertEquals(1732821262171, day6.run(day6.readInput(DAY6_INPUT), 256))
     }
 }
