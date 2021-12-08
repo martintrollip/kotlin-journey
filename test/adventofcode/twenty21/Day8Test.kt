@@ -45,6 +45,6 @@ class Day8Test {
     @Test
     fun day8_outputValue_withInput() {
         val day8 = Day8()
-        assertEquals(61229, day8.part2(day8.readInput(DAY8_INPUT)))
+        assertEquals(1043697, day8.part2(day8.readInput(DAY8_INPUT)))
     }
 }
