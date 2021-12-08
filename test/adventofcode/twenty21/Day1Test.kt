@@ -2,7 +2,6 @@ package adventofcode.twenty21
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.File
 
 /**
  * @author Martin Trollip
