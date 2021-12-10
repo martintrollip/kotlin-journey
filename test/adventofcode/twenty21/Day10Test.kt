@@ -57,6 +57,6 @@ class Day10Test {
     fun day10_calculateMiddleScore_withInput() {
         val day10 = Day10()
         val result = day10.part2(day10.readInput(DAY10_INPUT))
-        assertEquals(288957, result)
+        assertEquals(3249889609L, result)
     }
 }

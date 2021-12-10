@@ -10,17 +10,17 @@ import java.util.*
 private const val DAY10_INPUT = "src/res/twenty21/day10_input"
 
 fun main() {
-    val day9 = Day9()
+    val day10 = Day10()
     println(
         "What is the total syntax error score for those errors?? ${
-            day9.part1(day9.readInput(DAY10_INPUT))
+            day10.part1(day10.readInput(DAY10_INPUT))
         }"
     )
-//    println(
-//        "What is the middle score? ${
-//            day9.part2(day9.readInput(DAY9_INPUT))
-//        }"
-//    )
+    println(
+        "What is the middle score? ${
+            day10.part2(day10.readInput(DAY10_INPUT))
+        }"
+    )
 }
 
 class Day10 {
