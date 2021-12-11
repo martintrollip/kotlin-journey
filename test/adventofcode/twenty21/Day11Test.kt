@@ -5,14 +5,13 @@ import org.junit.Test
 
 /**
  * @author Martin Trollip
-: @since 2021/12/10 08:31
+ * @since 2021/12/10 08:31
  */
 class Day11Test {
     private val DAY11_INPUT_EXAMPLE = "src/res/twenty21/day11_input_example"
     private val DAY11_INPUT_EXAMPLE_SMALLER = "src/res/twenty21/day11_input_example_smaller"
     private val DAY11_INPUT = "src/res/twenty21/day11_input"
-
-   
+    
     @Test
     fun day11_countFlashes_example() {
         val day11 = Day11()
@@ -24,14 +23,14 @@ class Day11Test {
     fun day11_countFlashes_example_smaller() {
         val day11 = Day11()
         val result = day11.part1(day11.readInput(DAY11_INPUT_EXAMPLE_SMALLER).toMutableMap(), 100)
-        assertEquals(256, result)
+        assertEquals(259, result)
     }
     
     @Test
     fun day11_countFlashes_withInput() {
         val day11 = Day11()
         val result = day11.part1(day11.readInput(DAY11_INPUT).toMutableMap(), 100)
-        assertEquals(2, result)
+        assertEquals(1594, result)
     }
 
     @Test
@@ -45,7 +44,7 @@ class Day11Test {
     fun day11_countSteps_withInput() {
         val day11 = Day11()
         val result = day11.part2(day11.readInput(DAY11_INPUT).toMutableMap())
-        assertEquals(195, result)
+        assertEquals(437, result)
     }
     
 }
