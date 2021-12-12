@@ -24,5 +24,6 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'com.google.guava:guava:31.0.1-jre'
+    implementation 'org.lwjgl:lwjgl-glfw:3.3.0'
     testCompile 'junit:junit:4.13.2'
 }

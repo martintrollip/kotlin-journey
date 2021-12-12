@@ -3,6 +3,9 @@ package adventofcode.twenty21
 import java.awt.Point
 import java.io.File
 import java.util.*
+import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFWErrorCallback
+
 
 /**
  * @author Martin Trollip
@@ -22,6 +25,8 @@ fun main() {
             day11.part2(day11.readInput(DAY11_INPUT).toMutableMap())
         }"
     )
+    
+//    day11.showOpenGL()
 }
 
 class Day11 {
@@ -88,6 +93,29 @@ class Day11 {
         }
 
         return counts
+    }
+    
+    fun showOpenGL() {
+        // Setup an error callback 
+        GLFWErrorCallback.createPrint(System.err).set()
+        if (!(glfwInit())) {
+            throw IllegalStateException("Unable to initialize window")
+        }
+        // setting GLFW window's configuration
+        // glfwDefaultWindowHints()
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3)
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // resizeable window
+
+        val window: Long = glfwCreateWindow(300, 300, "Hello Window!", 0, 0)
+        if (window <= 0) {
+            println("Failed to create GLFW window")
+            glfwTerminate()
+        }
+        // Make the OpenGL context current
+        glfwMakeContextCurrent(window)
     }
     
     private fun allNeighbours(points: List<Point>) = points.flatMap {
